@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "82620629635",
+    "project_id": "spendtrack-da8d1",
+    "storage_bucket": "spendtrack-da8d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82620629635:android:8f60841fcb7450df9551b6",
+        "android_client_info": {
+          "package_name": "com.zacle.spendtrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82620629635-imh77j4evgoo5fh3q5kajl5h7a0aospn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zacle.spendtrack",
+            "certificate_hash": "aad43c25718adf510b4ca1bade58831efe715009"
+          }
+        },
+        {
+          "client_id": "82620629635-j1tu5b1g7qheg913ltj256jo5prtc6af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPj5oJpai6L2SKKdcFDVTCwQsK_jzgV-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82620629635-j1tu5b1g7qheg913ltj256jo5prtc6af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
