@@ -25,5 +25,5 @@ rootProject.name = "SpendTrack"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":core:model")
-include(":core:datastore-proto")
 include(":core:datastore")
+include(":core:common")
