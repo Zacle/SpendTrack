@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "com/zacle/spendtrack/core/datastore_proto/theme_appearance.proto";
+
+option java_package = "com.zacle.spendtrack.core.datastore";
+option java_multiple_files = true;
+
+message UserPreferences {
+    bool should_hide_onboarding = 1;
+
+    // Last Syncing time of all models
+    int64 user_last_sync = 2;
+    int64 expense_last_sync = 3;
+    int64 income_last_sync = 4;
+    int64 bills_last_sync = 5;
+    int64 budget_last_sync = 6;
+    int64 category_last_sync = 7;
+
+    ThemeAppearanceProto theme_appearance = 8;
+}
