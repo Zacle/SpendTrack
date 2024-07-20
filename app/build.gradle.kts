@@ -14,7 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.zacle.spendtrack.core.testing.SpendTrackTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -28,6 +28,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     packaging {
@@ -55,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.tracing.ktx)
     implementation(libs.androidx.window.core)
+    implementation(libs.coil.kt)
     implementation(libs.timber)
 
     ksp(libs.hilt.compiler)
@@ -62,4 +67,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.testManifest)
 
     kspTest(libs.hilt.compiler)
+
+    testImplementation(libs.hilt.android.testing)
+    androidTestImplementation(kotlin("test"))
+    androidTestImplementation(projects.core.testing)
+    androidTestImplementation(libs.hilt.android.testing)
 }

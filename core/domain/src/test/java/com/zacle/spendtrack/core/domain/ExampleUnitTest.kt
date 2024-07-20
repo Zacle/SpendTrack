@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.core.datastore
+package com.zacle.spendtrack.core.domain
 
 import org.junit.Test
 

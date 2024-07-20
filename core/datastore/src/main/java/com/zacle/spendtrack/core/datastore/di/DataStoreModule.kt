@@ -7,6 +7,7 @@ import androidx.datastore.dataStoreFile
 import com.zacle.spendtrack.core.common.SpendTrackDispatcher
 import com.zacle.spendtrack.core.common.SpendTrackDispatchers.IO
 import com.zacle.spendtrack.core.common.di.ApplicationScope
+import com.zacle.spendtrack.core.datastore.UserPreferencesDataSource
 import com.zacle.spendtrack.core.datastore.UserPreferencesSerializer
 import com.zacle.spendtrack.core.datastore_proto.UserPreferences
 import dagger.Module
@@ -35,4 +36,11 @@ object DataStoreModule {
         ) {
             context.dataStoreFile("user_preferences.pb")
         }
+
+    @Provides
+    @Singleton
+    fun providesUserPreferencesDataSource(
+        userPreferences: DataStore<UserPreferences>
+    ): UserPreferencesDataSource = UserPreferencesDataSource(userPreferences)
+
 }

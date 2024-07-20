@@ -35,6 +35,9 @@ dependencies {
     api(libs.androidx.dataStore)
     api(libs.androidx.dataStore.core)
     api(libs.protobuf.kotlin.lite)
+
+    testImplementation(projects.core.datastoreTest)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes
