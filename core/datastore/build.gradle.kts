@@ -1,3 +1,4 @@
+import com.zacle.build_logic.convention.ext.androidTestImplementation
 import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 
@@ -11,6 +12,7 @@ android {
     namespace = "com.zacle.spendtrack.core.datastore"
 
     defaultConfig {
+        testInstrumentationRunner = "com.zacle.spendtrack.core.testing.SpendTrackTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -35,9 +37,16 @@ dependencies {
     api(libs.androidx.dataStore)
     api(libs.androidx.dataStore.core)
     api(libs.protobuf.kotlin.lite)
+    implementation(libs.androidx.test.ext)
 
-    testImplementation(projects.core.datastoreTest)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(projects.core.testing)
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(libs.truth)
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes

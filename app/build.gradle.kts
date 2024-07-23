@@ -70,6 +70,7 @@ dependencies {
 
     testImplementation(libs.hilt.android.testing)
     androidTestImplementation(kotlin("test"))
-    androidTestImplementation(projects.core.testing)
     androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(projects.core.testing)
+    androidTestImplementation(projects.core.datastore)
 }
