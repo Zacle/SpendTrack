@@ -44,7 +44,9 @@ android {
 dependencies {
     implementation(projects.core.common)
     implementation(projects.core.model)
+    implementation(projects.core.data)
     implementation(projects.core.datastore)
+    implementation(projects.core.domain)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)
