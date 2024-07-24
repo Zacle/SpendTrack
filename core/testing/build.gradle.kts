@@ -8,9 +8,9 @@ android {
 }
 
 dependencies {
-    api(libs.kotlinx.coroutines.test)
     api(projects.core.model)
     api(projects.core.common)
+    api(libs.kotlinx.coroutines.test)
 
     implementation(libs.androidx.test.rules)
     implementation(libs.hilt.android.testing)

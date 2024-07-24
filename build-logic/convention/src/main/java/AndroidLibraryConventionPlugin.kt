@@ -2,7 +2,7 @@ import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
 import com.zacle.build_logic.convention.configureKotlinAndroid
 import com.zacle.build_logic.convention.disableUnnecessaryAndroidTests
-import com.zacle.build_logic.convention.ext.testImplementation
+import com.zacle.build_logic.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -19,13 +19,17 @@ class AndroidLibraryConventionPlugin: Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
+                defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 defaultConfig.targetSdk = 34
             }
             extensions.configure<LibraryAndroidComponentsExtension> {
                 disableUnnecessaryAndroidTests(target)
             }
             dependencies {
-                testImplementation(kotlin("test"))
+                add("androidTestImplementation", kotlin("test"))
+                add("testImplementation", kotlin("test"))
+
+                add("implementation", libs.findLibrary("androidx.tracing.ktx").get())
             }
         }
     }
