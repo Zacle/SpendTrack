@@ -46,6 +46,9 @@ timber = "5.0.1"
 truth = "1.4.2"
 material = "1.12.0"
 
+[bundles]
+androidx-compose-ui-test = ["androidx-compose-ui-test", "androidx-compose-ui-testManifest"]
+
 [libraries]
 # Android Core
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
