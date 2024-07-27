@@ -50,6 +50,8 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.model)
 
+    implementation(projects.feature.onboarding)
+
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)

@@ -2,7 +2,6 @@ package com.zacle.spendtrack
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import firebase.com.protolitewrapper.BuildConfig
 import timber.log.Timber
 
 @HiltAndroidApp
