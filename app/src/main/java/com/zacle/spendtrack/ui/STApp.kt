@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zacle.spendtrack.R
+import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.navigation.STNavHost
 
@@ -19,28 +20,29 @@ fun STApp(
     shouldHideOnboarding: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    SpendTrackBackground(modifier = modifier) {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-    // If user is not connected to the internet show a snack bar to inform them
-    val notConnectedMessage = stringResource(R.string.not_connected)
-    LaunchedEffect(isOffline) {
-        if (isOffline) {
-            snackbarHostState.showSnackbar(
-                message = notConnectedMessage,
-                duration = Indefinite
-            )
+        // If user is not connected to the internet show a snack bar to inform them
+        val notConnectedMessage = stringResource(R.string.not_connected)
+        LaunchedEffect(isOffline) {
+            if (isOffline) {
+                snackbarHostState.showSnackbar(
+                    message = notConnectedMessage,
+                    duration = Indefinite
+                )
+            }
         }
-    }
 
-    val startDestination: Any =
-        if (!shouldHideOnboarding)
-            Onboarding
-        else
-            ""
-    STNavHost(
-        appState = appState,
-        modifier = modifier,
-        startDestination = startDestination
-    )
+        val startDestination: Any =
+            if (!shouldHideOnboarding)
+                Onboarding
+            else
+                ""
+        STNavHost(
+            appState = appState,
+            startDestination = startDestination
+        )
+    }
 }
