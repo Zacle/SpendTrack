@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.zacle.spendtrack.core.common.SpendTrackDispatcher
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers.IO
+import com.zacle.spendtrack.core.common.STDispatcher
+import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.ApplicationScope
 import com.zacle.spendtrack.core.datastore.UserPreferencesDataSource
 import com.zacle.spendtrack.core.datastore.UserPreferencesSerializer
@@ -26,7 +26,7 @@ object DataStoreModule {
     @Singleton
     internal fun providesUserPreferencesDataStore(
         @ApplicationContext context: Context,
-        @SpendTrackDispatcher(IO) ioDispatcher: CoroutineDispatcher,
+        @STDispatcher(IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationScope scope: CoroutineScope,
         userPreferencesSerializer: UserPreferencesSerializer
     ): DataStore<UserPreferences> =

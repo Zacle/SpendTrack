@@ -1,7 +1,7 @@
 package com.zacle.spendtrack.core.testing.di
 
-import com.zacle.spendtrack.core.common.SpendTrackDispatcher
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers
+import com.zacle.spendtrack.core.common.STDispatcher
+import com.zacle.spendtrack.core.common.STDispatchers
 import com.zacle.spendtrack.core.common.di.DispatchersModule
 import dagger.Module
 import dagger.Provides
@@ -17,11 +17,11 @@ import kotlinx.coroutines.test.TestDispatcher
 )
 internal object TestDispatchersModule {
     @Provides
-    @SpendTrackDispatcher(SpendTrackDispatchers.IO)
+    @STDispatcher(STDispatchers.IO)
     fun providesIODispatcher(testDispatcher: TestDispatcher): CoroutineDispatcher = testDispatcher
 
     @Provides
-    @SpendTrackDispatcher(SpendTrackDispatchers.Default)
+    @STDispatcher(STDispatchers.Default)
     fun providesDefaultDispatcher(
         testDispatcher: TestDispatcher,
     ): CoroutineDispatcher = testDispatcher

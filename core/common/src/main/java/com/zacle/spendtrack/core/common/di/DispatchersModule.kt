@@ -1,8 +1,8 @@
 package com.zacle.spendtrack.core.common.di
 
-import com.zacle.spendtrack.core.common.SpendTrackDispatcher
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers.Default
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers.IO
+import com.zacle.spendtrack.core.common.STDispatcher
+import com.zacle.spendtrack.core.common.STDispatchers.Default
+import com.zacle.spendtrack.core.common.STDispatchers.IO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,10 +14,10 @@ import kotlinx.coroutines.Dispatchers
 @InstallIn(SingletonComponent::class)
 object DispatchersModule {
     @Provides
-    @SpendTrackDispatcher(Default)
+    @STDispatcher(Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
-    @SpendTrackDispatcher(IO)
+    @STDispatcher(IO)
     fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

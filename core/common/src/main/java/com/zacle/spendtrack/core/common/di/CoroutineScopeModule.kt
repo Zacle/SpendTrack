@@ -1,7 +1,7 @@
 package com.zacle.spendtrack.core.common.di
 
-import com.zacle.spendtrack.core.common.SpendTrackDispatcher
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers.Default
+import com.zacle.spendtrack.core.common.STDispatcher
+import com.zacle.spendtrack.core.common.STDispatchers.Default
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ object CoroutineScopeModule {
     @Singleton
     @ApplicationScope
     fun provideCoroutineScope(
-        @SpendTrackDispatcher(Default) dispatcher: CoroutineDispatcher,
+        @STDispatcher(Default) dispatcher: CoroutineDispatcher,
     ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 }

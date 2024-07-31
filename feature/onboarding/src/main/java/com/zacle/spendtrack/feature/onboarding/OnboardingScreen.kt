@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.feature.onboarding.data
+package com.zacle.spendtrack.feature.onboarding
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -39,11 +39,12 @@ import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
-import com.zacle.spendtrack.feature.onboarding.R
+import com.zacle.spendtrack.feature.onboarding.data.OnboardingPage
+import com.zacle.spendtrack.feature.onboarding.data.OnboardingPagesModel
 
 @Composable
 fun OnboardingRoute(
-    navigateToHome: () -> Unit,
+    navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
@@ -53,7 +54,7 @@ fun OnboardingRoute(
         state = uiState,
         onboardingCompleted = {
             viewModel.submitAction(OnboardingUiAction.SetOnboarded)
-            navigateToHome()
+            navigateToLogin()
         },
         modifier = modifier
     )

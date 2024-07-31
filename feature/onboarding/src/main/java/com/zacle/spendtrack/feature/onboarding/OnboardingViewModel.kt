@@ -1,10 +1,12 @@
-package com.zacle.spendtrack.feature.onboarding.data
+package com.zacle.spendtrack.feature.onboarding
 
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.repository.UserDataRepository
 import com.zacle.spendtrack.core.ui.BaseViewModel
 import com.zacle.spendtrack.core.ui.UiEvent
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.feature.onboarding.data.OnboardingPage
+import com.zacle.spendtrack.feature.onboarding.data.OnboardingPagesModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

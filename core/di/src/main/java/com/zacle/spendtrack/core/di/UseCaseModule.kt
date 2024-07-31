@@ -1,7 +1,7 @@
 package com.zacle.spendtrack.core.di
 
-import com.zacle.spendtrack.core.common.SpendTrackDispatcher
-import com.zacle.spendtrack.core.common.SpendTrackDispatchers.IO
+import com.zacle.spendtrack.core.common.STDispatcher
+import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.domain.UseCase
 import dagger.Module
 import dagger.Provides
@@ -14,6 +14,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 object UseCaseModule {
     @Provides
     fun provideUseCaseConfiguration(
-        @SpendTrackDispatcher(IO) ioDispatcher: CoroutineDispatcher
+        @STDispatcher(IO) ioDispatcher: CoroutineDispatcher
     ): UseCase.Configuration = UseCase.Configuration(ioDispatcher)
 }

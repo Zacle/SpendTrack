@@ -49,8 +49,13 @@ dependencies {
     implementation(projects.core.di)
     implementation(projects.core.domain)
     implementation(projects.core.model)
+    implementation(projects.core.ui)
 
     implementation(projects.feature.onboarding)
+    implementation(projects.feature.home)
+    implementation(projects.feature.transaction)
+    implementation(projects.feature.budget)
+    implementation(projects.feature.profile)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)
@@ -66,6 +71,7 @@ dependencies {
     implementation(libs.androidx.tracing.ktx)
     implementation(libs.androidx.window.core)
     implementation(libs.coil.kt)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.timber)
 
     ksp(libs.hilt.compiler)

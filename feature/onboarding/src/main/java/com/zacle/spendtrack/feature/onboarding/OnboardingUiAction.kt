@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.feature.onboarding.data
+package com.zacle.spendtrack.feature.onboarding
 
 import com.zacle.spendtrack.core.ui.UiAction
 
