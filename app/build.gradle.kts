@@ -48,6 +48,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.di)
     implementation(projects.core.domain)
+    implementation(projects.core.firebase)
     implementation(projects.core.model)
     implementation(projects.core.ui)
 
