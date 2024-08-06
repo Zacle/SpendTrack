@@ -11,13 +11,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zacle.spendtrack.R
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
+import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.navigation.STNavHost
 
 @Composable
 fun STApp(
     appState: STAppState,
-    shouldHideOnboarding: Boolean,
+    userStateModel: UserStateModel,
     modifier: Modifier = Modifier
 ) {
     SpendTrackBackground(modifier = modifier) {
@@ -34,9 +35,9 @@ fun STApp(
                 )
             }
         }
-
+        // TODO Add login flow
         val startDestination: Any =
-            if (!shouldHideOnboarding)
+            if (!userStateModel.userData.shouldHideOnboarding)
                 Onboarding
             else
                 ""

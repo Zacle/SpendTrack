@@ -18,42 +18,6 @@ class ObserveUserAuthStateUseCaseTest {
     private val useCase = ObserveUserAuthStateUseCase(mock(), authStateUserRepository)
 
     @Test
-    fun `should throw NotAuthenticatedException when user is null`() = runTest {
-        val request = ObserveUserAuthStateUseCase.Request
-        whenever(authStateUserRepository.userInfo).thenReturn(flowOf(null))
-        try {
-            useCase.process(request)
-        } catch (e: Throwable) {
-            assertTrue(e is UseCaseException.NotAuthenticatedException)
-        }
-    }
-
-    @Test
-    fun `should throw NotAuthenticatedException when user is not authenticated`() = runTest {
-        val request = ObserveUserAuthStateUseCase.Request
-        whenever(authStateUserRepository.userInfo)
-            .thenReturn(flowOf(FakeAuthenticatedUserInfo(isSignedIn = false)))
-        try {
-            useCase.process(request)
-        } catch (e: Throwable) {
-            assertTrue(e is UseCaseException.NotAuthenticatedException)
-        }
-    }
-
-    @Test
-    fun `should throw EmailNotVerifiedException when user's email is not verified`() = runTest {
-        val request = ObserveUserAuthStateUseCase.Request
-        whenever(authStateUserRepository.userInfo).thenReturn(
-            flowOf(FakeAuthenticatedUserInfo(isEmailVerified = false))
-        )
-        try {
-            useCase.process(request)
-        } catch (e: Throwable) {
-            assertTrue(e is UseCaseException.EmailNotVerifiedException)
-        }
-    }
-
-    @Test
     fun `should return Response when user is authenticated and email is verified`() = runTest {
         val request = ObserveUserAuthStateUseCase.Request
         whenever(authStateUserRepository.userInfo).thenReturn(

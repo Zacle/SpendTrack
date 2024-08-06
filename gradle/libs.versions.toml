@@ -1,19 +1,20 @@
 [versions]
 appcompat = "1.7.0"
-activityCompose = "1.9.0"
+activityCompose = "1.9.1"
 androidDesugarJdkLibs = "2.0.4"
 # AGP and tools should be updated together
 agp = "8.5.1"
 androidTools = "31.5.1"
 androidxComposeMaterial3Adaptive = "1.0.0-beta04"
-androidxComposeMaterial3AdaptiveNavigationSuite = "1.3.0-beta04"
+androidxComposeMaterial3AdaptiveNavigationSuite = "1.3.0-beta05"
 androidxComposeRuntimeTracing = "1.0.0-beta01"
 androidxCore = "1.13.1"
 androidxCoreSplashscreen = "1.0.1"
+androidxCredentials = "1.5.0-alpha03"
 androidxDataStore = "1.1.1"
 androidxHiltNavigationCompose = "1.2.0"
-androidxLifecycle = "2.8.3"
-androidxNavigation = "2.8.0-beta05"
+androidxLifecycle = "2.8.4"
+androidxNavigation = "2.8.0-beta06"
 androidxTestCore = "1.6.1"
 androidxTestExt = "1.2.1"
 androidxTestRules = "1.6.1"
@@ -27,6 +28,7 @@ espressoCore = "3.6.1"
 firebaseBom = "33.1.2"
 firebaseCrashlyticsPlugin = "3.0.2"
 googleGmsGoogleServices = "4.4.2"
+googleId = "1.1.0"
 googleOssPlugin = "0.10.6"
 hilt = "2.51.1"
 hiltExt = "1.2.0"
@@ -37,7 +39,7 @@ kotlinxCoroutines = "1.8.0"
 kotlinxDatetime = "0.5.0"
 kotlinxSerializationJson = "1.6.3"
 ksp = "2.0.0-1.0.21"
-lifecycleRuntimeKtx = "2.8.3"
+lifecycleRuntimeKtx = "2.8.4"
 mockito = "5.0.0"
 protobuf = "4.26.1"
 protobufPlugin = "0.9.4"
@@ -45,6 +47,7 @@ room = "2.6.1"
 timber = "5.0.1"
 truth = "1.4.2"
 material = "1.12.0"
+androidxJunit = "1.2.1"
 
 [bundles]
 androidx-compose-ui-test = ["androidx-compose-ui-test", "androidx-compose-ui-testManifest"]
@@ -56,7 +59,6 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 androidx-test-ext = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidxTestExt" }
@@ -132,14 +134,19 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 
-# Google OSS
+# Google
+#noinspection CredentialDependency
+credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidxCredentials" }
+credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidxCredentials" }
 google-oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "googleOssPlugin" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleGmsGoogleServices" }
+identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
 
 # Room
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -150,6 +157,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 
 
 [plugins]

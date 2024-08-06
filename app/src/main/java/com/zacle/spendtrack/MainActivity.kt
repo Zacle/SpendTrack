@@ -24,6 +24,7 @@ import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.model.UserData
 import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.composition_local.LocalTimeZone
+import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.ui.STApp
 import com.zacle.spendtrack.ui.rememberSTAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        var uiState: UiState<UserData> by mutableStateOf(UiState.Loading)
+        var uiState: UiState<UserStateModel> by mutableStateOf(UiState.Loading)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -105,8 +106,7 @@ class MainActivity : ComponentActivity() {
                     SpendTrackTheme(darkTheme = darkTheme) {
                         STApp(
                             appState = appState,
-                            shouldHideOnboarding =
-                            (uiState as UiState.Success<UserData>).data.shouldHideOnboarding
+                            userStateModel = (uiState as UiState.Success<UserStateModel>).data
                         )
                     }
                 }
