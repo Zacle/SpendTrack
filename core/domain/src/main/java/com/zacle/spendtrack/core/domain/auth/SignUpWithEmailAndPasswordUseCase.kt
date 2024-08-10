@@ -2,7 +2,11 @@ package com.zacle.spendtrack.core.domain.auth
 
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.repository.AuthenticationRepository
+import com.zacle.spendtrack.core.model.auth.AuthResult
+import com.zacle.spendtrack.core.model.usecase.UseCaseException
+import com.zacle.spendtrack.core.model.usecase.UseCaseException.NotAuthenticatedException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class SignUpWithEmailAndPasswordUseCase(
@@ -10,10 +14,11 @@ class SignUpWithEmailAndPasswordUseCase(
     private val authenticationRepository: AuthenticationRepository
 ): UseCase<SignUpWithEmailAndPasswordUseCase.Request, SignUpWithEmailAndPasswordUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> {
+    override suspend fun process(request: Request): Flow<Response>  = flow {
         val (firstName, lastName, email, password) = request
-        val success = authenticationRepository.signUpWithEmailAndPassword(firstName, lastName, email, password)
-        return flowOf(Response(success))
+        val authResult = authenticationRepository.signUpWithEmailAndPassword(firstName, lastName, email, password)
+        if (authResult.uid == null) throw NotAuthenticatedException(Throwable())
+        emit(Response(authResult))
     }
 
     data class Request(
@@ -23,6 +28,6 @@ class SignUpWithEmailAndPasswordUseCase(
         val password: String
     ): UseCase.Request
 
-    data class Response(val success: Boolean): UseCase.Response
+    data class Response(val authResult: AuthResult): UseCase.Response
 
 }

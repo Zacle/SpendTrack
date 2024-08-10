@@ -53,11 +53,15 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.ui)
 
-    implementation(projects.feature.onboarding)
-    implementation(projects.feature.home)
-    implementation(projects.feature.transaction)
     implementation(projects.feature.budget)
+    implementation(projects.feature.forgotPassword)
+    implementation(projects.feature.home)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.login)
     implementation(projects.feature.profile)
+    implementation(projects.feature.register)
+    implementation(projects.feature.transaction)
+    implementation(projects.feature.verifyAuth)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)

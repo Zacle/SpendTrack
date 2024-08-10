@@ -17,13 +17,22 @@ class FirebaseAuthenticationDataSource @Inject constructor(
             displayName = authResult.user?.displayName,
             providerId = authResult.additionalUserInfo?.providerId,
             photoUrl = authResult.user?.photoUrl,
-            email = authResult.user?.email
+            email = authResult.user?.email,
+            isEmailVerified = authResult.user?.isEmailVerified
         )
     }
 
-    override suspend fun signInWithEmailAndPassword(email: String, password: String): Boolean {
+    override suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult {
         val authResult = auth.signInWithEmailAndPassword(email, password).await()
-        return authResult.user != null
+        return AuthResult(
+            uid = authResult.user?.uid,
+            isNewUser = authResult.additionalUserInfo?.isNewUser,
+            displayName = authResult.user?.displayName,
+            providerId = authResult.additionalUserInfo?.providerId,
+            photoUrl = authResult.user?.photoUrl,
+            email = authResult.user?.email,
+            isEmailVerified = authResult.user?.isEmailVerified
+        )
     }
 
     override suspend fun sendEmailVerification(): Boolean =
@@ -34,7 +43,6 @@ class FirebaseAuthenticationDataSource @Inject constructor(
         } catch (e: Exception) {
             false
         }
-
 
     override suspend fun reloadUser(): Boolean =
         try {
@@ -47,8 +55,12 @@ class FirebaseAuthenticationDataSource @Inject constructor(
     override suspend fun updatePassword(password: String): Boolean =
         try {
             val currentUser = auth.currentUser
-            currentUser?.updatePassword(password)?.await()
-            true
+            if (currentUser == null) {
+                false
+            } else {
+                currentUser.updatePassword(password).await()
+                true
+            }
         } catch (e: Exception) {
             false
         }

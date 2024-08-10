@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">Verification</string>
+    <string name="email_not_verified">The email is not verified yet. Please verify it before!</string>
+
+    <string name="email_verification_text">
+        You\'re almost there! We just sent a verification email to you. Click the link to confirm your
+        address and start using the app!
+    </string>
+    <string name="already_verified">Already verified</string>
+</resources>

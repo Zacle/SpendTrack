@@ -24,13 +24,17 @@ class DefaultAuthenticationRepository @Inject constructor(
     /**
      * Authenticate the user with Google.
      */
-    override suspend fun authenticateWithGoogle(context: Context): Flow<Boolean> = flow {
+    override suspend fun authenticateWithGoogle(context: Context): Flow<AuthResult> = flow {
         googleAuthDataSource.authenticateWithGoogle(context).collect { authResult ->
             if (authResult != null) {
                 val inserted = insertNewUser(authResult)
-                emit(inserted)
+                if (inserted) {
+                    emit(authResult)
+                } else {
+                    emit(AuthResult())
+                }
             } else {
-                emit(false)
+                emit(AuthResult())
             }
         }
     }
@@ -44,21 +48,30 @@ class DefaultAuthenticationRepository @Inject constructor(
         lastName: String,
         email: String,
         password: String
-    ): Boolean {
+    ): AuthResult {
         val authResult = authenticationDataSource.signUpWithEmailAndPassword(email, password)
         val inserted = saveNewUser(authResult, firstName, lastName, email)
         if (inserted) {
             authenticationDataSource.sendEmailVerification()
         }
-        return inserted
+        return authResult
+    }
+
+    override suspend fun updatePassword(password: String): Boolean {
+        return authenticationDataSource.updatePassword(password)
+    }
+
+    override suspend fun sendPasswordResetEmail(email: String): Boolean {
+        return authenticationDataSource.sendPasswordResetEmail(email)
     }
 
     /**
      * Sign in the user with email and password. Then reload the user to get the latest data
      */
-    override suspend fun signInWithEmailAndPassword(email: String, password: String) {
-        authenticationDataSource.signInWithEmailAndPassword(email, password)
+    override suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult {
+        val authResult = authenticationDataSource.signInWithEmailAndPassword(email, password)
         authenticationDataSource.reloadUser()
+        return authResult
     }
 
     override suspend fun signOut() {

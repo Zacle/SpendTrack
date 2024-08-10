@@ -43,7 +43,8 @@ class GoogleAuthService @Inject constructor(
                                 displayName = authResult.user?.displayName,
                                 providerId = authResult.additionalUserInfo?.providerId,
                                 photoUrl = authResult.user?.photoUrl,
-                                email = authResult.user?.email
+                                email = authResult.user?.email,
+                                isEmailVerified = authResult.user?.isEmailVerified
                             )
                         )
                     } else {

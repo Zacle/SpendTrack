@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="try_again">Try again</string>
+    <string name="name_error_blank">Name should not be blank</string>
+    <string name="name_error_invalid">Invalid name</string>
+    <string name="name_error_short">Name should be at least 3 characters long</string>
+    <string name="email_error_blank">Email should not be blank</string>
+    <string name="email_error_invalid">Invalid email</string>
+    <string name="password_error_blank">Password should not be blank</string>
+    <string name="password_error_short">Password should be at least 8 characters</string>
+    <string name="password_error_invalid">Invalid password</string>
 </resources>

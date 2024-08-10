@@ -2,6 +2,7 @@ package com.zacle.spendtrack.core.di
 
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.auth.AuthenticateWithGoogleUseCase
+import com.zacle.spendtrack.core.domain.auth.ForgotPasswordUseCase
 import com.zacle.spendtrack.core.domain.auth.ObserveUserAuthStateUseCase
 import com.zacle.spendtrack.core.domain.auth.SignInWithEmailAndPasswordUseCase
 import com.zacle.spendtrack.core.domain.auth.SignOutUseCase
@@ -45,4 +46,10 @@ object AuthUseCaseModule {
         configuration: UseCase.Configuration,
         authenticationRepository: AuthenticationRepository
     ): SignOutUseCase = SignOutUseCase(configuration, authenticationRepository)
+
+    @Provides
+    fun provideForgotPasswordUseCase(
+        configuration: UseCase.Configuration,
+        authenticationRepository: AuthenticationRepository
+    ): ForgotPasswordUseCase = ForgotPasswordUseCase(configuration, authenticationRepository)
 }
