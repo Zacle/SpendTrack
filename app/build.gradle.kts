@@ -50,6 +50,7 @@ dependencies {
     implementation(projects.core.di)
     implementation(projects.core.domain)
     implementation(projects.core.firebase)
+    implementation(projects.core.google)
     implementation(projects.core.model)
     implementation(projects.core.ui)
 

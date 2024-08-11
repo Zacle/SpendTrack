@@ -1,5 +1,8 @@
 package com.zacle.spendtrack.core.firebase.di
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.zacle.spendtrack.core.common.di.ApplicationScope
 import com.zacle.spendtrack.core.common.di.RemoteUserData
 import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
 import com.zacle.spendtrack.core.data.datasource.AuthenticationDataSource
@@ -7,29 +10,33 @@ import com.zacle.spendtrack.core.data.datasource.UserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthStateUserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthenticationDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseUserDataSource
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
+import kotlinx.coroutines.CoroutineScope
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FirebaseDataSourceModule {
-    @Binds
-    abstract fun bindAuthStateUserDataSource(
-        dataSource: FirebaseAuthStateUserDataSource
-    ): AuthStateUserDataSource
+object FirebaseDataSourceModule {
+    @Provides
+    @Singleton
+    fun provideAuthStateUserDataSource(
+        auth: FirebaseAuth,
+        @ApplicationScope scope: CoroutineScope
+    ): AuthStateUserDataSource = FirebaseAuthStateUserDataSource(auth, scope)
 
-    @Binds
+    @Provides
+    @Singleton
     @RemoteUserData
-    abstract fun bindUserDataSource(
-        dataSource: FirebaseUserDataSource
-    ): UserDataSource
+    fun provideUserDataSource(
+        firestore: FirebaseFirestore
+    ): UserDataSource = FirebaseUserDataSource(firestore)
 
-    @Binds
-    abstract fun bindAuthenticationDataSource(
-        dataSource: FirebaseAuthenticationDataSource
-    ): AuthenticationDataSource
-
+    @Provides
+    @Singleton
+    fun provideAuthenticationDataSource(
+        auth: FirebaseAuth
+    ): AuthenticationDataSource = FirebaseAuthenticationDataSource(auth)
 }

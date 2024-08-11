@@ -21,7 +21,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.common.util.TimeZoneMonitor
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
-import com.zacle.spendtrack.core.model.UserData
 import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.composition_local.LocalTimeZone
 import com.zacle.spendtrack.data.UserStateModel

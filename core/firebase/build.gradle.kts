@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.spendtrack.android.library)
     alias(libs.plugins.spendtrack.android.hilt)
-    alias(libs.plugins.spendtrack.android.firebase)
 }
 
 android {
@@ -12,6 +11,11 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.data)
     implementation(projects.core.model)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
 
     implementation(libs.kotlinx.coroutines.android)
 

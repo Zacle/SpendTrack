@@ -2,9 +2,6 @@ package com.zacle.spendtrack
 
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.GetUserDataAndAuthStateUseCase
-import com.zacle.spendtrack.core.domain.auth.ObserveUserAuthStateUseCase
-import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
-import com.zacle.spendtrack.core.model.UserData
 import com.zacle.spendtrack.core.ui.BaseViewModel
 import com.zacle.spendtrack.core.ui.UiEvent
 import com.zacle.spendtrack.core.ui.UiState
