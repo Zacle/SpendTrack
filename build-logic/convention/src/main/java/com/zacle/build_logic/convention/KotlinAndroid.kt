@@ -39,6 +39,8 @@ internal fun Project.configureKotlinAndroid(
 
     dependencies {
         add("coreLibraryDesugaring", libs.findLibrary("android.desugarJdkLibs").get())
+
+        add("implementation", libs.findLibrary("timber").get())
     }
 }
 

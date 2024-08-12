@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +36,7 @@ import com.zacle.spendtrack.core.designsystem.component.STPasswordTextField
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackButton
+import com.zacle.spendtrack.core.designsystem.component.TOP_APP_BAR_PADDING
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
@@ -81,6 +82,7 @@ fun RegisterRoute(
     RegisterScreen(
         uiState = uiState,
         isOffline = isOffline,
+        snackbarHostState = snackbarHostState,
         onFirstNameChanged = { viewModel.submitAction(RegisterUiAction.OnFirstNameChanged(it)) },
         onLastNameChanged = { viewModel.submitAction(RegisterUiAction.OnLastNameChanged(it)) },
         onEmailChanged = { viewModel.submitAction(RegisterUiAction.OnEmailChanged(it)) },
@@ -93,11 +95,11 @@ fun RegisterRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     uiState: RegisterUiState,
     isOffline: Boolean,
+    snackbarHostState: SnackbarHostState,
     onFirstNameChanged: (String) -> Unit,
     onLastNameChanged: (String) -> Unit,
     onEmailChanged: (String) -> Unit,
@@ -113,16 +115,18 @@ fun RegisterScreen(
             STTopAppBar(
                 titleRes = R.string.register,
                 navigationIcon = {
-                    Button(onClick = navigateUp) {
-                        Icon(
-                            imageVector = SpendTrackIcons.arrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = SpendTrackIcons.arrowBack,
+                        contentDescription = null,
+                        modifier = Modifier.clickable { navigateUp() }
+                    )
                 }
             )
         },
-        modifier = modifier
+        modifier = modifier,
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         val contentPadding = Modifier.padding(innerPadding)
         RegisterContent(
@@ -155,7 +159,8 @@ fun RegisterContent(
 ) {
     val context = LocalContext.current
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .padding(top = TOP_APP_BAR_PADDING.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

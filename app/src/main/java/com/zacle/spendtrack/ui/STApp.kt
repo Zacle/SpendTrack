@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zacle.spendtrack.R
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
-import com.zacle.spendtrack.core.model.auth.AuthenticatedUserInfo
 import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.feature.login.Login
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding

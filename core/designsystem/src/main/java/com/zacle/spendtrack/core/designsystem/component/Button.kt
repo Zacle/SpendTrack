@@ -1,7 +1,6 @@
 package com.zacle.spendtrack.core.designsystem.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,7 +51,7 @@ fun SpendTrackButton(
             text = text,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(vertical = 4.dp)
+            modifier = Modifier.padding(vertical = 8.dp)
         )
     }
 }
@@ -62,40 +62,42 @@ fun GoogleButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    Box(
+    Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { if (enabled) onClick() }
-            .background(
-                color =
-                if (enabled)
-                    MaterialTheme.colorScheme.surface
-                else
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-            )
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(horizontal = 10.dp, vertical = 10.dp),
-        contentAlignment = Alignment.Center
+            .clickable { if (enabled) onClick() },
+        shape = RoundedCornerShape(10.dp),
+        color =
+        if (enabled)
+            MaterialTheme.colorScheme.surface
+        else
+            MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 12.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(id = SpendTrackIcons.google),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                text = stringResource(id = R.string.google_auth),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = SpendTrackIcons.google),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                )
+                Spacer(modifier = Modifier.size(4.dp))
+                Text(
+                    text = stringResource(id = R.string.google_auth),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }

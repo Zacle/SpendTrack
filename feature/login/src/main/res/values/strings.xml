@@ -11,7 +11,5 @@
     <string name="unknown_error">An unknown error occurred</string>
 
     <string name="login_failed">Wrong email or password</string>
-    <string name="invalid_email">Invalid email</string>
-    <string name="password_is_blank">Password should not be blank</string>
 
 </resources>

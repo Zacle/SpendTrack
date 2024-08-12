@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +36,7 @@ import com.zacle.spendtrack.core.designsystem.component.STPasswordTextField
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackButton
+import com.zacle.spendtrack.core.designsystem.component.TOP_APP_BAR_PADDING
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
 import kotlinx.coroutines.flow.collectLatest
@@ -53,20 +55,12 @@ fun LoginRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val loginFailed = stringResource(id = R.string.login_failed)
-    val invalidEmail = stringResource(id = R.string.invalid_email)
-    val passwordIsBlank = stringResource(id = R.string.password_is_blank)
 
     LaunchedEffect(Unit) {
         viewModel.singleEventFlow.collectLatest { event ->
             when (event) {
                 is LoginUiEvent.LoginFailed -> {
                     snackbarHostState.showSnackbar(loginFailed)
-                }
-                is LoginUiEvent.InvalidEmail -> {
-                    snackbarHostState.showSnackbar(invalidEmail)
-                }
-                is LoginUiEvent.PasswordIsBlank -> {
-                    snackbarHostState.showSnackbar(passwordIsBlank)
                 }
                 is LoginUiEvent.NavigateToVerifyEmail -> {
                     navigateToVerifyEmail()
@@ -92,11 +86,11 @@ fun LoginRoute(
         onGoogleSignInClicked = { viewModel.submitAction(LoginUiAction.OnGoogleSignInClicked(it)) },
         onRegisterClicked = { viewModel.submitAction(LoginUiAction.OnRegisterClicked) },
         onForgotPasswordClicked = { viewModel.submitAction(LoginUiAction.OnForgotPasswordClicked) },
+        snackbarHostState = snackbarHostState,
         modifier = modifier
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     uiState: LoginUiState,
@@ -106,15 +100,21 @@ fun LoginScreen(
     onGoogleSignInClicked: (Context) -> Unit,
     onRegisterClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = {
             STTopAppBar(titleRes = R.string.login)
         },
-        modifier = modifier
+        modifier = modifier,
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        val contentPadding = Modifier.padding(innerPadding)
+        val contentPadding = Modifier
+            .padding(innerPadding)
+
         LoginContent(
             uiState = uiState,
             onEmailChanged = onEmailChanged,
@@ -141,7 +141,8 @@ fun LoginContent(
 ) {
     val context = LocalContext.current
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .padding(top = TOP_APP_BAR_PADDING.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -204,13 +205,15 @@ fun LogInForm(
         STOutlinedTextField(
             name = uiState.email,
             placeholder = stringResource(id = R.string.email),
-            onValueChange = { onEmailChanged(it) }
+            onValueChange = { onEmailChanged(it) },
+            errorResId = uiState.emailError?.errorMessageResId
         )
         Spacer(modifier = Modifier.height(12.dp))
         STPasswordTextField(
             password = uiState.password,
             placeholder = stringResource(id = R.string.password),
-            onValueChange = { onPasswordChanged(it) }
+            onValueChange = { onPasswordChanged(it) },
+            errorResId = uiState.passwordError?.errorMessageResId
         )
         Spacer(modifier = Modifier.height(24.dp))
         SpendTrackButton(
