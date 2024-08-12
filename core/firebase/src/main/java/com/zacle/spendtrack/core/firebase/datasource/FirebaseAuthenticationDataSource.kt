@@ -10,7 +10,9 @@ class FirebaseAuthenticationDataSource @Inject constructor(
     private val auth: FirebaseAuth
 ): AuthenticationDataSource {
     override suspend fun signUpWithEmailAndPassword(email: String, password: String): AuthResult {
-        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+        val authResult = auth
+            .createUserWithEmailAndPassword(email, password)
+            .await()
         return AuthResult(
             uid = authResult.user?.uid,
             isNewUser = authResult.additionalUserInfo?.isNewUser,
@@ -34,15 +36,6 @@ class FirebaseAuthenticationDataSource @Inject constructor(
             isEmailVerified = authResult.user?.isEmailVerified
         )
     }
-
-    override suspend fun sendEmailVerification(): Boolean =
-        try {
-            val currentUser = auth.currentUser
-            currentUser?.sendEmailVerification()?.await()
-            true
-        } catch (e: Exception) {
-            false
-        }
 
     override suspend fun reloadUser(): Boolean =
         try {

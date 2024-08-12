@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.zacle.spendtrack.feature.forgot_password.forgotPasswordScreen
 import com.zacle.spendtrack.feature.forgot_password.navigateToForgotPassword
+import com.zacle.spendtrack.feature.home.homeScreen
+import com.zacle.spendtrack.feature.home.navigateToHome
 import com.zacle.spendtrack.feature.login.loginScreen
 import com.zacle.spendtrack.feature.login.navigateToLogin
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
@@ -35,13 +37,13 @@ fun STNavHost(
             navigateToRegister = navController::navigateToRegister,
             navigateToForgotPassword = navController::navigateToForgotPassword,
             navigateToVerifyEmail = navController::navigateToVerifyAuth,
-            navigateToHome = {}
+            navigateToHome = navController::navigateToHome
         )
         registerScreen(
             isOffline = isOffline,
             navigateUp = navController::navigateUp,
             navigateToVerifyEmail = navController::navigateToVerifyAuth,
-            navigateToHome = {},
+            navigateToHome = navController::navigateToHome,
             navigateToLogin = navController::navigateToLogin
         )
         forgotPasswordScreen(
@@ -52,7 +54,8 @@ fun STNavHost(
         verifyAuthScreen(
             isOffline = isOffline,
             navigateUp = navController::navigateUp,
-            navigateToHome = {}
+            navigateToHome = navController::navigateToHome
         )
+        homeScreen()
     }
 }

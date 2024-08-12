@@ -50,10 +50,7 @@ class DefaultAuthenticationRepository @Inject constructor(
         password: String
     ): AuthResult {
         val authResult = authenticationDataSource.signUpWithEmailAndPassword(email, password)
-        val inserted = saveNewUser(authResult, firstName, lastName, email)
-        if (inserted) {
-            authenticationDataSource.sendEmailVerification()
-        }
+        saveNewUser(authResult, firstName, lastName, email)
         return authResult
     }
 

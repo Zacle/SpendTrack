@@ -75,7 +75,7 @@ fun VerifyAuthScreen(
     Scaffold(
         topBar = {
             STTopAppBar(
-                titleRes = R.string.title,
+                titleRes = R.string.verify_auth_title,
                 navigationIcon = {
                     Icon(
                         imageVector = SpendTrackIcons.arrowBack,

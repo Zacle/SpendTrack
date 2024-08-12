@@ -7,12 +7,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zacle.spendtrack.R
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.data.UserStateModel
+import com.zacle.spendtrack.feature.home.Home
 import com.zacle.spendtrack.feature.login.Login
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.verify_auth.VerifyAuth

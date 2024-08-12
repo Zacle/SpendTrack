@@ -30,6 +30,10 @@ class FirebaseAuthStateUserDataSource(
             awaitClose { auth.removeAuthStateListener(authListener) }
         }
         .map { authState ->
+            authState.currentUser?.reload()
+            if (authState.currentUser != null && authState.currentUser?.isEmailVerified == false) {
+                authState.currentUser?.sendEmailVerification()
+            }
             FirebaseUserInfo(authState.currentUser)
         }
         .shareIn(appScope, SharingStarted.WhileSubscribed(), replay = 1)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title">Verification</string>
+    <string name="verify_auth_title">Verification</string>
     <string name="email_not_verified">The email is not verified yet. Please verify it before!</string>
 
     <string name="email_verification_text">
