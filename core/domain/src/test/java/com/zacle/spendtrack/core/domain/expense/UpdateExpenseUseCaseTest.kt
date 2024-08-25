@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class UpdateExpenseUseCaseTest {
@@ -37,9 +37,9 @@ class UpdateExpenseUseCaseTest {
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 50.0), period)
 
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, shoppingBudget.copy(remainingAmount = 150.0))
+        assertEquals(response.budget.remainingAmount, 150.0)
     }
 
     @Test
@@ -53,9 +53,9 @@ class UpdateExpenseUseCaseTest {
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 20.0), period)
 
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, shoppingBudget.copy(remainingAmount = 180.0))
+        assertEquals(response.budget.remainingAmount, 180.0)
     }
 
     @Test
@@ -69,9 +69,9 @@ class UpdateExpenseUseCaseTest {
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 10.0), period)
 
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, shoppingBudget.copy(remainingAmount = 190.0))
+        assertEquals(response.budget.remainingAmount, 190.0)
     }
 
     @Test

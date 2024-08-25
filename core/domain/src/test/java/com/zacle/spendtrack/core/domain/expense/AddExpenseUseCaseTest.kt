@@ -54,6 +54,6 @@ class AddExpenseUseCaseTest {
         val request = AddExpenseUseCase.Request(userId, subscription, period)
         addExpenseUseCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, entertainmentBudget.copy(remainingAmount = 270.0))
+        verify(budgetRepository).updateBudget(entertainmentBudget.copy(remainingAmount = 270.0))
     }
 }

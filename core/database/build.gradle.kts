@@ -21,6 +21,7 @@ dependencies {
     api(projects.core.model)
 
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.coroutines.core)
 
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

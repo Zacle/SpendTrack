@@ -7,6 +7,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
 
 /**
  * Add budget for the current Month. Each budget has a unique category and each category has only one budget.
@@ -23,6 +24,7 @@ class AddBudgetUseCase(
         val budget = request.budget
         var budgetAmount = budget.amount
         var remainingAmount = budgetAmount
+        val insertedBudget: Budget
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
 
@@ -33,15 +35,21 @@ class AddBudgetUseCase(
         if (currentBudget != null) {
             budgetAmount += currentBudget.amount
             remainingAmount  += currentBudget.remainingAmount
-            budgetRepository.updateBudget(request.userId, currentBudget.copy(amount = budgetAmount, remainingAmount = remainingAmount))
+            insertedBudget = currentBudget.copy(
+                amount = budgetAmount,
+                remainingAmount = remainingAmount,
+                updatedAt = Clock.System.now()
+            )
+            budgetRepository.updateBudget(insertedBudget)
         } else {
-            budgetRepository.addBudget(request.userId, budget.copy(remainingAmount = remainingAmount))
+            insertedBudget = budget.copy(userId = request.userId, remainingAmount = remainingAmount)
+            budgetRepository.addBudget(insertedBudget)
         }
 
-        emit(Response)
+        emit(Response(insertedBudget))
     }
 
     data class Request(val userId: String, val budget: Budget, val period: Period): UseCase.Request
 
-    data object Response: UseCase.Response
+    data class Response(val budget: Budget): UseCase.Response
 }

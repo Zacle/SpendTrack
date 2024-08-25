@@ -52,6 +52,6 @@ class DeleteExpenseUseCaseTest {
 
         deleteExpenseUseCase.process(DeleteExpenseUseCase.Request(userId, library, period)).first()
 
-        verify(budgetRepository).updateBudget(userId, educationBudget.copy(remainingAmount = 70.0))
+        verify(budgetRepository).updateBudget(educationBudget.copy(remainingAmount = 70.0))
     }
 }

@@ -2,9 +2,10 @@ package com.zacle.spendtrack.core.model
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import java.util.UUID
 
 data class Income(
-    val incomeId: String = "",
+    val incomeId: String = UUID.randomUUID().toString(),
     val userId: String = "",
     val name: String = "",
     val description: String = "",

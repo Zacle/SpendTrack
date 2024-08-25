@@ -16,7 +16,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 
 class UpdateIncomeUseCaseTest {
@@ -38,9 +37,9 @@ class UpdateIncomeUseCaseTest {
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 600.0), period)
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, educationBudget.copy(amount = 1100.0, remainingAmount = 600.0))
+        assertTrue(response.budget.remainingAmount == 600.0 && response.budget.amount == 1100.0)
     }
 
     @Test
@@ -54,9 +53,9 @@ class UpdateIncomeUseCaseTest {
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 300.0), period)
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, educationBudget.copy(amount = 800.0, remainingAmount = 300.0))
+        assertTrue(response.budget.remainingAmount == 300.0 && response.budget.amount == 800.0)
     }
 
     @Test
@@ -70,9 +69,9 @@ class UpdateIncomeUseCaseTest {
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 500.0), period)
-        useCase.process(request).first()
+        val response = useCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, educationBudget.copy(amount = 1000.0, remainingAmount = 500.0))
+        assertTrue(response.budget.remainingAmount == 500.0 && response.budget.amount == 1000.0)
     }
 
     @Test

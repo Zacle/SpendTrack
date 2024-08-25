@@ -10,6 +10,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
 
 class UpdateExpenseUseCase(
     configuration: Configuration,
@@ -35,13 +36,14 @@ class UpdateExpenseUseCase(
 
 
         val remainingAmount = categoryBudget.remainingAmount + expenseAmountDelta
-        budgetRepository.updateBudget(request.userId, categoryBudget.copy(remainingAmount = remainingAmount))
+        val updatedBudget = categoryBudget.copy(remainingAmount = remainingAmount, updatedAt = Clock.System.now())
+        budgetRepository.updateBudget(updatedBudget)
 
-        expenseRepository.updateExpense(request.userId, request.expense)
-        emit(Response)
+        expenseRepository.updateExpense(request.expense)
+        emit(Response(updatedBudget))
     }
 
     data class Request(val userId: String, val expense: Expense, val period: Period): UseCase.Request
 
-    data object Response: UseCase.Response
+    data class Response(val budget: Budget): UseCase.Response
 }

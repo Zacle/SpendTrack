@@ -30,9 +30,9 @@ class AddIncomeUseCase(
 
         val amount = categoryBudget.amount + income.amount
         val remainingAmount = categoryBudget.remainingAmount + income.amount
-        budgetRepository.updateBudget(request.userId, categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
+        budgetRepository.updateBudget(categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
 
-        incomeRepository.addIncome(request.userId, request.income)
+        incomeRepository.addIncome(request.income.copy(userId = request.userId))
         emit(Response)
     }
 

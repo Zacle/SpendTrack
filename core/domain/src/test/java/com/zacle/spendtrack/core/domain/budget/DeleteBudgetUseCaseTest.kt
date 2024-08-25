@@ -1,6 +1,7 @@
 package com.zacle.spendtrack.core.domain.budget
 
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
+import com.zacle.spendtrack.core.model.Budget
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -14,11 +15,11 @@ class DeleteBudgetUseCaseTest {
     @Test
     fun `should delete a budget`() = runTest {
         val userId = "userId"
-        val budgetId = "budgetId"
+        val budget = Budget()
 
-        useCase.process(DeleteBudgetUseCase.Request(userId, budgetId)).first()
+        useCase.process(DeleteBudgetUseCase.Request(userId, budget)).first()
 
-        verify(budgetRepository).deleteBudget(userId, budgetId)
+        verify(budgetRepository).deleteBudget(budget)
 
     }
 }

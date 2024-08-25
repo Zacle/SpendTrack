@@ -39,7 +39,7 @@ class AddIncomeUseCaseTest {
         val request = AddIncomeUseCase.Request(userId, refund, period)
         addIncomeUseCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, foodBudget.copy(amount = 550.0, remainingAmount = 300.0))
+        verify(budgetRepository).updateBudget(foodBudget.copy(amount = 550.0, remainingAmount = 300.0))
     }
 
     @Test

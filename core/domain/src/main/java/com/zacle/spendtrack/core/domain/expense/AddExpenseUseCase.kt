@@ -30,9 +30,9 @@ class AddExpenseUseCase(
         if (categoryBudget == null) throw CategoryBudgetNotExistsException()
 
         val remainingAmount = categoryBudget.remainingAmount - expense.amount
-        budgetRepository.updateBudget(request.userId, categoryBudget.copy(remainingAmount = remainingAmount))
+        budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
 
-        expenseRepository.addExpense(request.userId, request.expense)
+        expenseRepository.addExpense(request.expense.copy(userId = request.userId))
         emit(Response)
     }
 

@@ -2,9 +2,10 @@ package com.zacle.spendtrack.core.model
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import java.util.UUID
 
 data class Budget(
-    val budgetId: String? = null,
+    val budgetId: String = UUID.randomUUID().toString(),
     val userId: String = "",
     val category: Category = Category(),
     val amount: Double = 0.0,

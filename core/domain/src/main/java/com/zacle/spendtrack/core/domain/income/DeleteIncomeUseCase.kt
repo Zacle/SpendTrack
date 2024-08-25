@@ -18,7 +18,6 @@ class DeleteIncomeUseCase(
 
     override suspend fun process(request: Request): Flow<Response> = flow {
         val income = request.income
-        val incomeId = income.incomeId
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
         val categoryBudget = budgets
@@ -27,9 +26,9 @@ class DeleteIncomeUseCase(
 
         val amount = categoryBudget.amount - income.amount
         val remainingAmount = categoryBudget.remainingAmount - income.amount
-        budgetRepository.updateBudget(request.userId, categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
+        budgetRepository.updateBudget(categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
 
-        incomeRepository.deleteIncome(request.userId, incomeId)
+        incomeRepository.deleteIncome(income)
         emit(Response)
     }
 

@@ -39,7 +39,7 @@ class DeleteIncomeUseCaseTest {
         val request = DeleteIncomeUseCase.Request(userId, internship, period)
         deleteIncomeUseCase.process(request).first()
 
-        verify(budgetRepository).updateBudget(userId, educationBudget.copy(amount = 900.0, remainingAmount = 400.0))
+        verify(budgetRepository).updateBudget(educationBudget.copy(amount = 900.0, remainingAmount = 400.0))
     }
 
     @Test

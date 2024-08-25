@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.test.assertEquals
 
 class AddBudgetUseCaseTest {
     private val budgetRepository = mock<BudgetRepository>()
@@ -27,9 +27,10 @@ class AddBudgetUseCaseTest {
 
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(emptyList()))
 
-        useCase.process(AddBudgetUseCase.Request(userId, budget, period)).collect{}
+        val response = useCase.process(AddBudgetUseCase.Request(userId, budget, period)).first()
 
-        verify(budgetRepository).addBudget(userId, budget.copy(remainingAmount = 100.0))
+        assertEquals(response.budget.amount, 100.0)
+        assertEquals(response.budget.remainingAmount, 100.0)
     }
 
     @Test
@@ -41,9 +42,10 @@ class AddBudgetUseCaseTest {
 
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(budget)))
 
-        useCase.process(AddBudgetUseCase.Request(userId, newBudget, period)).first()
+        val response = useCase.process(AddBudgetUseCase.Request(userId, newBudget, period)).first()
 
-        verify(budgetRepository).updateBudget(userId, budget.copy(amount = 300.0, remainingAmount = 250.0))
+        assertEquals(response.budget.amount, 300.0)
+        assertEquals(response.budget.remainingAmount, 250.0)
 
     }
 
@@ -56,8 +58,9 @@ class AddBudgetUseCaseTest {
 
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(budget)))
 
-        useCase.process(AddBudgetUseCase.Request(userId, newBudget, period)).first()
+        val response = useCase.process(AddBudgetUseCase.Request(userId, newBudget, period)).first()
 
-        verify(budgetRepository).addBudget(userId, newBudget.copy(remainingAmount = 50.0))
+        assertEquals(response.budget.amount, 50.0)
+        assertEquals(response.budget.remainingAmount, 50.0)
     }
 }
