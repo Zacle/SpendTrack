@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.core.firebase.user
+package com.zacle.spendtrack.core.firebase.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId

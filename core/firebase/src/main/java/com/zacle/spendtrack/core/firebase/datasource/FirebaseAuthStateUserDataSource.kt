@@ -3,7 +3,7 @@ package com.zacle.spendtrack.core.firebase.datasource
 import com.google.firebase.auth.FirebaseAuth
 import com.zacle.spendtrack.core.common.di.ApplicationScope
 import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
-import com.zacle.spendtrack.core.firebase.user.FirebaseUserInfo
+import com.zacle.spendtrack.core.firebase.model.FirebaseUserInfo
 import com.zacle.spendtrack.core.model.auth.AuthenticatedUserInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose

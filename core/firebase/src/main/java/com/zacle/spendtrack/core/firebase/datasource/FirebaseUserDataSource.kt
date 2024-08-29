@@ -3,9 +3,10 @@ package com.zacle.spendtrack.core.firebase.datasource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
-import com.zacle.spendtrack.core.firebase.user.FirebaseUser
-import com.zacle.spendtrack.core.firebase.user.asExternalModel
-import com.zacle.spendtrack.core.firebase.user.asFirebaseModel
+import com.zacle.spendtrack.core.firebase.model.FirebaseUser
+import com.zacle.spendtrack.core.firebase.model.asExternalModel
+import com.zacle.spendtrack.core.firebase.model.asFirebaseModel
+import com.zacle.spendtrack.core.firebase.util.Collections.USERS_COLLECTION
 import com.zacle.spendtrack.core.model.Exceptions.FirebaseUserNotCreatedException
 import com.zacle.spendtrack.core.model.Exceptions.FirebaseUserNotFoundException
 import com.zacle.spendtrack.core.model.User
@@ -70,8 +71,4 @@ class FirebaseUserDataSource @Inject constructor(
 
     private val userCollection by lazy { firestore.collection(USERS_COLLECTION) }
     private fun getUserDocument(userId: String) = userCollection.document(userId)
-
-    companion object {
-        private const val USERS_COLLECTION = "users"
-    }
 }

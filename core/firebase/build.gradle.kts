@@ -12,6 +12,8 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.model)
 
+    implementation(libs.timber)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)

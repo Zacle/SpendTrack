@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
+/**
+ * [BudgetDataSource] implementation based on a Room
+ */
 class LocalBudgetDataSource @Inject constructor(
     private val budgetDao: BudgetDao
 ): BudgetDataSource {

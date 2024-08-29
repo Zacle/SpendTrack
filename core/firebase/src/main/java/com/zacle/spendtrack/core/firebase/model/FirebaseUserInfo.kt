@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.core.firebase.user
+package com.zacle.spendtrack.core.firebase.model
 
 import android.net.Uri
 import com.google.firebase.auth.FirebaseUser

@@ -3,12 +3,15 @@ package com.zacle.spendtrack.core.firebase.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.zacle.spendtrack.core.common.di.ApplicationScope
+import com.zacle.spendtrack.core.common.di.RemoteBudgetData
 import com.zacle.spendtrack.core.common.di.RemoteUserData
 import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
 import com.zacle.spendtrack.core.data.datasource.AuthenticationDataSource
+import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthStateUserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthenticationDataSource
+import com.zacle.spendtrack.core.firebase.datasource.FirebaseBudgetDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseUserDataSource
 import dagger.Module
 import dagger.Provides
@@ -39,4 +42,11 @@ object FirebaseDataSourceModule {
     fun provideAuthenticationDataSource(
         auth: FirebaseAuth
     ): AuthenticationDataSource = FirebaseAuthenticationDataSource(auth)
+
+    @Provides
+    @Singleton
+    @RemoteBudgetData
+    fun provideBudgetDataSource(
+        firestore: FirebaseFirestore
+    ): BudgetDataSource = FirebaseBudgetDataSource(firestore)
 }
