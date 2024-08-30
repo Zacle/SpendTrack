@@ -1,12 +1,20 @@
 package com.zacle.spendtrack.core.database.di
 
 import com.zacle.spendtrack.core.common.di.LocalBudgetData
+import com.zacle.spendtrack.core.common.di.LocalExpenseData
+import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.LocalUserData
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
+import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
 import com.zacle.spendtrack.core.database.dao.BudgetDao
+import com.zacle.spendtrack.core.database.dao.ExpenseDao
+import com.zacle.spendtrack.core.database.dao.IncomeDao
 import com.zacle.spendtrack.core.database.dao.UserDao
 import com.zacle.spendtrack.core.database.datasource.LocalBudgetDataSource
+import com.zacle.spendtrack.core.database.datasource.LocalExpenseDataSource
+import com.zacle.spendtrack.core.database.datasource.LocalIncomeDataSource
 import com.zacle.spendtrack.core.database.datasource.LocalUserDataSource
 import dagger.Module
 import dagger.Provides
@@ -28,4 +36,15 @@ object LocalDataSourceModule {
     fun provideLocalBudgetDataSource(budgetDao: BudgetDao): BudgetDataSource =
         LocalBudgetDataSource(budgetDao)
 
+    @Provides
+    @Singleton
+    @LocalExpenseData
+    fun provideLocalExpenseDataSource(expenseDao: ExpenseDao): ExpenseDataSource =
+        LocalExpenseDataSource(expenseDao)
+
+    @Provides
+    @Singleton
+    @LocalIncomeData
+    fun provideLocalIncomeDataSource(incomeDao: IncomeDao): IncomeDataSource =
+        LocalIncomeDataSource(incomeDao)
 }

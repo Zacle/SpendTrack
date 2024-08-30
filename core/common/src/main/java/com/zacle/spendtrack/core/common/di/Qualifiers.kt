@@ -1,19 +1,36 @@
 package com.zacle.spendtrack.core.common.di
 
 import javax.inject.Qualifier
+import kotlin.annotation.AnnotationRetention.RUNTIME
 
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(RUNTIME)
 @Qualifier
 annotation class RemoteUserData
 
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(RUNTIME)
 @Qualifier
 annotation class LocalUserData
 
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(RUNTIME)
 @Qualifier
 annotation class RemoteBudgetData
 
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(RUNTIME)
 @Qualifier
 annotation class LocalBudgetData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class RemoteExpenseData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class LocalExpenseData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class RemoteIncomeData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class LocalIncomeData

@@ -4,14 +4,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.zacle.spendtrack.core.common.di.ApplicationScope
 import com.zacle.spendtrack.core.common.di.RemoteBudgetData
+import com.zacle.spendtrack.core.common.di.RemoteExpenseData
+import com.zacle.spendtrack.core.common.di.RemoteIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteUserData
 import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
 import com.zacle.spendtrack.core.data.datasource.AuthenticationDataSource
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
+import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthStateUserDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseAuthenticationDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseBudgetDataSource
+import com.zacle.spendtrack.core.firebase.datasource.FirebaseExpenseDataSource
+import com.zacle.spendtrack.core.firebase.datasource.FirebaseIncomeDataSource
 import com.zacle.spendtrack.core.firebase.datasource.FirebaseUserDataSource
 import dagger.Module
 import dagger.Provides
@@ -49,4 +55,18 @@ object FirebaseDataSourceModule {
     fun provideBudgetDataSource(
         firestore: FirebaseFirestore
     ): BudgetDataSource = FirebaseBudgetDataSource(firestore)
+
+    @Provides
+    @Singleton
+    @RemoteExpenseData
+    fun provideExpenseDataSource(
+        firestore: FirebaseFirestore
+    ): ExpenseDataSource = FirebaseExpenseDataSource(firestore)
+
+    @Provides
+    @Singleton
+    @RemoteIncomeData
+    fun provideIncomeDataSource(
+        firestore: FirebaseFirestore
+    ): IncomeDataSource = FirebaseIncomeDataSource(firestore)
 }

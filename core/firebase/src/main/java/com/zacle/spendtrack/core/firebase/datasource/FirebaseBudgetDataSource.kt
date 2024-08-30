@@ -21,7 +21,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-private const val TIMEOUT_DURATION = 30L
+const val TIMEOUT_DURATION = 30L
 
 /**
  * [BudgetDataSource] implementation for Firebase
@@ -103,7 +103,7 @@ class FirebaseBudgetDataSource @Inject constructor(
     }
 
     override suspend fun deleteBudget(budget: Budget) {
-        /** make sure the budget exists before deleting or throw the budget not found exception */
+        /** Make sure the budget exists before deleting or throw the budget not found exception */
         budgetCollection(budget.userId)
             .document(budget.budgetId)
             .get()
