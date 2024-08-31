@@ -5,7 +5,9 @@ import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.GetUserDataAndAuthStateUseCase
 import com.zacle.spendtrack.core.domain.auth.ObserveUserAuthStateUseCase
+import com.zacle.spendtrack.core.domain.category.GetCategoriesUseCase
 import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
+import com.zacle.spendtrack.core.domain.repository.CategoryRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,4 +29,10 @@ object UseCaseModule {
         observeUserAuthStateUseCase: ObserveUserAuthStateUseCase
     ): GetUserDataAndAuthStateUseCase =
         GetUserDataAndAuthStateUseCase(configuration, getUserDataUseCase, observeUserAuthStateUseCase)
+
+    @Provides
+    fun provideGetCategoriesUseCase(
+        configuration: UseCase.Configuration,
+        categoryRepository: CategoryRepository
+    ): GetCategoriesUseCase = GetCategoriesUseCase(configuration, categoryRepository)
 }
