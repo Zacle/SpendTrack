@@ -4,9 +4,14 @@ import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.GetUserDataAndAuthStateUseCase
+import com.zacle.spendtrack.core.domain.OverviewUseCase
+import com.zacle.spendtrack.core.domain.TransactionsUseCase
 import com.zacle.spendtrack.core.domain.auth.ObserveUserAuthStateUseCase
+import com.zacle.spendtrack.core.domain.budget.GetBudgetsUseCase
 import com.zacle.spendtrack.core.domain.category.GetCategoriesUseCase
 import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
+import com.zacle.spendtrack.core.domain.expense.GetExpensesUseCase
+import com.zacle.spendtrack.core.domain.income.GetIncomesUseCase
 import com.zacle.spendtrack.core.domain.repository.CategoryRepository
 import dagger.Module
 import dagger.Provides
@@ -35,4 +40,19 @@ object UseCaseModule {
         configuration: UseCase.Configuration,
         categoryRepository: CategoryRepository
     ): GetCategoriesUseCase = GetCategoriesUseCase(configuration, categoryRepository)
+
+    @Provides
+    fun provideOverviewUseCase(
+        configuration: UseCase.Configuration,
+        getBudgetsUseCase: GetBudgetsUseCase,
+        getExpensesUseCase: GetExpensesUseCase,
+        getIncomesUseCase: GetIncomesUseCase
+    ): OverviewUseCase = OverviewUseCase(configuration, getBudgetsUseCase, getExpensesUseCase, getIncomesUseCase)
+
+    @Provides
+    fun provideTransactionsUseCase(
+        configuration: UseCase.Configuration,
+        getExpensesUseCase: GetExpensesUseCase,
+        getIncomesUseCase: GetIncomesUseCase
+    ): TransactionsUseCase = TransactionsUseCase(configuration, getExpensesUseCase, getIncomesUseCase)
 }
