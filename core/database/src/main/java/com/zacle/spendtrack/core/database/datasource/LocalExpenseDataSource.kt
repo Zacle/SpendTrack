@@ -1,6 +1,6 @@
 package com.zacle.spendtrack.core.database.datasource
 
-import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
 import com.zacle.spendtrack.core.database.dao.ExpenseDao
 import com.zacle.spendtrack.core.database.model.asEntity
 import com.zacle.spendtrack.core.database.model.asExternalModel
@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 /**
- * [ExpenseDataSource] implementation based on a Room
+ * [SyncableExpenseDataSource] implementation based on a Room
  */
 class LocalExpenseDataSource @Inject constructor(
     private val expenseDao: ExpenseDao
-): ExpenseDataSource {
+): SyncableExpenseDataSource {
     override suspend fun getExpense(userId: String, expenseId: String): Flow<Expense?> =
         expenseDao.getExpense(userId, expenseId).mapLatest { it?.asExternalModel() }
 
@@ -46,7 +46,10 @@ class LocalExpenseDataSource @Inject constructor(
         expenseDao.updateExpense(expense.asEntity())
     }
 
-    override suspend fun deleteExpense(expense: Expense) {
-        expenseDao.deleteExpense(expense.asEntity())
+    override suspend fun deleteExpense(userId: String, expenseId: String) {
+        expenseDao.deleteExpense(userId, expenseId)
     }
+
+    override suspend fun getNonSyncedExpenses(userId: String): List<Expense> =
+        expenseDao.getNonSyncedExpenses(userId).map { it.asExternalModel() }
 }

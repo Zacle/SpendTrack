@@ -26,7 +26,7 @@ class GetBudgetDetailsUseCase(
 
     override suspend fun process(request: Request): Flow<Response> =
         combine(
-            budgetRepository.getBudget(request.userId, request.budgetId, request.budgetPeriod),
+            budgetRepository.getBudget(request.userId, request.budgetId),
             expenseRepository.getExpensesByCategory(request.userId, request.categoryId, request.budgetPeriod),
             incomeRepository.getIncomesByCategory(request.userId, request.categoryId, request.budgetPeriod)
         ) { budget, expenses, incomes ->

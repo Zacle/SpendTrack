@@ -10,5 +10,9 @@ interface ExpenseDataSource {
     suspend fun getExpensesByCategory(userId: String, categoryId: String, period: Period): Flow<List<Expense>>
     suspend fun addExpense(expense: Expense)
     suspend fun updateExpense(expense: Expense)
-    suspend fun deleteExpense(expense: Expense)
+    suspend fun deleteExpense(userId: String, expenseId: String)
+}
+
+interface SyncableExpenseDataSource : ExpenseDataSource {
+    suspend fun getNonSyncedExpenses(userId: String): List<Expense>
 }

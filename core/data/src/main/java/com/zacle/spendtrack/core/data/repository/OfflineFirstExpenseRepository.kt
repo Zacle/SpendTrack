@@ -5,16 +5,22 @@ import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalExpenseData
 import com.zacle.spendtrack.core.common.di.RemoteExpenseData
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
+import com.zacle.spendtrack.core.data.datasource.DeletedExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
+import com.zacle.spendtrack.core.model.DeletedExpense
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
+import com.zacle.spendtrack.core.model.util.Synchronizer
+import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -27,10 +33,11 @@ import javax.inject.Inject
  * same in the network. If the user is offline, we schedule a background work using [WorkManager]
  */
 class OfflineFirstExpenseRepository @Inject constructor(
-    @LocalExpenseData private val localExpenseDataSource: ExpenseDataSource,
+    @LocalExpenseData private val localExpenseDataSource: SyncableExpenseDataSource,
     @RemoteExpenseData private val remoteExpenseDataSource: ExpenseDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val deletedExpenseDataSource: DeletedExpenseDataSource
 ): ExpenseRepository {
     override suspend fun getExpenses(userId: String, period: Period): Flow<List<Expense>> =
         localExpenseDataSource.getExpenses(userId, period).flatMapLatest { expenses ->
@@ -79,32 +86,76 @@ class OfflineFirstExpenseRepository @Inject constructor(
         }
 
     override suspend fun addExpense(expense: Expense) {
-        localExpenseDataSource.addExpense(expense)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
             remoteExpenseDataSource.addExpense(expense)
+            localExpenseDataSource.addExpense(expense.copy(synced = true))
         } else {
             // TODO: Handle offline case
+            localExpenseDataSource.addExpense(expense)
         }
     }
 
     override suspend fun updateExpense(expense: Expense) {
-        localExpenseDataSource.updateExpense(expense)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
             remoteExpenseDataSource.updateExpense(expense)
+            localExpenseDataSource.updateExpense(expense.copy(synced = true))
         } else {
             // TODO: Handle offline case
+            localExpenseDataSource.updateExpense(expense.copy(synced = false))
         }
     }
 
     override suspend fun deleteExpense(expense: Expense) {
-        localExpenseDataSource.deleteExpense(expense)
+        localExpenseDataSource.deleteExpense(expense.userId, expense.expenseId)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteExpenseDataSource.deleteExpense(expense)
+            remoteExpenseDataSource.deleteExpense(expense.userId, expense.expenseId)
         } else {
             // TODO: Handle offline case
+            deletedExpenseDataSource.insert(DeletedExpense(expense.expenseId, expense.userId))
         }
     }
+
+    override suspend fun syncWith(userId: String, synchronizer: Synchronizer): Boolean =
+        synchronizer.changeLastSyncTimes(
+            lastSyncUpdater = { copy(expenseLastSync = it) },
+            modelAdder = {
+                val addedExpensesNotSynced = localExpenseDataSource.getNonSyncedExpenses(userId)
+
+                addedExpensesNotSynced.forEach { expense ->
+                    try {
+                        remoteExpenseDataSource.addExpense(expense)
+                        localExpenseDataSource.updateExpense(expense.copy(synced = true))
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            },
+            modelUpdater = {
+                val updatedExpensesNotSynced = localExpenseDataSource.getNonSyncedExpenses(userId)
+
+                updatedExpensesNotSynced.forEach { expense ->
+                    try {
+                        remoteExpenseDataSource.updateExpense(expense)
+                        localExpenseDataSource.updateExpense(expense.copy(synced = true))
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            },
+            modelDeleter = {
+                val deletedExpenseIds = deletedExpenseDataSource.getDeletedExpenses(userId).map { it.expenseId }
+
+                deletedExpenseIds.forEach { expenseId ->
+                    try {
+                        remoteExpenseDataSource.deleteExpense(userId, expenseId)
+                        deletedExpenseDataSource.delete(userId, expenseId)
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            }
+        )
 }

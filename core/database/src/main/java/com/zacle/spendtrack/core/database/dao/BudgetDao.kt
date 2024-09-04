@@ -1,7 +1,6 @@
 package com.zacle.spendtrack.core.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -21,8 +20,12 @@ interface BudgetDao {
     @Query(
         "SELECT * " +
         "FROM budgets " +
-        "WHERE user_id = :userId AND id = :budgetId AND budget_period BETWEEN :start AND :end")
-    fun getBudget(userId: String, budgetId: String, start: Long, end: Long): Flow<PopulatedBudget?>
+        "WHERE user_id = :userId AND id = :budgetId")
+    fun getBudget(userId: String, budgetId: String): Flow<PopulatedBudget?>
+
+    @Transaction
+    @Query("SELECT * FROM budgets WHERE user_id = :userId AND synced = 0")
+    suspend fun getNonSyncedBudgets(userId: String): List<PopulatedBudget>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertBudget(budget: BudgetEntity)
@@ -30,6 +33,6 @@ interface BudgetDao {
     @Update
     suspend fun updateBudget(budget: BudgetEntity)
 
-    @Delete
-    suspend fun deleteBudget(budget: BudgetEntity)
+    @Query("DELETE FROM budgets WHERE user_id = :userId AND id = :budgetId")
+    suspend fun deleteBudget(userId: String, budgetId: String)
 }

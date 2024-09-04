@@ -1,6 +1,6 @@
 package com.zacle.spendtrack.core.database.datasource
 
-import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
 import com.zacle.spendtrack.core.database.dao.BudgetDao
 import com.zacle.spendtrack.core.database.model.asEntity
 import com.zacle.spendtrack.core.database.model.asExternalModel
@@ -11,22 +11,19 @@ import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 /**
- * [BudgetDataSource] implementation based on a Room
+ * [SyncableBudgetDataSource] implementation based on a Room
  */
 class LocalBudgetDataSource @Inject constructor(
     private val budgetDao: BudgetDao
-): BudgetDataSource {
+): SyncableBudgetDataSource {
     override suspend fun getBudget(
         userId: String,
-        budgetId: String,
-        budgetPeriod: Period
+        budgetId: String
     ): Flow<Budget?> =
         budgetDao
             .getBudget(
                 userId = userId,
-                budgetId = budgetId,
-                start = budgetPeriod.start.toEpochMilliseconds(),
-                end = budgetPeriod.end.toEpochMilliseconds()
+                budgetId = budgetId
             )
             .mapLatest { it?.asExternalModel() }
 
@@ -49,7 +46,10 @@ class LocalBudgetDataSource @Inject constructor(
         budgetDao.updateBudget(budget.asEntity())
     }
 
-    override suspend fun deleteBudget(budget: Budget) {
-        budgetDao.deleteBudget(budget.asEntity())
+    override suspend fun deleteBudget(userId: String, budgetId: String) {
+        budgetDao.deleteBudget(userId, budgetId)
     }
+
+    override suspend fun getNonSyncedBudgets(userId: String): List<Budget> =
+        budgetDao.getNonSyncedBudgets(userId).map { it.asExternalModel() }
 }

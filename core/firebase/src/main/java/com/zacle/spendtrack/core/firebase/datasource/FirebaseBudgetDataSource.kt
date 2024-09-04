@@ -31,20 +31,14 @@ class FirebaseBudgetDataSource @Inject constructor(
 ): BudgetDataSource {
     override suspend fun getBudget(
         userId: String,
-        budgetId: String,
-        budgetPeriod: Period
+        budgetId: String
     ): Flow<Budget?>  = flow {
         if (userId.isEmpty() || budgetId.isEmpty()) {
             emit(null)
         }
 
-        val start = Timestamp(budgetPeriod.start.epochSeconds, budgetPeriod.start.nanosecondsOfSecond)
-        val end = Timestamp(budgetPeriod.end.epochSeconds, budgetPeriod.end.nanosecondsOfSecond)
-
         val task = budgetCollection(userId)
             .whereEqualTo("budgetId", budgetId)
-            .whereGreaterThanOrEqualTo("budgetPeriod", start)
-            .whereLessThanOrEqualTo("budgetPeriod", end)
             .get()
 
         val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
@@ -102,15 +96,15 @@ class FirebaseBudgetDataSource @Inject constructor(
             .await()
     }
 
-    override suspend fun deleteBudget(budget: Budget) {
+    override suspend fun deleteBudget(userId: String, budgetId: String) {
         /** Make sure the budget exists before deleting or throw the budget not found exception */
-        budgetCollection(budget.userId)
-            .document(budget.budgetId)
+        budgetCollection(userId)
+            .document(budgetId)
             .get()
             .await()
             .toObject(FirebaseBudget::class.java) ?: throw Exceptions.BudgetNotFoundException()
 
-        budgetCollection(budget.userId).document(budget.budgetId).delete().await()
+        budgetCollection(userId).document(budgetId).delete().await()
     }
 
     private fun budgetCollection(userId: String) =

@@ -5,7 +5,10 @@ import com.zacle.spendtrack.core.datastore_proto.UserPreferences
 import com.zacle.spendtrack.core.datastore_proto.copy
 import com.zacle.spendtrack.core.model.ThemeAppearance
 import com.zacle.spendtrack.core.model.UserData
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 data class UserPreferencesDataSource @Inject constructor(
@@ -43,6 +46,46 @@ data class UserPreferencesDataSource @Inject constructor(
             it.copy {
                 this.shouldHideOnboarding = shouldHideOnboarding
             }
+        }
+    }
+
+    suspend fun getChangeLastSyncTimes() = userPreferences.data
+        .map {
+            ChangeLastSyncTimes(
+                userLastSync = it.userLastSync,
+                expenseLastSync = it.expenseLastSync,
+                incomeLastSync = it.incomeLastSync,
+                billsLastSync = it.billsLastSync,
+                budgetLastSync = it.budgetLastSync
+            )
+        }
+        .firstOrNull() ?: ChangeLastSyncTimes()
+
+    /**
+     * Update the [ChangeLastSyncTimes] using the [update]
+     */
+    suspend fun updateChangeLastSyncTimes(update: ChangeLastSyncTimes.() -> ChangeLastSyncTimes) {
+        try {
+            userPreferences.updateData { currentPreferences ->
+                val updatedChangeLastSyncTimes = update(
+                    ChangeLastSyncTimes(
+                        userLastSync = currentPreferences.userLastSync,
+                        expenseLastSync = currentPreferences.expenseLastSync,
+                        incomeLastSync = currentPreferences.incomeLastSync,
+                        billsLastSync = currentPreferences.billsLastSync,
+                        budgetLastSync = currentPreferences.budgetLastSync
+                    )
+                )
+                currentPreferences.copy {
+                    userLastSync = updatedChangeLastSyncTimes.userLastSync
+                    expenseLastSync = updatedChangeLastSyncTimes.expenseLastSync
+                    incomeLastSync = updatedChangeLastSyncTimes.incomeLastSync
+                    billsLastSync = updatedChangeLastSyncTimes.billsLastSync
+                    budgetLastSync = updatedChangeLastSyncTimes.budgetLastSync
+                }
+            }
+        } catch (ioException: IOException) {
+            Timber.e("Failed to update the last sync times")
         }
     }
 }

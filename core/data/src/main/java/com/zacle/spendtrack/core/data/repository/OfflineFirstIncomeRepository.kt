@@ -5,16 +5,22 @@ import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteIncomeData
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
+import com.zacle.spendtrack.core.data.datasource.DeletedIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
 import com.zacle.spendtrack.core.domain.repository.IncomeRepository
+import com.zacle.spendtrack.core.model.DeletedIncome
 import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
+import com.zacle.spendtrack.core.model.util.Synchronizer
+import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -27,10 +33,11 @@ import javax.inject.Inject
  * same in the network. If the user is offline, we schedule a background work using [WorkManager]
  */
 class OfflineFirstIncomeRepository @Inject constructor(
-    @LocalIncomeData private val localIncomeDataSource: IncomeDataSource,
+    @LocalIncomeData private val localIncomeDataSource: SyncableIncomeDataSource,
     @RemoteIncomeData private val remoteIncomeDataSource: IncomeDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val deletedIncomeDataSource: DeletedIncomeDataSource
 ): IncomeRepository {
     override suspend fun getIncomes(userId: String, period: Period): Flow<List<Income>> =
         localIncomeDataSource.getIncomes(userId, period).flatMapLatest { incomes ->
@@ -79,32 +86,76 @@ class OfflineFirstIncomeRepository @Inject constructor(
         }
 
     override suspend fun addIncome(income: Income) {
-        localIncomeDataSource.addIncome(income)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
             remoteIncomeDataSource.addIncome(income)
+            localIncomeDataSource.addIncome(income.copy(synced = true))
         } else {
             // TODO: Handle offline case
+            localIncomeDataSource.addIncome(income)
         }
     }
 
     override suspend fun updateIncome(income: Income) {
-        localIncomeDataSource.updateIncome(income)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
             remoteIncomeDataSource.updateIncome(income)
+            localIncomeDataSource.updateIncome(income.copy(synced = true))
         } else {
             // TODO: Handle offline case
+            localIncomeDataSource.updateIncome(income.copy(synced = false))
         }
     }
 
     override suspend fun deleteIncome(income: Income) {
-        localIncomeDataSource.deleteIncome(income)
+        localIncomeDataSource.deleteIncome(income.userId, income.incomeId)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteIncomeDataSource.deleteIncome(income)
+            remoteIncomeDataSource.deleteIncome(income.userId, income.incomeId)
         } else {
             // TODO: Handle offline case
+            deletedIncomeDataSource.insert(DeletedIncome(income.incomeId, income.userId))
         }
     }
+
+    override suspend fun syncWith(userId: String, synchronizer: Synchronizer): Boolean =
+        synchronizer.changeLastSyncTimes(
+            lastSyncUpdater = { copy(incomeLastSync = it) },
+            modelAdder = {
+                val addedIncomesNotSynced = localIncomeDataSource.getNonSyncedIncomes(userId)
+
+                addedIncomesNotSynced.forEach { income ->
+                    try {
+                        remoteIncomeDataSource.addIncome(income)
+                        localIncomeDataSource.updateIncome(income.copy(synced = true))
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            },
+            modelUpdater = {
+                val updatedIncomesNotSynced = localIncomeDataSource.getNonSyncedIncomes(userId)
+
+                updatedIncomesNotSynced.forEach { income ->
+                    try {
+                        remoteIncomeDataSource.updateIncome(income)
+                        localIncomeDataSource.updateIncome(income.copy(synced = true))
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            },
+            modelDeleter = {
+                val deletedIncomeIds = deletedIncomeDataSource.getDeletedIncomes(userId).map { it.incomeId }
+
+                deletedIncomeIds.forEach { incomeId ->
+                    try {
+                        remoteIncomeDataSource.deleteIncome(userId, incomeId)
+                        deletedIncomeDataSource.delete(userId, incomeId)
+                    } catch (e: Exception) {
+                        Timber.e(e)
+                    }
+                }
+            }
+        )
 }

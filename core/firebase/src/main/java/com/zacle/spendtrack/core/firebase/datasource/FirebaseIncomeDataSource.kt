@@ -119,15 +119,15 @@ class FirebaseIncomeDataSource @Inject constructor(
             .await()
     }
 
-    override suspend fun deleteIncome(income: Income) {
+    override suspend fun deleteIncome(userId: String, incomeId: String) {
         /** Make sure the income exists before deleting or throw the income not found exception **/
-        incomeCollection(income.userId)
-            .document(income.incomeId)
+        incomeCollection(userId)
+            .document(incomeId)
             .get()
             .await()
             .toObject(FirebaseIncome::class.java) ?: throw Exceptions.IncomeNotFoundException()
 
-        incomeCollection(income.userId).document(income.incomeId).delete().await()
+        incomeCollection(userId).document(incomeId).delete().await()
     }
 
     private fun incomeCollection(userId: String) =

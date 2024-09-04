@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.model)
+
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.datetime)
     testImplementation(libs.kotlinx.coroutines.test)

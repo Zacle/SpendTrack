@@ -22,9 +22,9 @@ class GetBudgetUseCaseTest {
     @Test
     fun `should get the budget with the given id`() = runTest {
         val period = Period()
-        val request = GetBudgetUseCase.Request(userId, "budgetId", period)
+        val request = GetBudgetUseCase.Request(userId, "budgetId")
 
-        whenever(budgetRepository.getBudget(userId, "budgetId", period)).thenReturn(flowOf(Budget()))
+        whenever(budgetRepository.getBudget(userId, "budgetId")).thenReturn(flowOf(Budget()))
 
         val budget = useCase.process(request).first()
 
@@ -33,10 +33,9 @@ class GetBudgetUseCaseTest {
 
     @Test
     fun `should throw an exception if the budget is not found`() = runTest {
-        val period = Period()
-        val request = GetBudgetUseCase.Request(userId, "budgetId", period)
+        val request = GetBudgetUseCase.Request(userId, "budgetId")
 
-        whenever(budgetRepository.getBudget(userId, "budgetId", period)).thenReturn(flowOf(null))
+        whenever(budgetRepository.getBudget(userId, "budgetId")).thenReturn(flowOf(null))
 
         try {
             useCase.process(request).first()

@@ -38,6 +38,7 @@ dependencies {
     api(libs.androidx.dataStore.core)
     api(libs.protobuf.kotlin.lite)
     implementation(libs.androidx.test.ext)
+    implementation(libs.timber)
 
     testImplementation(libs.kotlinx.coroutines.test)
 

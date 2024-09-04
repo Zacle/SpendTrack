@@ -15,9 +15,15 @@ import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
 import com.zacle.spendtrack.core.data.datasource.AuthenticationDataSource
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.CategoryDataSource
+import com.zacle.spendtrack.core.data.datasource.DeletedBudgetDataSource
+import com.zacle.spendtrack.core.data.datasource.DeletedExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.DeletedIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.GoogleAuthDataSource
 import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
 import com.zacle.spendtrack.core.data.repository.DefaultAuthStateUserRepository
 import com.zacle.spendtrack.core.data.repository.DefaultAuthenticationRepository
@@ -80,45 +86,51 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideBudgetRepository(
-        @LocalBudgetData localBudgetDataSource: BudgetDataSource,
+        @LocalBudgetData localBudgetDataSource: SyncableBudgetDataSource,
         @RemoteBudgetData remoteBudgetDataSource: BudgetDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        networkMonitor: NetworkMonitor
+        networkMonitor: NetworkMonitor,
+        deletedBudgetDataSource: DeletedBudgetDataSource
     ): BudgetRepository =
         OfflineFirstBudgetRepository(
             localBudgetDataSource = localBudgetDataSource,
             remoteBudgetDataSource = remoteBudgetDataSource,
             ioDispatcher = ioDispatcher,
-            networkMonitor = networkMonitor
+            networkMonitor = networkMonitor,
+            deletedBudgetDataSource = deletedBudgetDataSource
         )
 
     @Provides
     @Singleton
     fun provideExpenseRepository(
-        @LocalExpenseData localExpenseDataSource: ExpenseDataSource,
+        @LocalExpenseData localExpenseDataSource: SyncableExpenseDataSource,
         @RemoteExpenseData remoteExpenseDataSource: ExpenseDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        networkMonitor: NetworkMonitor
+        networkMonitor: NetworkMonitor,
+        deletedExpenseDataSource: DeletedExpenseDataSource
     ): ExpenseRepository =
         OfflineFirstExpenseRepository(
             localExpenseDataSource = localExpenseDataSource,
             remoteExpenseDataSource = remoteExpenseDataSource,
             ioDispatcher = ioDispatcher,
-            networkMonitor = networkMonitor
+            networkMonitor = networkMonitor,
+            deletedExpenseDataSource = deletedExpenseDataSource
         )
 
     @Provides
     @Singleton
     fun provideIncomeRepository(
-        @LocalIncomeData localIncomeDataSource: IncomeDataSource,
+        @LocalIncomeData localIncomeDataSource: SyncableIncomeDataSource,
         @RemoteIncomeData remoteIncomeDataSource: IncomeDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        networkMonitor: NetworkMonitor
+        networkMonitor: NetworkMonitor,
+        deletedIncomeDataSource: DeletedIncomeDataSource
     ): IncomeRepository =
         OfflineFirstIncomeRepository(
             localIncomeDataSource = localIncomeDataSource,
             remoteIncomeDataSource = remoteIncomeDataSource,
             ioDispatcher = ioDispatcher,
-            networkMonitor = networkMonitor
+            networkMonitor = networkMonitor,
+            deletedIncomeDataSource = deletedIncomeDataSource
         )
 }

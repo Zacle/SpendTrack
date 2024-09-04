@@ -10,5 +10,9 @@ interface IncomeDataSource {
     suspend fun getIncomesByCategory(userId: String, categoryId: String, period: Period): Flow<List<Income>>
     suspend fun addIncome(income: Income)
     suspend fun updateIncome(income: Income)
-    suspend fun deleteIncome(income: Income)
+    suspend fun deleteIncome(userId: String, incomeId: String)
+}
+
+interface SyncableIncomeDataSource : IncomeDataSource {
+    suspend fun getNonSyncedIncomes(userId: String): List<Income>
 }

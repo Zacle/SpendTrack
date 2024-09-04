@@ -3,6 +3,7 @@ package com.zacle.spendtrack.core.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.zacle.spendtrack.core.model.Income
 import kotlinx.datetime.Clock
@@ -17,7 +18,8 @@ import kotlinx.datetime.Instant
             childColumns = ["category_id"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index("category_id")]
 )
 data class IncomeEntity(
     @PrimaryKey

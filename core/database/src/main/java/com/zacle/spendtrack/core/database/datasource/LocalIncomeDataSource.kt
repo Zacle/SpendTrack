@@ -1,6 +1,6 @@
 package com.zacle.spendtrack.core.database.datasource
 
-import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
+import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
 import com.zacle.spendtrack.core.database.dao.IncomeDao
 import com.zacle.spendtrack.core.database.model.asEntity
 import com.zacle.spendtrack.core.database.model.asExternalModel
@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 /**
- * [IncomeDataSource] implementation for Room
+ * [SyncableIncomeDataSource] implementation for Room
  */
 class LocalIncomeDataSource @Inject constructor(
     private val incomeDao: IncomeDao
-): IncomeDataSource {
+): SyncableIncomeDataSource {
     override suspend fun getIncome(userId: String, incomeId: String): Flow<Income?> =
         incomeDao
             .getIncome(
@@ -55,7 +55,10 @@ class LocalIncomeDataSource @Inject constructor(
         incomeDao.updateIncome(income.asEntity())
     }
 
-    override suspend fun deleteIncome(income: Income) {
-        incomeDao.deleteIncome(income.asEntity())
+    override suspend fun deleteIncome(userId: String, incomeId: String) {
+        incomeDao.deleteIncome(userId, incomeId)
     }
+
+    override suspend fun getNonSyncedIncomes(userId: String): List<Income> =
+        incomeDao.getNonSyncedIncomes(userId).map { it.asExternalModel() }
 }

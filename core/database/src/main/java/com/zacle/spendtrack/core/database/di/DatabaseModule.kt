@@ -10,6 +10,9 @@ import com.zacle.spendtrack.core.common.di.ApplicationScope
 import com.zacle.spendtrack.core.database.STDatabase
 import com.zacle.spendtrack.core.database.dao.BudgetDao
 import com.zacle.spendtrack.core.database.dao.CategoryDao
+import com.zacle.spendtrack.core.database.dao.DeletedBudgetDao
+import com.zacle.spendtrack.core.database.dao.DeletedExpenseDao
+import com.zacle.spendtrack.core.database.dao.DeletedIncomeDao
 import com.zacle.spendtrack.core.database.dao.ExpenseDao
 import com.zacle.spendtrack.core.database.dao.IncomeDao
 import com.zacle.spendtrack.core.database.dao.UserDao
@@ -80,4 +83,19 @@ internal object DatabaseModule {
     fun provideIncomeDao(
         database: STDatabase,
     ): IncomeDao = database.incomeDao()
+
+    @Provides
+    fun provideDeletedBudgetDao(
+        database: STDatabase,
+    ): DeletedBudgetDao = database.deletedBudgetDao()
+
+    @Provides
+    fun provideDeletedExpenseDao(
+        database: STDatabase,
+    ): DeletedExpenseDao = database.deletedExpenseDao()
+
+    @Provides
+    fun provideDeletedIncomeDao(
+        database: STDatabase,
+    ): DeletedIncomeDao = database.deletedIncomeDao()
 }

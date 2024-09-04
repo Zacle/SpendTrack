@@ -118,15 +118,15 @@ class FirebaseExpenseDataSource @Inject constructor(
             .await()
     }
 
-    override suspend fun deleteExpense(expense: Expense) {
+    override suspend fun deleteExpense(userId: String, expenseId: String) {
         /** Make sure the expense exists before deleting or throw the expense not found exception **/
-        expenseCollection(expense.userId)
-            .document(expense.expenseId)
+        expenseCollection(userId)
+            .document(expenseId)
             .get()
             .await()
             .toObject(FirebaseExpense::class.java) ?: throw Exceptions.ExpenseNotFoundException()
 
-        expenseCollection(expense.userId).document(expense.expenseId).delete().await()
+        expenseCollection(userId).document(expenseId).delete().await()
     }
 
     private fun expenseCollection(userId: String) =
