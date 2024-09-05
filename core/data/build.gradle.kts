@@ -15,6 +15,9 @@ dependencies {
     api(projects.core.model)
 
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.work.ktx)
+    implementation(libs.hilt.ext.work)
+    implementation(libs.timber)
 
     testImplementation(projects.core.testing)
     testImplementation(libs.mockito.kotlin)

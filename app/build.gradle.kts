@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.tracing.ktx)
     implementation(libs.androidx.window.core)
+    implementation(libs.androidx.work.ktx)
     implementation(libs.coil.kt)
     implementation(libs.kotlinx.datetime)
     implementation(libs.timber)

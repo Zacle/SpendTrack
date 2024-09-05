@@ -1,19 +1,29 @@
 package com.zacle.spendtrack.core.data.repository
 
+import android.content.Context
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteIncomeData
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
+import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.DeletedIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
+import com.zacle.spendtrack.core.data.sync.SyncConstraints
+import com.zacle.spendtrack.core.data.sync.SyncIncomeWorker
 import com.zacle.spendtrack.core.domain.repository.IncomeRepository
 import com.zacle.spendtrack.core.model.DeletedIncome
 import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,6 +46,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
     @LocalIncomeData private val localIncomeDataSource: SyncableIncomeDataSource,
     @RemoteIncomeData private val remoteIncomeDataSource: IncomeDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
     private val networkMonitor: NetworkMonitor,
     private val deletedIncomeDataSource: DeletedIncomeDataSource
 ): IncomeRepository {
@@ -91,7 +102,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
             remoteIncomeDataSource.addIncome(income)
             localIncomeDataSource.addIncome(income.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(income.userId)
             localIncomeDataSource.addIncome(income)
         }
     }
@@ -102,7 +113,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
             remoteIncomeDataSource.updateIncome(income)
             localIncomeDataSource.updateIncome(income.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(income.userId)
             localIncomeDataSource.updateIncome(income.copy(synced = false))
         }
     }
@@ -113,9 +124,34 @@ class OfflineFirstIncomeRepository @Inject constructor(
         if (isOnline) {
             remoteIncomeDataSource.deleteIncome(income.userId, income.incomeId)
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(income.userId)
             deletedIncomeDataSource.insert(DeletedIncome(income.incomeId, income.userId))
         }
+    }
+
+    private fun startUpSyncWork(userId: String) {
+        val inputData = Data.Builder()
+            .putString(USER_ID_KEY, userId)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<SyncIncomeWorker>()
+            .setConstraints(SyncConstraints)
+            .setInputData(inputData)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+
+        val operation = WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                INCOME_SYNC_WORK_NAME,
+                ExistingWorkPolicy.KEEP,
+                workRequest
+            )
+            .result
+
+        operation.addListener(
+            { Timber.i("SyncIncomeWorker enqueued") },
+            { it.run() }
+        )
     }
 
     override suspend fun syncWith(userId: String, synchronizer: Synchronizer): Boolean =
@@ -159,3 +195,6 @@ class OfflineFirstIncomeRepository @Inject constructor(
             }
         )
 }
+
+// This name should not be changed otherwise the app may have concurrent sync requests running
+internal const val INCOME_SYNC_WORK_NAME = "IncomeSyncWorkName"

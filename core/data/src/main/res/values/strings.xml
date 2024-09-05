@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="budget_sync_work_notification_title">SpendTrack Budget Sync</string>
+    <string name="expense_sync_work_notification_title">SpendTrack Expense Sync</string>
+    <string name="income_sync_work_notification_title">SpendTrack Income Sync</string>
+
+    <string name="budget_sync_work_notification_channel_name">Syncing Budgets</string>
+    <string name="expense_sync_work_notification_channel_name">Syncing Expenses</string>
+    <string name="income_sync_work_notification_channel_name">Syncing Incomes</string>
+
+    <string name="budget_sync_work_notification_channel_description">
+        Background tasks for syncing budgets
+    </string>
+    <string name="expense_sync_work_notification_channel_description">
+        Background tasks for syncing expenses
+    </string>
+    <string name="income_sync_work_notification_channel_description">
+        Background tasks for syncing incomes
+    </string>
+</resources>

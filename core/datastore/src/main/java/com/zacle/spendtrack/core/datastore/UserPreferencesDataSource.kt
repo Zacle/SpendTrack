@@ -3,6 +3,7 @@ package com.zacle.spendtrack.core.datastore
 import androidx.datastore.core.DataStore
 import com.zacle.spendtrack.core.datastore_proto.UserPreferences
 import com.zacle.spendtrack.core.datastore_proto.copy
+import com.zacle.spendtrack.core.model.ChangeLastSyncTimes
 import com.zacle.spendtrack.core.model.ThemeAppearance
 import com.zacle.spendtrack.core.model.UserData
 import kotlinx.coroutines.flow.firstOrNull

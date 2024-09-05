@@ -1,5 +1,6 @@
 package com.zacle.spendtrack.core.data.di
 
+import android.content.Context
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers
 import com.zacle.spendtrack.core.common.di.LocalBudgetData
@@ -43,6 +44,7 @@ import com.zacle.spendtrack.core.domain.repository.UserDataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
@@ -89,6 +91,7 @@ object RepositoryModule {
         @LocalBudgetData localBudgetDataSource: SyncableBudgetDataSource,
         @RemoteBudgetData remoteBudgetDataSource: BudgetDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
         deletedBudgetDataSource: DeletedBudgetDataSource
     ): BudgetRepository =
@@ -97,7 +100,8 @@ object RepositoryModule {
             remoteBudgetDataSource = remoteBudgetDataSource,
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
-            deletedBudgetDataSource = deletedBudgetDataSource
+            deletedBudgetDataSource = deletedBudgetDataSource,
+            context = context
         )
 
     @Provides
@@ -106,6 +110,7 @@ object RepositoryModule {
         @LocalExpenseData localExpenseDataSource: SyncableExpenseDataSource,
         @RemoteExpenseData remoteExpenseDataSource: ExpenseDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
         deletedExpenseDataSource: DeletedExpenseDataSource
     ): ExpenseRepository =
@@ -114,7 +119,8 @@ object RepositoryModule {
             remoteExpenseDataSource = remoteExpenseDataSource,
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
-            deletedExpenseDataSource = deletedExpenseDataSource
+            deletedExpenseDataSource = deletedExpenseDataSource,
+            context = context
         )
 
     @Provides
@@ -123,6 +129,7 @@ object RepositoryModule {
         @LocalIncomeData localIncomeDataSource: SyncableIncomeDataSource,
         @RemoteIncomeData remoteIncomeDataSource: IncomeDataSource,
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
         deletedIncomeDataSource: DeletedIncomeDataSource
     ): IncomeRepository =
@@ -131,6 +138,7 @@ object RepositoryModule {
             remoteIncomeDataSource = remoteIncomeDataSource,
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
-            deletedIncomeDataSource = deletedIncomeDataSource
+            deletedIncomeDataSource = deletedIncomeDataSource,
+            context = context
         )
 }

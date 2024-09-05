@@ -1,19 +1,29 @@
 package com.zacle.spendtrack.core.data.repository
 
+import android.content.Context
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalBudgetData
 import com.zacle.spendtrack.core.common.di.RemoteBudgetData
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
+import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.DeletedBudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
+import com.zacle.spendtrack.core.data.sync.SyncBudgetWorker
+import com.zacle.spendtrack.core.data.sync.SyncConstraints
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.DeletedBudget
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,6 +46,7 @@ class OfflineFirstBudgetRepository @Inject constructor(
     @LocalBudgetData private val localBudgetDataSource: SyncableBudgetDataSource,
     @RemoteBudgetData private val remoteBudgetDataSource: BudgetDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
     private val networkMonitor: NetworkMonitor,
     private val deletedBudgetDataSource: DeletedBudgetDataSource
 ): BudgetRepository {
@@ -76,7 +87,7 @@ class OfflineFirstBudgetRepository @Inject constructor(
             remoteBudgetDataSource.addBudget(budget)
             localBudgetDataSource.addBudget(budget.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(budget.userId)
             localBudgetDataSource.addBudget(budget)
         }
     }
@@ -87,7 +98,7 @@ class OfflineFirstBudgetRepository @Inject constructor(
             remoteBudgetDataSource.updateBudget(budget)
             localBudgetDataSource.updateBudget(budget.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(budget.userId)
             localBudgetDataSource.updateBudget(budget.copy(synced = false))
         }
     }
@@ -98,9 +109,34 @@ class OfflineFirstBudgetRepository @Inject constructor(
         if (isOnline) {
             remoteBudgetDataSource.deleteBudget(budget.userId, budget.budgetId)
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(budget.userId)
             deletedBudgetDataSource.insert(DeletedBudget(budget.budgetId, budget.userId))
         }
+    }
+
+    private fun startUpSyncWork(userId: String) {
+        val inputData = Data.Builder()
+            .putString(USER_ID_KEY, userId)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<SyncBudgetWorker>()
+            .setConstraints(SyncConstraints)
+            .setInputData(inputData)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+
+        val operation = WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                BUDGET_SYNC_WORK_NAME,
+                ExistingWorkPolicy.KEEP,
+                workRequest
+            )
+            .result
+
+        operation.addListener(
+            { Timber.i("SyncBudgetWorker enqueued") },
+            { it.run() }
+        )
     }
 
     /**
@@ -147,3 +183,6 @@ class OfflineFirstBudgetRepository @Inject constructor(
             }
         )
 }
+
+// This name should not be changed otherwise the app may have concurrent sync requests running
+internal const val BUDGET_SYNC_WORK_NAME = "BudgetSyncWorkName"

@@ -1,19 +1,29 @@
 package com.zacle.spendtrack.core.data.repository
 
+import android.content.Context
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalExpenseData
 import com.zacle.spendtrack.core.common.di.RemoteExpenseData
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
+import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.DeletedExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
+import com.zacle.spendtrack.core.data.sync.SyncConstraints
+import com.zacle.spendtrack.core.data.sync.SyncExpenseWorker
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
 import com.zacle.spendtrack.core.model.DeletedExpense
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -36,6 +46,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
     @LocalExpenseData private val localExpenseDataSource: SyncableExpenseDataSource,
     @RemoteExpenseData private val remoteExpenseDataSource: ExpenseDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
     private val networkMonitor: NetworkMonitor,
     private val deletedExpenseDataSource: DeletedExpenseDataSource
 ): ExpenseRepository {
@@ -91,7 +102,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
             remoteExpenseDataSource.addExpense(expense)
             localExpenseDataSource.addExpense(expense.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(expense.userId)
             localExpenseDataSource.addExpense(expense)
         }
     }
@@ -102,7 +113,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
             remoteExpenseDataSource.updateExpense(expense)
             localExpenseDataSource.updateExpense(expense.copy(synced = true))
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(expense.userId)
             localExpenseDataSource.updateExpense(expense.copy(synced = false))
         }
     }
@@ -113,9 +124,34 @@ class OfflineFirstExpenseRepository @Inject constructor(
         if (isOnline) {
             remoteExpenseDataSource.deleteExpense(expense.userId, expense.expenseId)
         } else {
-            // TODO: Handle offline case
+            startUpSyncWork(expense.userId)
             deletedExpenseDataSource.insert(DeletedExpense(expense.expenseId, expense.userId))
         }
+    }
+
+    private fun startUpSyncWork(userId: String) {
+        val inputData = Data.Builder()
+            .putString(USER_ID_KEY, userId)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<SyncExpenseWorker>()
+            .setConstraints(SyncConstraints)
+            .setInputData(inputData)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+
+        val operation = WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                EXPENSE_SYNC_WORK_NAME,
+                ExistingWorkPolicy.KEEP,
+                workRequest
+            )
+            .result
+
+        operation.addListener(
+            { Timber.i("SyncExpenseWorker enqueued") },
+            { it.run() }
+        )
     }
 
     override suspend fun syncWith(userId: String, synchronizer: Synchronizer): Boolean =
@@ -159,3 +195,6 @@ class OfflineFirstExpenseRepository @Inject constructor(
             }
         )
 }
+
+// This name should not be changed otherwise the app may have concurrent sync requests running
+internal const val EXPENSE_SYNC_WORK_NAME = "ExpenseSyncWorkName"
