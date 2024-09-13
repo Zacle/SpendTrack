@@ -56,7 +56,7 @@ fun ExpandedFloatingActionButton(
         Icon(
             painter = painter,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = Color.White,
             modifier = Modifier.size(24.dp)
         )
     }
