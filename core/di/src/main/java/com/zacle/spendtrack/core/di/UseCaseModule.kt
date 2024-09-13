@@ -4,6 +4,7 @@ import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.GetUserDataAndAuthStateUseCase
+import com.zacle.spendtrack.core.domain.HomeUseCase
 import com.zacle.spendtrack.core.domain.OverviewUseCase
 import com.zacle.spendtrack.core.domain.TransactionsUseCase
 import com.zacle.spendtrack.core.domain.auth.ObserveUserAuthStateUseCase
@@ -55,4 +56,12 @@ object UseCaseModule {
         getExpensesUseCase: GetExpensesUseCase,
         getIncomesUseCase: GetIncomesUseCase
     ): TransactionsUseCase = TransactionsUseCase(configuration, getExpensesUseCase, getIncomesUseCase)
+
+    @Provides
+    fun provideHomeUseCase(
+        configuration: UseCase.Configuration,
+        overviewUseCase: OverviewUseCase,
+        transactionsUseCase: TransactionsUseCase,
+        budgetsUseCase: GetBudgetsUseCase
+    ): HomeUseCase = HomeUseCase(configuration, overviewUseCase, transactionsUseCase, budgetsUseCase)
 }

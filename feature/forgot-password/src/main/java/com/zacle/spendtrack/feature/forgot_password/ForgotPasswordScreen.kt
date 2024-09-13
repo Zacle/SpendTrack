@@ -81,7 +81,9 @@ fun ForgotPasswordScreen(
     Scaffold(
         topBar = {
             STTopAppBar(
-                titleRes = R.string.title,
+                title = {
+                    Text(text = stringResource(id = R.string.title))
+                },
                 navigationIcon = {
                     Icon(
                         imageVector = SpendTrackIcons.arrowBack,

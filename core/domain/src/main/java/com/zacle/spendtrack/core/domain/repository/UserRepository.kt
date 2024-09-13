@@ -15,7 +15,7 @@ interface UserRepository {
     /**
      * Get the current logged in user
      */
-    suspend fun getUser(userId: String): Flow<User?>
+    suspend fun getUser(): Flow<User?>
 
     /**
      * Update the current logged in user

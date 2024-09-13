@@ -12,7 +12,15 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.common.util.TimeZoneMonitor
+import com.zacle.spendtrack.feature.budget.Budget
+import com.zacle.spendtrack.feature.home.Home
+import com.zacle.spendtrack.feature.profile.Profile
+import com.zacle.spendtrack.feature.transaction.Transaction
 import com.zacle.spendtrack.navigation.TopLevelDestination
+import com.zacle.spendtrack.navigation.TopLevelDestination.BUDGET
+import com.zacle.spendtrack.navigation.TopLevelDestination.HOME
+import com.zacle.spendtrack.navigation.TopLevelDestination.PROFILE
+import com.zacle.spendtrack.navigation.TopLevelDestination.TRANSACTION
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -65,6 +73,15 @@ class STAppState(
      * route.
      */
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
+
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = when (currentDestination?.route?.substringAfterLast(".")) {
+            Home.toString() -> HOME
+            Transaction.toString() -> TRANSACTION
+            Budget.toString() -> BUDGET
+            Profile.toString() -> PROFILE
+            else -> null
+        }
 
     val currentTimeZone = timeZoneMonitor.currentTimeZone
         .stateIn(

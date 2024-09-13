@@ -20,7 +20,7 @@ class UpdateIncomeUseCase(
 
     override suspend fun process(request: Request): Flow<Response> = flow {
         val income = request.income
-        val incomeId = income.incomeId
+        val incomeId = income.id
 
         val currentIncome = incomeRepository
             .getIncome(request.userId, incomeId)

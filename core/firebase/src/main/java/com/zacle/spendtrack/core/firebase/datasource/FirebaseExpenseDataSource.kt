@@ -95,7 +95,7 @@ class FirebaseExpenseDataSource @Inject constructor(
     override suspend fun addExpense(expense: Expense) {
         val firebaseExpense = expense.asFirebaseModel()
         expenseCollection(expense.userId)
-            .document(expense.expenseId)
+            .document(expense.id)
             .set(firebaseExpense)
             .addOnCompleteListener {
                 if (!it.isSuccessful) {
@@ -108,7 +108,7 @@ class FirebaseExpenseDataSource @Inject constructor(
     override suspend fun updateExpense(expense: Expense) {
         val firebaseExpense = expense.asFirebaseModel()
         expenseCollection(expense.userId)
-            .document(expense.expenseId)
+            .document(expense.id)
             .set(firebaseExpense, SetOptions.merge())
             .addOnCompleteListener {
                 if (!it.isSuccessful) {

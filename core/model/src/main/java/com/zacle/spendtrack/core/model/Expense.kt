@@ -5,14 +5,14 @@ import kotlinx.datetime.Instant
 import java.util.UUID
 
 data class Expense(
-    val expenseId: String = UUID.randomUUID().toString(),
-    val userId: String = "",
-    val name: String = "",
-    val description: String = "",
-    val receiptUrl: String? = null,
-    val updatedAt: Instant? = null,
-    val synced: Boolean = false,
+    override val id: String = UUID.randomUUID().toString(),
+    override val userId: String = "",
+    override val name: String = "",
+    override val description: String = "",
     override val amount: Double = 0.0,
     override val category: Category = Category(),
-    override val transactionDate: Instant = Clock.System.now()
+    override val transactionDate: Instant = Clock.System.now(),
+    override val receiptUrl: String? = null,
+    override val updatedAt: Instant? = null,
+    override val synced: Boolean = false
 ): Transaction

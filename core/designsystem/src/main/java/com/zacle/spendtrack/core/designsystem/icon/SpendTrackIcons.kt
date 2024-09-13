@@ -4,6 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -16,10 +18,14 @@ object SpendTrackIcons {
     val profile = R.drawable.profile
     val add = R.drawable.add
     val google = R.drawable.google
+    val addExpense = R.drawable.add_expense
+    val addIncome = R.drawable.add_income
 
     val visibility = Icons.Default.Visibility
     val visibilityOff = Icons.Default.VisibilityOff
     val arrowBack = Icons.AutoMirrored.Filled.ArrowBack
+    val dropDown = Icons.Default.KeyboardArrowDown
+    val notification = Icons.Default.Notifications
 }
 
 /**

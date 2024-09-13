@@ -54,11 +54,12 @@ class OfflineFirstBudgetRepository @Inject constructor(
         localBudgetDataSource.getBudgets(userId, budgetPeriod).flatMapLatest { budgets ->
             val isOnline = networkMonitor.isOnline.first()
             if (budgets.isEmpty() && isOnline) {
-                val remoteBudgets = remoteBudgetDataSource.getBudgets(userId, budgetPeriod).first()
-                remoteBudgets.forEach { budget ->
-                    localBudgetDataSource.addBudget(budget)
+                remoteBudgetDataSource.getBudgets(userId, budgetPeriod).flatMapLatest { remoteBudgets ->
+                    remoteBudgets.forEach { budget ->
+                        localBudgetDataSource.addBudget(budget)
+                    }
+                    flow { emit(remoteBudgets) }
                 }
-                flow { emit(remoteBudgets) }
             } else {
                 flow { emit(budgets) }
             }
@@ -71,11 +72,12 @@ class OfflineFirstBudgetRepository @Inject constructor(
         .flatMapLatest { budget ->
             val isOnline = networkMonitor.isOnline.first()
             if (budget == null && isOnline) {
-                val remoteBudget = remoteBudgetDataSource.getBudget(userId, budgetId).first()
-                if (remoteBudget != null) {
-                    localBudgetDataSource.addBudget(remoteBudget)
+                remoteBudgetDataSource.getBudget(userId, budgetId).flatMapLatest { remoteBudget ->
+                    if (remoteBudget != null) {
+                        localBudgetDataSource.addBudget(remoteBudget)
+                    }
+                    flow { emit(remoteBudget) }
                 }
-                flow { emit(remoteBudget) }
             } else {
                 flow { emit(budget) }
             }

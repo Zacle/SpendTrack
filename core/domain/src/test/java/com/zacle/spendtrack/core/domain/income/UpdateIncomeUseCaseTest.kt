@@ -33,7 +33,7 @@ class UpdateIncomeUseCaseTest {
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
         val budgets = listOf(educationBudget, foodBudget, entertainmentBudget)
 
-        whenever(incomeRepository.getIncome(userId, bonus.incomeId)).thenReturn(flowOf(bonus))
+        whenever(incomeRepository.getIncome(userId, bonus.id)).thenReturn(flowOf(bonus))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 600.0), period)
@@ -49,7 +49,7 @@ class UpdateIncomeUseCaseTest {
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
         val budgets = listOf(educationBudget, foodBudget, entertainmentBudget)
 
-        whenever(incomeRepository.getIncome(userId, bonus.incomeId)).thenReturn(flowOf(bonus))
+        whenever(incomeRepository.getIncome(userId, bonus.id)).thenReturn(flowOf(bonus))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 300.0), period)
@@ -65,7 +65,7 @@ class UpdateIncomeUseCaseTest {
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
         val budgets = listOf(educationBudget, foodBudget, entertainmentBudget)
 
-        whenever(incomeRepository.getIncome(userId, bonus.incomeId)).thenReturn(flowOf(bonus))
+        whenever(incomeRepository.getIncome(userId, bonus.id)).thenReturn(flowOf(bonus))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 500.0), period)
@@ -81,7 +81,7 @@ class UpdateIncomeUseCaseTest {
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
         val budgets = listOf(educationBudget, foodBudget, entertainmentBudget)
 
-        whenever(incomeRepository.getIncome(userId, bonus.incomeId)).thenReturn(flowOf(null))
+        whenever(incomeRepository.getIncome(userId, bonus.id)).thenReturn(flowOf(null))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, bonus.copy(amount = 500.0), period)
@@ -100,7 +100,7 @@ class UpdateIncomeUseCaseTest {
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
         val budgets = listOf(educationBudget, foodBudget, entertainmentBudget)
 
-        whenever(incomeRepository.getIncome(userId, gift.incomeId)).thenReturn(flowOf(gift))
+        whenever(incomeRepository.getIncome(userId, gift.id)).thenReturn(flowOf(gift))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(budgets))
 
         val request = UpdateIncomeUseCase.Request(userId, gift.copy(amount = 500.0), period)

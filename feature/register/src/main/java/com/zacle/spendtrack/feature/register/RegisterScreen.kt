@@ -113,7 +113,9 @@ fun RegisterScreen(
     Scaffold(
         topBar = {
             STTopAppBar(
-                titleRes = R.string.register,
+                title = {
+                    Text(text = stringResource(id = R.string.register))
+                },
                 navigationIcon = {
                     Icon(
                         imageVector = SpendTrackIcons.arrowBack,

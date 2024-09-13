@@ -20,7 +20,7 @@ data class FirebaseIncome(
 )
 
 fun FirebaseIncome.asExternalModel() = Income(
-    incomeId = incomeId,
+    id = incomeId,
     userId = userId,
     name = name,
     description = description,
@@ -33,7 +33,7 @@ fun FirebaseIncome.asExternalModel() = Income(
 )
 
 fun Income.asFirebaseModel() = FirebaseIncome(
-    incomeId = incomeId,
+    incomeId = id,
     userId = userId,
     name = name,
     description = description,

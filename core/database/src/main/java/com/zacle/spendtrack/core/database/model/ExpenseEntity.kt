@@ -42,7 +42,7 @@ data class ExpenseEntity(
 )
 
 fun Expense.asEntity() = ExpenseEntity(
-    expenseId = expenseId,
+    expenseId = id,
     userId = userId,
     categoryId = category.categoryId,
     transactionDate = transactionDate,

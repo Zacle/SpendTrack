@@ -3,4 +3,8 @@
     <string name="google_auth">
         Continue with Google
     </string>
+    <string name="food_drinks">Food &amp; Drinks</string>
+    <string name="remaining">Remaining</string>
+    <string name="exceeded_limit">You\'ve exceeded the limit!</string>
+    <string name="of">of</string>
 </resources>

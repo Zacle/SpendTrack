@@ -33,6 +33,7 @@ import com.zacle.spendtrack.core.data.repository.OfflineFirstCategoryRepository
 import com.zacle.spendtrack.core.data.repository.OfflineFirstExpenseRepository
 import com.zacle.spendtrack.core.data.repository.OfflineFirstIncomeRepository
 import com.zacle.spendtrack.core.data.repository.OfflineFirstUserDataRepository
+import com.zacle.spendtrack.core.data.repository.OfflineFirstUserRepository
 import com.zacle.spendtrack.core.datastore.UserPreferencesDataSource
 import com.zacle.spendtrack.core.domain.repository.AuthStateUserRepository
 import com.zacle.spendtrack.core.domain.repository.AuthenticationRepository
@@ -41,6 +42,7 @@ import com.zacle.spendtrack.core.domain.repository.CategoryRepository
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
 import com.zacle.spendtrack.core.domain.repository.IncomeRepository
 import com.zacle.spendtrack.core.domain.repository.UserDataRepository
+import com.zacle.spendtrack.core.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -141,4 +143,18 @@ object RepositoryModule {
             deletedIncomeDataSource = deletedIncomeDataSource,
             context = context
         )
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        @LocalUserData localUserDataSource: UserDataSource,
+        @RemoteUserData remoteUserDataSource: UserDataSource,
+        authStateUserRepository: AuthStateUserRepository,
+        networkMonitor: NetworkMonitor
+    ): UserRepository = OfflineFirstUserRepository(
+        localUserDataSource = localUserDataSource,
+        remoteUserDataSource = remoteUserDataSource,
+        authStateUserRepository = authStateUserRepository,
+        networkMonitor = networkMonitor
+    )
 }

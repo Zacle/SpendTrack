@@ -14,7 +14,7 @@ data class PopulatedExpense(
 )
 
 fun PopulatedExpense.asExternalModel() = Expense(
-    expenseId = expense.expenseId,
+    id = expense.expenseId,
     userId = expense.userId,
     category = category.asExternalModel(),
     transactionDate = expense.transactionDate,

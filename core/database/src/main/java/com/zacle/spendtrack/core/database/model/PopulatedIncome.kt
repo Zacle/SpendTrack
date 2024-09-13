@@ -14,7 +14,7 @@ data class PopulatedIncome(
 )
 
 fun PopulatedIncome.asExternalModel() = Income(
-    incomeId = income.incomeId,
+    id = income.incomeId,
     userId = income.userId,
     category = category.asExternalModel(),
     transactionDate = income.transactionDate,

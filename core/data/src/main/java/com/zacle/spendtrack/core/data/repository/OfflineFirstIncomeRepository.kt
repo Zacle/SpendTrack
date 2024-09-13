@@ -54,11 +54,12 @@ class OfflineFirstIncomeRepository @Inject constructor(
         localIncomeDataSource.getIncomes(userId, period).flatMapLatest { incomes ->
             val isOnline = networkMonitor.isOnline.first()
             if (incomes.isEmpty() && isOnline) {
-                val remoteIncomes = remoteIncomeDataSource.getIncomes(userId, period).first()
-                remoteIncomes.forEach { income ->
-                    localIncomeDataSource.addIncome(income)
+                remoteIncomeDataSource.getIncomes(userId, period).flatMapLatest { remoteIncomes ->
+                    remoteIncomes.forEach { income ->
+                        localIncomeDataSource.addIncome(income)
+                    }
+                    flow { emit(remoteIncomes) }
                 }
-                flow { emit(remoteIncomes) }
             } else {
                 flow { emit(incomes) }
             }
@@ -72,11 +73,12 @@ class OfflineFirstIncomeRepository @Inject constructor(
         .flatMapLatest { incomes ->
             val isOnline = networkMonitor.isOnline.first()
             if (incomes.isEmpty() && isOnline) {
-                val remoteIncomes = remoteIncomeDataSource.getIncomesByCategory(userId, categoryId, period).first()
-                remoteIncomes.forEach { income ->
-                    localIncomeDataSource.addIncome(income)
+                remoteIncomeDataSource.getIncomesByCategory(userId, categoryId, period).flatMapLatest { remoteIncomes ->
+                    remoteIncomes.forEach { income ->
+                        localIncomeDataSource.addIncome(income)
+                    }
+                    flow { emit(remoteIncomes) }
                 }
-                flow { emit(remoteIncomes) }
             } else {
                 flow { emit(incomes) }
             }
@@ -86,11 +88,12 @@ class OfflineFirstIncomeRepository @Inject constructor(
         localIncomeDataSource.getIncome(userId, incomeId).flatMapLatest { income ->
             val isOnline = networkMonitor.isOnline.first()
             if (income == null && isOnline) {
-                val remoteIncome = remoteIncomeDataSource.getIncome(userId, incomeId).first()
-                if (remoteIncome != null) {
-                    localIncomeDataSource.addIncome(remoteIncome)
+                remoteIncomeDataSource.getIncome(userId, incomeId).flatMapLatest { remoteIncome ->
+                    if (remoteIncome != null) {
+                        localIncomeDataSource.addIncome(remoteIncome)
+                    }
+                    flow { emit(remoteIncome) }
                 }
-                flow { emit(remoteIncome) }
             } else {
                 flow { emit(income) }
             }
@@ -119,13 +122,13 @@ class OfflineFirstIncomeRepository @Inject constructor(
     }
 
     override suspend fun deleteIncome(income: Income) {
-        localIncomeDataSource.deleteIncome(income.userId, income.incomeId)
+        localIncomeDataSource.deleteIncome(income.userId, income.id)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteIncomeDataSource.deleteIncome(income.userId, income.incomeId)
+            remoteIncomeDataSource.deleteIncome(income.userId, income.id)
         } else {
             startUpSyncWork(income.userId)
-            deletedIncomeDataSource.insert(DeletedIncome(income.incomeId, income.userId))
+            deletedIncomeDataSource.insert(DeletedIncome(income.id, income.userId))
         }
     }
 

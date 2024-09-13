@@ -32,7 +32,7 @@ class UpdateExpenseUseCaseTest {
         val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
 
-        whenever(expenseRepository.getExpense(userId, shopping.expenseId)).thenReturn(flowOf(shopping))
+        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 50.0), period)
@@ -48,7 +48,7 @@ class UpdateExpenseUseCaseTest {
         val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
 
-        whenever(expenseRepository.getExpense(userId, shopping.expenseId)).thenReturn(flowOf(shopping))
+        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 20.0), period)
@@ -64,7 +64,7 @@ class UpdateExpenseUseCaseTest {
         val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
 
-        whenever(expenseRepository.getExpense(userId, shopping.expenseId)).thenReturn(flowOf(shopping))
+        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
 
         val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 10.0), period)
@@ -80,7 +80,7 @@ class UpdateExpenseUseCaseTest {
         val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
         val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
 
-        whenever(expenseRepository.getExpense(userId, shopping.expenseId)).thenReturn(flowOf(null))
+        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(null))
         whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
 
         try {

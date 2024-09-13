@@ -105,7 +105,11 @@ fun LoginScreen(
 ) {
     Scaffold(
         topBar = {
-            STTopAppBar(titleRes = R.string.login)
+            STTopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.login))
+                }
+            )
         },
         modifier = modifier,
         containerColor = Color.Transparent,

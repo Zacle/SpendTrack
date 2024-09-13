@@ -45,13 +45,12 @@ fun RowScope.STNavigationBarItem(
     enabled: Boolean = true,
     alwaysShowLabel: Boolean = true,
     icon: @Composable () -> Unit,
-    selectedIcon: @Composable () -> Unit = icon,
     label: @Composable (() -> Unit)? = null,
 ) {
     NavigationBarItem(
         selected = selected,
         onClick = onClick,
-        icon = if (selected) selectedIcon else icon,
+        icon = icon,
         modifier = modifier,
         enabled = enabled,
         label = label,
@@ -61,7 +60,7 @@ fun RowScope.STNavigationBarItem(
             unselectedIconColor = STNavigationDefaults.navigationContentColor(),
             selectedTextColor = STNavigationDefaults.navigationSelectedItemColor(),
             unselectedTextColor = STNavigationDefaults.navigationContentColor(),
-            indicatorColor = STNavigationDefaults.navigationIndicatorColor(),
+            indicatorColor = Color.Transparent,
         )
     )
 }
@@ -81,7 +80,8 @@ fun STNavigationBar(
     NavigationBar(
         modifier = modifier,
         contentColor = STNavigationDefaults.navigationContentColor(),
-        tonalElevation = 0.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 5.dp,
         content = content,
     )
 }
@@ -216,7 +216,7 @@ fun STNavigationSuiteScaffold(
 /**
  * A wrapper around [NavigationSuiteScope] to declare navigation items.
  */
-class STNavigationSuiteScope internal constructor(
+class STNavigationSuiteScope(
     private val navigationSuiteScope: NavigationSuiteScope,
     private val navigationSuiteItemColors: NavigationSuiteItemColors,
 ) {
@@ -225,18 +225,11 @@ class STNavigationSuiteScope internal constructor(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         icon: @Composable () -> Unit,
-        selectedIcon: @Composable () -> Unit = icon,
         label: @Composable (() -> Unit)? = null,
     ) = navigationSuiteScope.item(
         selected = selected,
         onClick = onClick,
-        icon = {
-            if (selected) {
-                selectedIcon()
-            } else {
-                icon()
-            }
-        },
+        icon = icon,
         label = label,
         colors = navigationSuiteItemColors,
         modifier = modifier,

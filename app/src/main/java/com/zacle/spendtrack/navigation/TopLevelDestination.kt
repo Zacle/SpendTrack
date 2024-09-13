@@ -1,12 +1,11 @@
 package com.zacle.spendtrack.navigation
 
-import com.zacle.spendtrack.R
 import com.zacle.spendtrack.core.designsystem.icon.Icon
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
-import com.zacle.spendtrack.feature.home.R as homeR
-import com.zacle.spendtrack.feature.transaction.R as transactionR
 import com.zacle.spendtrack.feature.budget.R as budgetR
+import com.zacle.spendtrack.feature.home.R as homeR
 import com.zacle.spendtrack.feature.profile.R as profileR
+import com.zacle.spendtrack.feature.transaction.R as transactionR
 
 /**
  * Type for the top level destinations in the application. Each of these destinations

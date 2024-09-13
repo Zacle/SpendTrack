@@ -1,6 +1,5 @@
 package com.zacle.spendtrack.core.designsystem.component
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,13 +22,13 @@ const val TOP_APP_BAR_PADDING = 64
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun STTopAppBar(
-    @StringRes titleRes: Int,
+    title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actionIcon: @Composable () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = stringResource(id = titleRes)) },
+        title = title,
         navigationIcon = navigationIcon,
         actions = { actionIcon() },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -45,7 +44,9 @@ fun STTopAppBar(
 fun STTopAppBarPreview(modifier: Modifier = Modifier) {
     SpendTrackTheme {
         STTopAppBar(
-            titleRes = R.string.google_auth,
+            title = {
+                Text(text = stringResource(id = R.string.google_auth))
+            },
             navigationIcon = {
                 IconButton(onClick = {}) {
                     Icon(

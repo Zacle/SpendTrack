@@ -54,11 +54,12 @@ class OfflineFirstExpenseRepository @Inject constructor(
         localExpenseDataSource.getExpenses(userId, period).flatMapLatest { expenses ->
             val isOnline = networkMonitor.isOnline.first()
             if (expenses.isEmpty() && isOnline) {
-                val remoteExpenses = remoteExpenseDataSource.getExpenses(userId, period).first()
-                remoteExpenses.forEach { expense ->
-                    localExpenseDataSource.addExpense(expense)
+                remoteExpenseDataSource.getExpenses(userId, period).flatMapLatest { remoteExpenses ->
+                    remoteExpenses.forEach { expense ->
+                        localExpenseDataSource.addExpense(expense)
+                    }
+                    flow { emit(remoteExpenses) }
                 }
-                flow { emit(remoteExpenses) }
             } else {
                 flow { emit(expenses) }
             }
@@ -72,11 +73,12 @@ class OfflineFirstExpenseRepository @Inject constructor(
         .flatMapLatest { expenses ->
             val isOnline = networkMonitor.isOnline.first()
             if (expenses.isEmpty() && isOnline) {
-                val remoteExpenses = remoteExpenseDataSource.getExpensesByCategory(userId, categoryId, period).first()
-                remoteExpenses.forEach { expense ->
-                    localExpenseDataSource.addExpense(expense)
+                remoteExpenseDataSource.getExpensesByCategory(userId, categoryId, period).flatMapLatest { remoteExpenses ->
+                    remoteExpenses.forEach { expense ->
+                        localExpenseDataSource.addExpense(expense)
+                    }
+                    flow { emit(remoteExpenses) }
                 }
-                flow { emit(remoteExpenses) }
             } else {
                 flow { emit(expenses) }
             }
@@ -86,11 +88,12 @@ class OfflineFirstExpenseRepository @Inject constructor(
         localExpenseDataSource.getExpense(userId, expenseId).flatMapLatest { expense ->
             val isOnline = networkMonitor.isOnline.first()
             if (expense == null && isOnline) {
-                val remoteExpense = remoteExpenseDataSource.getExpense(userId, expenseId).first()
-                if (remoteExpense != null) {
-                    localExpenseDataSource.addExpense(remoteExpense)
+                remoteExpenseDataSource.getExpense(userId, expenseId).flatMapLatest { remoteExpense ->
+                    if (remoteExpense != null) {
+                        localExpenseDataSource.addExpense(remoteExpense)
+                    }
+                    flow { emit(remoteExpense) }
                 }
-                flow { emit(remoteExpense) }
             } else {
                 flow { emit(expense) }
             }
@@ -119,13 +122,13 @@ class OfflineFirstExpenseRepository @Inject constructor(
     }
 
     override suspend fun deleteExpense(expense: Expense) {
-        localExpenseDataSource.deleteExpense(expense.userId, expense.expenseId)
+        localExpenseDataSource.deleteExpense(expense.userId, expense.id)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteExpenseDataSource.deleteExpense(expense.userId, expense.expenseId)
+            remoteExpenseDataSource.deleteExpense(expense.userId, expense.id)
         } else {
             startUpSyncWork(expense.userId)
-            deletedExpenseDataSource.insert(DeletedExpense(expense.expenseId, expense.userId))
+            deletedExpenseDataSource.insert(DeletedExpense(expense.id, expense.userId))
         }
     }
 

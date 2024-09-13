@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,6 +28,29 @@ import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+
+@Composable
+fun TertiaryButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .noRippleEffect { onClick() },
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+        contentColor = MaterialTheme.colorScheme.primary
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 6.dp)
+        )
+    }
+}
 
 @Composable
 fun SpendTrackButton(
@@ -99,6 +123,17 @@ fun GoogleButton(
                 )
             }
         }
+    }
+}
+
+@Preview(device = "id:Nexus S", showBackground = true)
+@Composable
+fun TertiaryButtonPreview(modifier: Modifier = Modifier) {
+    SpendTrackTheme {
+        TertiaryButton(
+            text = "See All",
+            onClick = {}
+        )
     }
 }
 

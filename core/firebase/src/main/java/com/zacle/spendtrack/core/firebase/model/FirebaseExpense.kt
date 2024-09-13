@@ -20,7 +20,7 @@ data class FirebaseExpense(
 )
 
 fun FirebaseExpense.asExternalModel() = Expense(
-    expenseId = expenseId,
+    id = expenseId,
     userId = userId,
     name = name,
     description = description,
@@ -33,7 +33,7 @@ fun FirebaseExpense.asExternalModel() = Expense(
 )
 
 fun Expense.asFirebaseModel() = FirebaseExpense(
-    expenseId = expenseId,
+    expenseId = id,
     userId = userId,
     name = name,
     description = description,

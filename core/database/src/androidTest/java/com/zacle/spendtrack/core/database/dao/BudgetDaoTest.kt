@@ -145,7 +145,7 @@ class BudgetDaoTest {
         val categories = categoryDao.getAllCategories().first()
         val travelBudget = travelBudget.copy(categoryId = categories[4].id)
         budgetDao.insertBudget(travelBudget)
-        val budget = budgetDao.getBudget("5", travelBudget.id, start.toEpochMilliseconds(), end.toEpochMilliseconds()).first()
+        val budget = budgetDao.getBudget("5", travelBudget.id).first()
         assertThat(budget).isNull()
     }
 
@@ -155,7 +155,7 @@ class BudgetDaoTest {
         val categories = categoryDao.getAllCategories().first()
         val educationBudget = educationBudget.copy(categoryId = categories[1].id)
         budgetDao.insertBudget(educationBudget)
-        val budget = budgetDao.getBudget("1", "1", start.toEpochMilliseconds(), end.toEpochMilliseconds()).first()
+        val budget = budgetDao.getBudget("1", "1").first()
         assertThat(budget).isNull()
     }
 
@@ -167,7 +167,7 @@ class BudgetDaoTest {
         val educationBudget = educationBudget.copy(categoryId = categories[1].id)
         budgetDao.insertBudget(foodBudget)
         budgetDao.insertBudget(educationBudget)
-        budgetDao.deleteBudget(foodBudget)
+        budgetDao.deleteBudget(foodBudget.userId, foodBudget.id)
         val budgets = budgetDao.getBudgets("1", start.toEpochMilliseconds(), end.toEpochMilliseconds()).first()
         assertThat(budgets).hasSize(1)
         assertThat(budgets[0].budget.id).isEqualTo(educationBudget.id)

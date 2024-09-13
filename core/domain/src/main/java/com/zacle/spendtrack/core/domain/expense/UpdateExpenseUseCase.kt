@@ -20,7 +20,7 @@ class UpdateExpenseUseCase(
 
     override suspend fun process(request: Request): Flow<Response> = flow {
         val newExpense = request.expense
-        val expenseId = newExpense.expenseId
+        val expenseId = newExpense.id
 
         val currentExpense = expenseRepository
             .getExpense(request.userId, expenseId)

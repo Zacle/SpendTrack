@@ -56,6 +56,14 @@ fun STNavHost(
             navigateUp = navController::navigateUp,
             navigateToHome = navController::navigateToHome
         )
-        homeScreen()
+        homeScreen(
+            navigateToProfile = {},
+            navigateToBudgets = {},
+            navigateToTransactions = {},
+            navigateToExpense = {},
+            navigateToIncome = {},
+            navigateToBudgetDetails = {},
+            navigateToLogin = navController::navigateToLogin
+        )
     }
 }

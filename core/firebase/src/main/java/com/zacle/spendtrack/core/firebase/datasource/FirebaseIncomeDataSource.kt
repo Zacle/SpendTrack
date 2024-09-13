@@ -96,7 +96,7 @@ class FirebaseIncomeDataSource @Inject constructor(
     override suspend fun addIncome(income: Income) {
         val firebaseIncome = income.asFirebaseModel()
         incomeCollection(income.userId)
-            .document(income.incomeId)
+            .document(income.id)
             .set(firebaseIncome)
             .addOnCompleteListener {
                 if (!it.isSuccessful) {
@@ -109,7 +109,7 @@ class FirebaseIncomeDataSource @Inject constructor(
     override suspend fun updateIncome(income: Income) {
         val firebaseIncome = income.asFirebaseModel()
         incomeCollection(income.userId)
-            .document(income.incomeId)
+            .document(income.id)
             .set(firebaseIncome, SetOptions.merge())
             .addOnCompleteListener {
                 if (!it.isSuccessful) {

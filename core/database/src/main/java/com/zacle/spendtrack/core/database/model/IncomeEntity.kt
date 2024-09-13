@@ -42,7 +42,7 @@ data class IncomeEntity(
 )
 
 fun Income.asEntity() = IncomeEntity(
-    incomeId = incomeId,
+    incomeId = id,
     userId = userId,
     categoryId = category.categoryId,
     transactionDate = transactionDate,
