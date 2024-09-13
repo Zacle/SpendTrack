@@ -1,7 +1,13 @@
 package com.zacle.spendtrack.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -24,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -40,6 +48,7 @@ import com.zacle.spendtrack.core.designsystem.component.STNavigationBarItem
 import com.zacle.spendtrack.core.designsystem.component.STNavigationDefaults
 import com.zacle.spendtrack.core.designsystem.component.STNavigationSuiteScope
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
+import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.feature.home.Home
 import com.zacle.spendtrack.feature.login.Login
@@ -93,6 +102,9 @@ fun STApp(
     val currentDestination = appState.currentDestination
     val currentTopLevelDestination = appState.currentTopLevelDestination
 
+    val layoutType = NavigationSuiteScaffoldDefaults
+        .calculateFromAdaptiveInfo(windowAdaptiveInfo)
+
     STNavigationSuiteScaffoldLayout(
         topLevelDestinations = appState.topLevelDestinations,
         currentDestination = currentDestination,
@@ -133,7 +145,60 @@ fun STApp(
             contentColor = MaterialTheme.colorScheme.onBackground,
             containerColor = Color.Transparent,
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            floatingActionButton = {
+                Box {
+                    FloatingActionButton(
+                        onClick = {},
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .offset(y = 50.dp),
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(
+                            defaultElevation = 12.dp
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = SpendTrackIcons.add),
+                            contentDescription = stringResource(R.string.add_transaction),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+            },
+            floatingActionButtonPosition = FabPosition.Center,
+            bottomBar = {
+                if (layoutType == NavigationSuiteType.NavigationBar) {
+                    if (currentTopLevelDestination != null) {
+                        STNavigationBar {
+                            appState.topLevelDestinations.forEach { destination ->
+                                val selected =
+                                    currentDestination.isTopLevelDestinationInHierarchy(destination)
+                                STNavigationBarItem(
+                                    selected = selected,
+                                    onClick = { appState.navigateToTopLevelDestination(destination) },
+                                    icon = {
+                                        val tintColor =
+                                            if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                        Icon(
+                                            painter = painterResource(id = destination.icon.id),
+                                            contentDescription = null,
+                                            tint = tintColor
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResource(destination.titleTextId),
+                                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         ) {
             STNavHost(
                 isOffline = isOffline,
@@ -212,36 +277,7 @@ fun STNavigationSuiteScaffoldLayout(
 
     NavigationSuiteScaffoldLayout(
         navigationSuite = {
-            if (layoutType == NavigationSuiteType.NavigationBar) {
-                if (currentTopLevelDestination != null) {
-                    STNavigationBar {
-                        topLevelDestinations.forEach { destination ->
-                            val selected =
-                                currentDestination.isTopLevelDestinationInHierarchy(destination)
-                            STNavigationBarItem(
-                                selected = selected,
-                                onClick = { onNavigateToTopLevelDestination(destination) },
-                                icon = {
-                                    val tintColor =
-                                        if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                                    Icon(
-                                        painter = painterResource(id = destination.icon.id),
-                                        contentDescription = null,
-                                        tint = tintColor
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        text = stringResource(destination.titleTextId),
-                                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                            )
-
-                        }
-                    }
-                }
-            } else {
+             if (layoutType != NavigationSuiteType.NavigationBar) {
                 if (currentTopLevelDestination != null) {
                     NavigationSuite(
                         layoutType = layoutType,
