@@ -132,17 +132,6 @@ fun TransactionCard(
     }
 }
 
-fun convertInstantToLocalDateTime(instant: Instant): LocalDateTime {
-    val javaInstant = instant.toJavaInstant()
-    val zoneId = ZoneId.systemDefault() // Get the system's default time zone
-    return LocalDateTime.ofInstant(javaInstant, zoneId)
-}
-
-fun dateToString(localDateTime: LocalDateTime, givenFormat: String = "hh:mm a"): String {
-    val formatter = DateTimeFormatter.ofPattern(givenFormat)
-    return localDateTime.format(formatter)
-}
-
 @Preview(device = "id:Nexus S", showBackground = true, showSystemUi = true)
 @Composable
 fun TransactionCardPreview() {

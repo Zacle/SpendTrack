@@ -7,4 +7,17 @@
     <string name="remaining">Remaining</string>
     <string name="exceeded_limit">You\'ve exceeded the limit!</string>
     <string name="of">of</string>
+
+    <string name="how_much">How much?</string>
+    <string name="categories">Categories</string>
+    <string name="name">Enter name</string>
+    <string name="description">Description</string>
+    <string name="add_attachment">Add attachment</string>
+    <string name="save">Save</string>
+
+    <string name="select_date">Select transaction date</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_day">This</string>
 </resources>
