@@ -20,6 +20,9 @@ object SpendTrackIcons {
     val google = R.drawable.google
     val addExpense = R.drawable.add_expense
     val addIncome = R.drawable.add_income
+    val camera = R.drawable.camera
+    val image = R.drawable.image
+    val cross_remove = R.drawable.cross_remove
 
     val visibility = Icons.Default.Visibility
     val visibilityOff = Icons.Default.VisibilityOff

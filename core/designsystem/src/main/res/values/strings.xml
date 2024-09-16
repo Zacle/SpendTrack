@@ -20,4 +20,15 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="yesterday">Yesterday</string>
     <string name="this_day">This</string>
+
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Image</string>
+    <string name="camera_description">Take a picture of the receipt</string>
+    <string name="gallery_description">Select a picture from the gallery</string>
+    <string name="delete_receipt">Remove receipt</string>
+
+    <string name="camera_permission">Please grant the permission to access the camera</string>
 </resources>
