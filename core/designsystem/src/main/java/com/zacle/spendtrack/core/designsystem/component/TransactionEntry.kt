@@ -74,6 +74,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.io.File
 import android.graphics.Color as AndroidColor
 
 @Composable
@@ -81,7 +82,7 @@ fun RecordTransaction(
     name: String,
     description: String,
     categories: List<Category>,
-    selectedCategoryId: String,
+    selectedCategoryId: String?,
     onAmountChanged: (Int) -> Unit,
     onCategorySelected: (Category) -> Unit,
     onNameChanged: (String) -> Unit,
@@ -92,8 +93,7 @@ fun RecordTransaction(
     modifier: Modifier = Modifier,
     amount: Int = 0,
     transactionDate: Instant? = null,
-    receiptUriImage: ImageData.UriImage? = null,
-    receiptImageLocalPath: String? = null,
+    receiptUriImage: ImageData? = null,
     contentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer
 ) {
     Column(
@@ -102,7 +102,7 @@ fun RecordTransaction(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxHeight(fraction = 0.4f)
+                .fillMaxHeight(fraction = 0.3f)
                 .fillMaxWidth(),
             contentAlignment = Alignment.BottomStart
         ) {
@@ -125,7 +125,6 @@ fun RecordTransaction(
             onTransactionSaved = onTransactionSaved,
             transactionDate = transactionDate,
             receiptUriImage = receiptUriImage,
-            receiptImageLocalPath = receiptImageLocalPath,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -184,7 +183,7 @@ fun TransactionEntry(
     name: String,
     description: String,
     categories: List<Category>,
-    selectedCategoryId: String,
+    selectedCategoryId: String?,
     onCategorySelected: (Category) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -193,8 +192,7 @@ fun TransactionEntry(
     onTransactionSaved: () -> Unit,
     modifier: Modifier = Modifier,
     transactionDate: Instant? = null,
-    receiptUriImage: ImageData.UriImage? = null,
-    receiptImageLocalPath: String? = null
+    receiptUriImage: ImageData? = null
 ) {
     val scrollState = rememberScrollState()
 
@@ -229,8 +227,7 @@ fun TransactionEntry(
             )
             Attachment(
                 onAttachmentSelected = onAttachmentSelected,
-                receiptUriImage = receiptUriImage,
-                receiptImageLocalPath = receiptImageLocalPath
+                receiptUriImage = receiptUriImage
             )
             TransactionDate(
                 onDateSelected = onDateSelected,
@@ -248,7 +245,7 @@ fun TransactionEntry(
 @Composable
 fun CategoryDropdown(
     categories: List<Category>,
-    selectedCategoryId: String,
+    selectedCategoryId: String?,
     onCategorySelected: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -375,14 +372,10 @@ fun STTextField(
 fun Attachment(
     onAttachmentSelected: (ImageData?) -> Unit,
     modifier: Modifier = Modifier,
-    receiptUriImage: ImageData.UriImage? = null,
-    receiptImageLocalPath: String? = null
+    receiptUriImage: ImageData? = null
 ) {
     var showPicturePickerDialog by remember { mutableStateOf(false) }
 
-    var receiptImage by remember(receiptImageLocalPath) {
-        mutableStateOf<String?>(null)
-    }
     var selectedImage by remember(receiptUriImage) {
         mutableStateOf<ImageData?>(null)
     }
@@ -396,7 +389,7 @@ fun Attachment(
                 }
             }
     ) {
-        if (selectedImage == null && receiptImage == null) {
+        if (selectedImage == null) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -416,7 +409,7 @@ fun Attachment(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-        } else if (selectedImage != null) {
+        } else {
             Box(modifier = Modifier
                 .padding(vertical = 16.dp)
             ) {
@@ -456,34 +449,18 @@ fun Attachment(
                             contentScale = ContentScale.Crop
                         )
                     }
+                    is ImageData.LocalPathImage -> {
+                        val path = (selectedImage as ImageData.LocalPathImage).path
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(File(path))
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = "Local Receipt Image"
+                        )
+                    }
                     else -> {}
                 }
-            }
-        } else if (receiptImageLocalPath != null) {
-            Box(modifier = Modifier
-                .padding(vertical = 16.dp)
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                ) {
-                    Icon(
-                        painter = painterResource(id = SpendTrackIcons.cross_remove),
-                        contentDescription = stringResource(id = R.string.delete_receipt),
-                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(4.dp)
-                            .clickable { receiptImage = null }
-                    )
-                }
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
             }
         }
     }

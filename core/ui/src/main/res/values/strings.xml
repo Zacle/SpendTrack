@@ -9,4 +9,7 @@
     <string name="password_error_blank">Password should not be blank</string>
     <string name="password_error_short">Password should be at least 8 characters</string>
     <string name="password_error_invalid">Invalid password. Password should contain at least 1 uppercase letter, 1 lowercase letter, 1 number</string>
+    <string name="category_not_selected">Category not selected. Please select a category!</string>
+    <string name="amount_error_invalid">Invalid amount. Amount should be greater than 0</string>
+    <string name="date_error_blank">Please select the transaction date</string>
 </resources>

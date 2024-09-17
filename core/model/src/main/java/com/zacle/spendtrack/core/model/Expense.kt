@@ -13,6 +13,7 @@ data class Expense(
     override val category: Category = Category(),
     override val transactionDate: Instant = Clock.System.now(),
     override val receiptUrl: String? = null,
+    override val localReceiptImagePath: String? = null,
     override val updatedAt: Instant? = null,
     override val synced: Boolean = false
 ): Transaction

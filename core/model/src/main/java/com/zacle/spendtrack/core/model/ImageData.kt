@@ -6,4 +6,5 @@ import android.net.Uri
 sealed class ImageData {
     data class UriImage(val uri: Uri): ImageData()
     data class BitmapImage(val bitmap: Bitmap): ImageData()
+    data class LocalPathImage(val path: String): ImageData()
 }
