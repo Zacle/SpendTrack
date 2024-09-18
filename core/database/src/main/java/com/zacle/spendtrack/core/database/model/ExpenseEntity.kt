@@ -33,6 +33,8 @@ data class ExpenseEntity(
     val transactionDate: Instant = Clock.System.now(),
     @ColumnInfo(name = "receipt_url")
     val receiptUrl: String? = null,
+    @ColumnInfo(name = "local_receipt_image_path")
+    val localReceiptImagePath: String? = null,
     @ColumnInfo(name = "updated_at")
     val updatedAt: Instant? = null,
     val name: String = "",

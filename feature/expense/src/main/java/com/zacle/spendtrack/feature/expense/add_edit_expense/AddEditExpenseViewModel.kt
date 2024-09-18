@@ -157,16 +157,16 @@ class AddEditExpenseViewModel @Inject constructor(
 
         val expense = expense.value
         var didImageChange = false
-        if (expense?.receiptUrl != null) {
+        if (uiState.value.receiptImage != null) {
             val imageData = uiState.value.receiptImage
-            didImageChange = if (imageData is ImageData.UriImage) {
-                imageData.uri.toString() != expense.receiptUrl
-            } else {
-                true
+            didImageChange = when (imageData) {
+                is ImageData.UriImage -> imageData.uri.toString() != expense?.receiptUrl
+                is ImageData.LocalPathImage -> imageData.path != expense?.localReceiptImagePath
+                else -> true
             }
         }
 
-        var localReceiptImagePath: String? = null
+        var localReceiptImagePath: String? = expense?.localReceiptImagePath
         if (didImageChange) {
             // Delete the old image
             expense?.localReceiptImagePath?.let {

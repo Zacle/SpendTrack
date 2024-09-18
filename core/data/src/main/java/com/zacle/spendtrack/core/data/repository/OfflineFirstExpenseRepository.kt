@@ -10,10 +10,12 @@ import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalExpenseData
 import com.zacle.spendtrack.core.common.di.RemoteExpenseData
+import com.zacle.spendtrack.core.common.util.ImageStorageManager
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.DeletedExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
+import com.zacle.spendtrack.core.data.datasource.StorageDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
 import com.zacle.spendtrack.core.data.sync.SyncConstraints
 import com.zacle.spendtrack.core.data.sync.SyncExpenseWorker
@@ -47,8 +49,10 @@ class OfflineFirstExpenseRepository @Inject constructor(
     @RemoteExpenseData private val remoteExpenseDataSource: ExpenseDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
+    private val deletedExpenseDataSource: DeletedExpenseDataSource,
     private val networkMonitor: NetworkMonitor,
-    private val deletedExpenseDataSource: DeletedExpenseDataSource
+    private val storageDataSource: StorageDataSource,
+    private val imageStorageManager: ImageStorageManager
 ): ExpenseRepository {
     override suspend fun getExpenses(userId: String, period: Period): Flow<List<Expense>> =
         localExpenseDataSource.getExpenses(userId, period).flatMapLatest { expenses ->
@@ -99,37 +103,155 @@ class OfflineFirstExpenseRepository @Inject constructor(
             }
         }
 
+    /**
+     * Adds an expense to the local and remote data sources.
+     * Handles both online and offline scenarios and ensures that the expense and its receipt image are synchronized.
+     *
+     * Steps:
+     * 1. If online:
+     *    - If a local receipt image exists, upload it to cloud storage.
+     *    - Update the expense with the cloud receipt URL and clear the local image path.
+     *    - Add the expense to the remote data source.
+     *    - Mark the expense as synced and store it locally.
+     *    - If any step fails (e.g., network issues), save the expense locally as unsynced for later synchronization.
+     * 2. If offline:
+     *    - Add the expense to the local database.
+     *    - Mark the expense as unsynced.
+     *    - Schedule WorkManager to sync the expense when the network is available.
+     *
+     * @param expense The expense object containing transaction data, including receipt information.
+     */
     override suspend fun addExpense(expense: Expense) {
+        // Check the current network status (online or offline)
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteExpenseDataSource.addExpense(expense)
-            localExpenseDataSource.addExpense(expense.copy(synced = true))
+            addExpenseToServer(expense)
         } else {
-            startUpSyncWork(expense.userId)
             localExpenseDataSource.addExpense(expense)
-        }
-    }
-
-    override suspend fun updateExpense(expense: Expense) {
-        val isOnline = networkMonitor.isOnline.first()
-        if (isOnline) {
-            remoteExpenseDataSource.updateExpense(expense)
-            localExpenseDataSource.updateExpense(expense.copy(synced = true))
-        } else {
+            // Schedule WorkManager to sync the expense when back online
             startUpSyncWork(expense.userId)
-            localExpenseDataSource.updateExpense(expense.copy(synced = false))
         }
     }
 
+    private suspend fun addExpenseToServer(expense: Expense) {
+        var expenseToUpload = expense
+        // If the expense has a local receipt image, upload it to the cloud
+        if (expense.localReceiptImagePath != null) {
+            // Upload the image to the cloud storage and obtain the cloud URL
+            val cloudUrl = storageDataSource.uploadImageToCloud(
+                bucketName = "$EXPENSE_IMAGES/${expense.id}.jpg",
+                imagePath = expense.localReceiptImagePath!!
+            )
+            if (cloudUrl != null) {
+                // Update the expense with the cloud receipt URL and clear the local receipt image path
+                expenseToUpload = expense.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+            }
+        }
+        // Upload the expense to the remote data source (Firebase, etc.)
+        remoteExpenseDataSource.addExpense(expenseToUpload)
+
+        // Mark the expense as synced (synced = true) and save it locally
+        localExpenseDataSource.addExpense(expenseToUpload.copy(synced = true))
+    }
+
+    /**
+     * Updates an existing expense in both local and remote data sources.
+     * This function handles both online and offline cases, ensuring the expense is synchronized when the user is online.
+     *
+     * Steps:
+     * 1. If online:
+     *    - If a local receipt image exists, upload it to cloud storage.
+     *    - Update the expense with the cloud receipt URL and clear the local image path.
+     *    - Update the expense in the remote data source.
+     *    - Mark the expense as synced and update it in the local database.
+     * 2. If offline:
+     *    - Update the expense in the local database and mark it as unsynced.
+     *    - Schedule WorkManager to sync the updated expense when the network is available.
+     *
+     * @param expense The expense object that contains updated transaction details, including receipt information.
+     */
+    override suspend fun updateExpense(expense: Expense) {
+        // Check the current network status (online or offline)
+        val isOnline = networkMonitor.isOnline.first()
+
+        if (isOnline) {
+            updateExpenseOnServer(expense)
+        } else {
+            localExpenseDataSource.updateExpense(expense.copy(synced = false))
+            // Schedule WorkManager to sync the updated expense when the device goes online
+            startUpSyncWork(expense.userId)
+        }
+    }
+
+    private suspend fun updateExpenseOnServer(expense: Expense) {
+        var expenseToUpload = expense
+        // If the expense has a local receipt image, upload it to cloud storage
+        if (expense.localReceiptImagePath != null) {
+            // Upload the image to the cloud storage and get the cloud URL
+            val cloudUrl = storageDataSource.uploadImageToCloud(
+                bucketName = "$EXPENSE_IMAGES/${expense.id}.jpg",
+                imagePath = expense.localReceiptImagePath!!
+            )
+            // If the upload is successful, update the expense with the cloud receipt URL
+            if (cloudUrl != null) {
+                expenseToUpload = expense.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+            }
+        }
+        // Update the expense in the remote data source (e.g., Firebase)
+        remoteExpenseDataSource.updateExpense(expenseToUpload)
+
+        // Mark the expense as synced and update it in the local database
+        localExpenseDataSource.updateExpense(expenseToUpload.copy(synced = true))
+    }
+
+    /**
+     * Deletes an expense from both local and remote data sources, handling both online and offline scenarios.
+     *
+     * Steps:
+     * 1. Always delete the expense from the local data source.
+     *    - If a local receipt image path exists, delete the local image file.
+     * 2. If the device is online:
+     *    - Delete the receipt image from cloud storage if a receipt URL exists.
+     *    - Delete the expense from the remote data source (e.g., Firebase).
+     * 3. If the device is offline:
+     *    - Schedule WorkManager to sync the deleted expense with the remote server when the device is online.
+     *    - Log the deletion in a local table (e.g., `DeletedExpense`) to track items for future deletion in the remote database.
+     *
+     * @param expense The expense object to be deleted, which contains the receipt information and ID.
+     */
     override suspend fun deleteExpense(expense: Expense) {
+        val localReceiptImagePath = expense.localReceiptImagePath
+
+        // Delete the expense from the local database
         localExpenseDataSource.deleteExpense(expense.userId, expense.id)
+
+        // If there is a local receipt image, delete it from local storage
+        if (localReceiptImagePath != null) {
+            imageStorageManager.deleteImageLocally(localReceiptImagePath)
+        }
+
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteExpenseDataSource.deleteExpense(expense.userId, expense.id)
+            deleteExpenseOnServer(expense)
         } else {
+            // If offline, schedule a WorkManager task to sync deletions when back online
             startUpSyncWork(expense.userId)
             deletedExpenseDataSource.insert(DeletedExpense(expense.id, expense.userId))
         }
+    }
+
+    private suspend fun deleteExpenseOnServer(expense: Expense) {
+        // Retrieve the receipt URL and local image path from the expense
+        val receiptUrl = expense.receiptUrl
+        // If online, delete the receipt from cloud storage (if it exists)
+        if (receiptUrl != null) {
+            storageDataSource.deleteImageFromCloud(
+                bucketName = "$EXPENSE_IMAGES/${expense.id}.jpg",
+                imagePath = receiptUrl
+            )
+        }
+        // Delete the expense from the remote database (e.g., Firebase)
+        remoteExpenseDataSource.deleteExpense(expense.userId, expense.id)
     }
 
     private fun startUpSyncWork(userId: String) {
@@ -165,8 +287,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
 
                 addedExpensesNotSynced.forEach { expense ->
                     try {
-                        remoteExpenseDataSource.addExpense(expense)
-                        localExpenseDataSource.updateExpense(expense.copy(synced = true))
+                        addExpenseToServer(expense)
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -177,8 +298,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
 
                 updatedExpensesNotSynced.forEach { expense ->
                     try {
-                        remoteExpenseDataSource.updateExpense(expense)
-                        localExpenseDataSource.updateExpense(expense.copy(synced = true))
+                        updateExpenseOnServer(expense)
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -189,7 +309,10 @@ class OfflineFirstExpenseRepository @Inject constructor(
 
                 deletedExpenseIds.forEach { expenseId ->
                     try {
-                        remoteExpenseDataSource.deleteExpense(userId, expenseId)
+                        val expense = remoteExpenseDataSource.getExpense(userId, expenseId).first()
+                        if (expense != null) {
+                            deleteExpenseOnServer(expense)
+                        }
                         deletedExpenseDataSource.delete(userId, expenseId)
                     } catch (e: Exception) {
                         Timber.e(e)
@@ -201,3 +324,5 @@ class OfflineFirstExpenseRepository @Inject constructor(
 
 // This name should not be changed otherwise the app may have concurrent sync requests running
 internal const val EXPENSE_SYNC_WORK_NAME = "ExpenseSyncWorkName"
+
+internal const val EXPENSE_IMAGES = "expenses"

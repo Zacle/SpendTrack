@@ -11,6 +11,7 @@ import com.zacle.spendtrack.core.common.di.RemoteBudgetData
 import com.zacle.spendtrack.core.common.di.RemoteExpenseData
 import com.zacle.spendtrack.core.common.di.RemoteIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteUserData
+import com.zacle.spendtrack.core.common.util.ImageStorageManager
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.data.datasource.AuthStateUserDataSource
 import com.zacle.spendtrack.core.data.datasource.AuthenticationDataSource
@@ -22,6 +23,7 @@ import com.zacle.spendtrack.core.data.datasource.DeletedIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.ExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.GoogleAuthDataSource
 import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
+import com.zacle.spendtrack.core.data.datasource.StorageDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
@@ -114,7 +116,9 @@ object RepositoryModule {
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
-        deletedExpenseDataSource: DeletedExpenseDataSource
+        deletedExpenseDataSource: DeletedExpenseDataSource,
+        storageDataSource: StorageDataSource,
+        imageStorageManager: ImageStorageManager
     ): ExpenseRepository =
         OfflineFirstExpenseRepository(
             localExpenseDataSource = localExpenseDataSource,
@@ -122,7 +126,9 @@ object RepositoryModule {
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
             deletedExpenseDataSource = deletedExpenseDataSource,
-            context = context
+            context = context,
+            storageDataSource = storageDataSource,
+            imageStorageManager = imageStorageManager
         )
 
     @Provides
@@ -133,7 +139,7 @@ object RepositoryModule {
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
-        deletedIncomeDataSource: DeletedIncomeDataSource
+        deletedIncomeDataSource: DeletedIncomeDataSource,
     ): IncomeRepository =
         OfflineFirstIncomeRepository(
             localIncomeDataSource = localIncomeDataSource,
