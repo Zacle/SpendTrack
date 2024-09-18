@@ -3,6 +3,7 @@ package com.zacle.spendtrack.feature.expense.add_edit_expense
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.zacle.spendtrack.core.common.util.ImageStorageManager
 import com.zacle.spendtrack.core.domain.expense.AddExpenseUseCase
 import com.zacle.spendtrack.core.domain.expense.GetExpenseUseCase
 import com.zacle.spendtrack.core.domain.expense.UpdateExpenseUseCase
@@ -36,9 +37,10 @@ class AddEditExpenseViewModel @Inject constructor(
     private val updateExpenseUseCase: UpdateExpenseUseCase,
     private val getExpenseUseCase: GetExpenseUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val imageStorageManager: ImageStorageManager,
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<Unit, UiState<Unit>, TransactionUiAction, TransactionUiEvent>() {
-    val expenseId: String? = savedStateHandle[EXPENSE_ID_ARG]
+    private val expenseId: String? = savedStateHandle[EXPENSE_ID_ARG]
 
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState.asStateFlow()
@@ -154,14 +156,37 @@ class AddEditExpenseViewModel @Inject constructor(
         if (errors.any { it != null }) return
 
         val expense = expense.value
+        var didImageChange = false
+        if (expense?.receiptUrl != null) {
+            val imageData = uiState.value.receiptImage
+            didImageChange = if (imageData is ImageData.UriImage) {
+                imageData.uri.toString() != expense.receiptUrl
+            } else {
+                true
+            }
+        }
+
+        var localReceiptImagePath: String? = null
+        if (didImageChange) {
+            // Delete the old image
+            expense?.localReceiptImagePath?.let {
+                imageStorageManager.deleteImageLocally(it)
+            }
+
+            // Save the new image locally
+            localReceiptImagePath = uiState.value.receiptImage?.let {
+                imageStorageManager.saveImageLocally(it, "receipt_${System.currentTimeMillis()}")
+            }
+        }
+
         val updateExpense = expense?.copy(
             name = uiState.value.name,
             description = uiState.value.description,
             amount = uiState.value.amount.toDouble(),
             category = uiState.value.selectedCategory,
             transactionDate = uiState.value.transactionDate,
-            receiptUrl = uiState.value.receiptImage?.let { (it as? ImageData.UriImage)?.uri.toString() },
-            localReceiptImagePath = uiState.value.receiptImage?.let { (it as? ImageData.LocalPathImage)?.path }
+            receiptUrl = if (didImageChange) null else expense.receiptUrl,
+            localReceiptImagePath = localReceiptImagePath
         )
         if (updateExpense != null) {
             updateExpenseUseCase.execute(
@@ -184,6 +209,10 @@ class AddEditExpenseViewModel @Inject constructor(
         )
         if (errors.any { it != null }) return
 
+        val localReceiptImagePath = uiState.value.receiptImage?.let {
+            imageStorageManager.saveImageLocally(it, "receipt_${System.currentTimeMillis()}")
+        }
+
         val expense = Expense(
             userId = uiState.value.userId,
             name = uiState.value.name,
@@ -191,8 +220,8 @@ class AddEditExpenseViewModel @Inject constructor(
             amount = uiState.value.amount.toDouble(),
             category = uiState.value.selectedCategory,
             transactionDate = uiState.value.transactionDate,
-            receiptUrl = uiState.value.receiptImage?.let { (it as? ImageData.UriImage)?.uri.toString() },
-            localReceiptImagePath = uiState.value.receiptImage?.let { (it as? ImageData.LocalPathImage)?.path }
+            receiptUrl = null,
+            localReceiptImagePath = localReceiptImagePath
         )
         addExpenseUseCase.execute(
             AddExpenseUseCase.Request(
