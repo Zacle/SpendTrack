@@ -140,6 +140,8 @@ object RepositoryModule {
         @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
         deletedIncomeDataSource: DeletedIncomeDataSource,
+        storageDataSource: StorageDataSource,
+        imageStorageManager: ImageStorageManager
     ): IncomeRepository =
         OfflineFirstIncomeRepository(
             localIncomeDataSource = localIncomeDataSource,
@@ -147,7 +149,9 @@ object RepositoryModule {
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
             deletedIncomeDataSource = deletedIncomeDataSource,
-            context = context
+            context = context,
+            storageDataSource = storageDataSource,
+            imageStorageManager = imageStorageManager
         )
 
     @Provides
