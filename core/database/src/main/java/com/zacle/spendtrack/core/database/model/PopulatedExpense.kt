@@ -19,6 +19,7 @@ fun PopulatedExpense.asExternalModel() = Expense(
     category = category.asExternalModel(),
     transactionDate = expense.transactionDate,
     receiptUrl = expense.receiptUrl,
+    localReceiptImagePath = expense.localReceiptImagePath,
     updatedAt = expense.updatedAt,
     name = expense.name,
     description = expense.description,

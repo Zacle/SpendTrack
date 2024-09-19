@@ -10,10 +10,12 @@ import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteIncomeData
+import com.zacle.spendtrack.core.common.util.ImageStorageManager
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.DeletedIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.IncomeDataSource
+import com.zacle.spendtrack.core.data.datasource.StorageDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
 import com.zacle.spendtrack.core.data.sync.SyncConstraints
 import com.zacle.spendtrack.core.data.sync.SyncIncomeWorker
@@ -47,8 +49,10 @@ class OfflineFirstIncomeRepository @Inject constructor(
     @RemoteIncomeData private val remoteIncomeDataSource: IncomeDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
+    private val deletedIncomeDataSource: DeletedIncomeDataSource,
     private val networkMonitor: NetworkMonitor,
-    private val deletedIncomeDataSource: DeletedIncomeDataSource
+    private val storageDataSource: StorageDataSource,
+    private val imageStorageManager: ImageStorageManager
 ): IncomeRepository {
     override suspend fun getIncomes(userId: String, period: Period): Flow<List<Income>> =
         localIncomeDataSource.getIncomes(userId, period).flatMapLatest { incomes ->
@@ -99,37 +103,149 @@ class OfflineFirstIncomeRepository @Inject constructor(
             }
         }
 
+    /**
+     * Adds an income to the local and remote data sources.
+     * Handles both online and offline scenarios and ensures that the income and its receipt image are synchronized.
+     *
+     * Steps:
+     * 1. If online:
+     *    - If a local receipt image exists, upload it to cloud storage.
+     *    - Update the income with the cloud receipt URL and clear the local image path.
+     *    - Add the income to the remote data source.
+     *    - Mark the income as synced and store it locally.
+     *    - If any step fails (e.g., network issues), save the income locally as unsynced for later synchronization.
+     * 2. If offline:
+     *    - Add the income to the local database.
+     *    - Mark the income as unsynced.
+     *    - Schedule WorkManager to sync the income when the network is available.
+     *
+     * @param income The income object containing transaction data, including receipt information.
+     */
     override suspend fun addIncome(income: Income) {
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteIncomeDataSource.addIncome(income)
-            localIncomeDataSource.addIncome(income.copy(synced = true))
+            addIncomeToServer(income)
         } else {
             startUpSyncWork(income.userId)
             localIncomeDataSource.addIncome(income)
         }
     }
 
+    private suspend fun addIncomeToServer(income: Income) {
+        var incomeToUpload = income
+        // If the income has a local receipt image, upload it to the cloud
+        if (income.localReceiptImagePath != null) {
+            // Upload the image to the cloud storage and obtain the cloud URL
+            val cloudUrl = storageDataSource.uploadImageToCloud(
+                bucketName = "$INCOME_IMAGES/${income.id}.jpg",
+                imagePath = income.localReceiptImagePath!!
+            )
+            if (cloudUrl != null) {
+                // Update the income with the cloud receipt URL and clear the local receipt image path
+                incomeToUpload = income.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+            }
+        }
+        // Upload the income to the remote data source (Firebase, etc.)
+        remoteIncomeDataSource.addIncome(incomeToUpload)
+
+        // Mark the income as synced (synced = true) and save it locally
+        localIncomeDataSource.addIncome(incomeToUpload.copy(synced = true))
+    }
+
+    /**
+     * Updates an existing income in both local and remote data sources.
+     * This function handles both online and offline cases, ensuring the income is synchronized when the user is online.
+     *
+     * Steps:
+     * 1. If online:
+     *    - If a local receipt image exists, upload it to cloud storage.
+     *    - Update the income with the cloud receipt URL and clear the local image path.
+     *    - Update the income in the remote data source.
+     *    - Mark the income as synced and update it in the local database.
+     * 2. If offline:
+     *    - Update the income in the local database and mark it as unsynced.
+     *    - Schedule WorkManager to sync the updated income when the network is available.
+     *
+     * @param income The income object that contains updated transaction details, including receipt information.
+     */
     override suspend fun updateIncome(income: Income) {
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteIncomeDataSource.updateIncome(income)
-            localIncomeDataSource.updateIncome(income.copy(synced = true))
+            updateIncomeOnServer(income)
         } else {
             startUpSyncWork(income.userId)
             localIncomeDataSource.updateIncome(income.copy(synced = false))
         }
     }
 
+    private suspend fun updateIncomeOnServer(income: Income) {
+        var incomeToUpload = income
+        // If the income has a local receipt image, upload it to the cloud
+        if (income.localReceiptImagePath != null) {
+            // Upload the image to the cloud storage and obtain the cloud URL
+            val cloudUrl = storageDataSource.uploadImageToCloud(
+                bucketName = "$INCOME_IMAGES/${income.id}.jpg",
+                imagePath = income.localReceiptImagePath!!
+            )
+            if (cloudUrl != null) {
+                // Update the income with the cloud receipt URL and clear the local receipt image path
+                incomeToUpload = income.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+            }
+        }
+        // Upload the income to the remote data source (Firebase, etc.)
+        remoteIncomeDataSource.updateIncome(incomeToUpload)
+
+        // Mark the income as synced (synced = true) and save it locally
+        localIncomeDataSource.updateIncome(incomeToUpload.copy(synced = true))
+    }
+
+    /**
+     * Deletes an income from both local and remote data sources, handling both online and offline scenarios.
+     *
+     * Steps:
+     * 1. Always delete the income from the local data source.
+     *    - If a local receipt image path exists, delete the local image file.
+     * 2. If the device is online:
+     *    - Delete the receipt image from cloud storage if a receipt URL exists.
+     *    - Delete the income from the remote data source (e.g., Firebase).
+     * 3. If the device is offline:
+     *    - Schedule WorkManager to sync the deleted income with the remote server when the device is online.
+     *    - Log the deletion in a local table (e.g., `DeletedIncome`) to track items for future deletion in the remote database.
+     *
+     * @param income The income object to be deleted, which contains the receipt information and ID.
+     */
     override suspend fun deleteIncome(income: Income) {
+        val localReceiptImagePath = income.localReceiptImagePath
+
+        // Delete the income from the local database
         localIncomeDataSource.deleteIncome(income.userId, income.id)
+
+        // If there is a local receipt image, delete it from local storage
+        if (localReceiptImagePath != null) {
+            imageStorageManager.deleteImageLocally(localReceiptImagePath)
+        }
+
         val isOnline = networkMonitor.isOnline.first()
         if (isOnline) {
-            remoteIncomeDataSource.deleteIncome(income.userId, income.id)
+            deleteIncomeOnServer(income)
         } else {
             startUpSyncWork(income.userId)
             deletedIncomeDataSource.insert(DeletedIncome(income.id, income.userId))
         }
+    }
+
+    private suspend fun deleteIncomeOnServer(income: Income) {
+        // Retrieve the receipt URL and local image path from the income
+        val receiptUrl = income.receiptUrl
+        // If online, delete the receipt from cloud storage (if it exists)
+        if (receiptUrl != null) {
+            storageDataSource.deleteImageFromCloud(
+                bucketName = "$INCOME_IMAGES/${income.id}.jpg",
+                imagePath = receiptUrl
+            )
+        }
+        // Delete the income from the remote database (e.g., Firebase)
+        remoteIncomeDataSource.deleteIncome(income.userId, income.id)
     }
 
     private fun startUpSyncWork(userId: String) {
@@ -165,8 +281,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
 
                 addedIncomesNotSynced.forEach { income ->
                     try {
-                        remoteIncomeDataSource.addIncome(income)
-                        localIncomeDataSource.updateIncome(income.copy(synced = true))
+                        addIncomeToServer(income)
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -177,8 +292,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
 
                 updatedIncomesNotSynced.forEach { income ->
                     try {
-                        remoteIncomeDataSource.updateIncome(income)
-                        localIncomeDataSource.updateIncome(income.copy(synced = true))
+                        updateIncomeOnServer(income)
                     } catch (e: Exception) {
                         Timber.e(e)
                     }
@@ -189,7 +303,10 @@ class OfflineFirstIncomeRepository @Inject constructor(
 
                 deletedIncomeIds.forEach { incomeId ->
                     try {
-                        remoteIncomeDataSource.deleteIncome(userId, incomeId)
+                        val income = remoteIncomeDataSource.getIncome(userId, incomeId).first()
+                        if (income != null) {
+                            deleteIncomeOnServer(income)
+                        }
                         deletedIncomeDataSource.delete(userId, incomeId)
                     } catch (e: Exception) {
                         Timber.e(e)
@@ -201,3 +318,5 @@ class OfflineFirstIncomeRepository @Inject constructor(
 
 // This name should not be changed otherwise the app may have concurrent sync requests running
 internal const val INCOME_SYNC_WORK_NAME = "IncomeSyncWorkName"
+
+internal const val INCOME_IMAGES = "incomes"

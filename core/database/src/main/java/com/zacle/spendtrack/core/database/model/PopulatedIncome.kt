@@ -19,6 +19,7 @@ fun PopulatedIncome.asExternalModel() = Income(
     category = category.asExternalModel(),
     transactionDate = income.transactionDate,
     receiptUrl = income.receiptUrl,
+    localReceiptImagePath = income.localReceiptImagePath,
     updatedAt = income.updatedAt,
     name = income.name,
     description = income.description,

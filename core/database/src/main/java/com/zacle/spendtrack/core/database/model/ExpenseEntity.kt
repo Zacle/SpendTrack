@@ -49,6 +49,7 @@ fun Expense.asEntity() = ExpenseEntity(
     categoryId = category.categoryId,
     transactionDate = transactionDate,
     receiptUrl = receiptUrl,
+    localReceiptImagePath = localReceiptImagePath,
     updatedAt = updatedAt,
     name = name,
     description = description,
