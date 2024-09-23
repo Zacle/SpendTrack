@@ -40,6 +40,7 @@ import com.zacle.spendtrack.core.designsystem.component.TOP_APP_BAR_PADDING
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
 import kotlinx.coroutines.flow.collectLatest
+import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun LoginRoute(

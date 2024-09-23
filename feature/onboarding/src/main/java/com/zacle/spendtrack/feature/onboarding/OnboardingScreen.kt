@@ -41,6 +41,7 @@ import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
 import com.zacle.spendtrack.feature.onboarding.data.OnboardingPage
 import com.zacle.spendtrack.feature.onboarding.data.OnboardingPagesModel
+import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun OnboardingRoute(

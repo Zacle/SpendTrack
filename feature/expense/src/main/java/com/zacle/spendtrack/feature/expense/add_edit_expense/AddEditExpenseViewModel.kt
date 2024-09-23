@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.common.util.ImageStorageManager
+import com.zacle.spendtrack.core.domain.category.GetCategoriesUseCase
 import com.zacle.spendtrack.core.domain.expense.AddExpenseUseCase
 import com.zacle.spendtrack.core.domain.expense.GetExpenseUseCase
 import com.zacle.spendtrack.core.domain.expense.UpdateExpenseUseCase
@@ -15,7 +16,6 @@ import com.zacle.spendtrack.core.model.usecase.Result
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
 import com.zacle.spendtrack.core.ui.BaseViewModel
 import com.zacle.spendtrack.core.ui.UiState
-import com.zacle.spendtrack.core.ui.ext.isValidName
 import com.zacle.spendtrack.core.ui.transaction.AmountError
 import com.zacle.spendtrack.core.ui.transaction.CategoryError
 import com.zacle.spendtrack.core.ui.transaction.NameError
@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import javax.inject.Inject
@@ -37,6 +38,7 @@ class AddEditExpenseViewModel @Inject constructor(
     private val updateExpenseUseCase: UpdateExpenseUseCase,
     private val getExpenseUseCase: GetExpenseUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val imageStorageManager: ImageStorageManager,
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<Unit, UiState<Unit>, TransactionUiAction, TransactionUiEvent>() {
@@ -54,46 +56,54 @@ class AddEditExpenseViewModel @Inject constructor(
             if (expenseId != null) {
                 getExpense(expenseId, userId)
             }
+            getCategories()
         }
     }
 
     private suspend fun getUserId() {
-        getUserUseCase.execute(GetUserUseCase.Request).collect { result ->
-            if (result is Result.Success) {
-                val user = result.data.user
-                if (user != null) {
-                    _uiState.value = uiState.value.copy(userId = user.userId)
-                } else {
-                    submitSingleEvent(TransactionUiEvent.NavigateToLogin)
-                }
+        val userIdResult = getUserUseCase.execute(GetUserUseCase.Request).first()
+        if (userIdResult is Result.Success) {
+            val userId = userIdResult.data.user?.userId
+            if (userId != null) {
+                _uiState.value = uiState.value.copy(userId = userId)
             } else {
                 submitSingleEvent(TransactionUiEvent.NavigateToLogin)
+            }
+        } else {
+            submitSingleEvent(TransactionUiEvent.NavigateToLogin)
+        }
+    }
+
+    private suspend fun getCategories() {
+        getCategoriesUseCase.execute(GetCategoriesUseCase.Request).collectLatest { result ->
+            if (result is Result.Success) {
+                val categories = result.data.categories
+                _uiState.value = uiState.value.copy(categories = categories)
             }
         }
     }
 
     private suspend fun getExpense(expenseId: String, userId: String) {
-        getExpenseUseCase.execute(GetExpenseUseCase.Request(userId, expenseId)).collectLatest { result ->
-            if (result is Result.Success) {
-                val expense = result.data.expense
-                this.expense.value = expense
-                if (expense != null) {
-                    _uiState.value = uiState.value.copy(
-                        name = expense.name,
-                        description = expense.description,
-                        amount = expense.amount.toInt(),
-                        selectedCategory = expense.category,
-                        transactionDate = expense.transactionDate,
-                        receiptImage =
-                            when {
-                                expense.receiptUrl != null -> ImageData.UriImage(Uri.parse(expense.receiptUrl))
-                                expense.localReceiptImagePath != null -> ImageData.LocalPathImage(
-                                    expense.localReceiptImagePath!!
-                                )
-                                else -> null
-                            }
-                    )
-                }
+        val expenseResult = getExpenseUseCase.execute(GetExpenseUseCase.Request(userId, expenseId)).first()
+        if (expenseResult is Result.Success) {
+            val expense = expenseResult.data.expense
+            this.expense.value = expense
+            if (expense != null) {
+                _uiState.value = uiState.value.copy(
+                    name = expense.name,
+                    description = expense.description,
+                    amount = expense.amount.toInt(),
+                    selectedCategory = expense.category,
+                    transactionDate = expense.transactionDate,
+                    receiptImage =
+                    when {
+                        expense.receiptUrl != null -> ImageData.UriImage(Uri.parse(expense.receiptUrl))
+                        expense.localReceiptImagePath != null -> ImageData.LocalPathImage(
+                            expense.localReceiptImagePath!!
+                        )
+                        else -> null
+                    }
+                )
             }
         }
     }
@@ -196,7 +206,7 @@ class AddEditExpenseViewModel @Inject constructor(
                     period = uiState.value.transactionDate.toMonthlyPeriod()
                 )
             )
-            submitSingleEvent(TransactionUiEvent.NavigateToHome)
+            submitSingleEvent(TransactionUiEvent.NavigateBack)
         }
     }
 
@@ -229,7 +239,9 @@ class AddEditExpenseViewModel @Inject constructor(
                 expense = expense,
                 period = uiState.value.transactionDate.toMonthlyPeriod()
             )
-        )
+        ).collect {
+            submitSingleEvent(TransactionUiEvent.NavigateBack)
+        }
     }
 
     private fun formValidation(name: String, amount: Int, category: Category) {
@@ -244,13 +256,6 @@ class AddEditExpenseViewModel @Inject constructor(
         if (name.isBlank()) {
             _uiState.value = uiState.value.copy(nameError = NameError.BLANK)
             submitSingleEvent(TransactionUiEvent.BlankNameError(NameError.BLANK.errorMessageResId))
-        } else {
-            _uiState.value = uiState.value.copy(nameError = null)
-        }
-
-        if (!name.isValidName()) {
-            _uiState.value = uiState.value.copy(nameError = NameError.INVALID)
-            submitSingleEvent(TransactionUiEvent.InvalidNameError(NameError.INVALID.errorMessageResId))
         } else {
             _uiState.value = uiState.value.copy(nameError = null)
         }

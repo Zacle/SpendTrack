@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="email_not_found">Email not found. Sign up instead!</string>
 
-    <string name="title">Forgot Password</string>
-
-    <string name="email">Email</string>
-
-    <string name="reset_password_text">
-        Please enter your registered email address. We will send you a password reset link.
-        Press on the link to reset your password.
-    </string>
-    <string name="submit">Continue</string>
 </resources>

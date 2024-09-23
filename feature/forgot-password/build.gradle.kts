@@ -8,8 +8,8 @@ android {
 }
 
 dependencies {
-
     implementation(projects.core.domain)
+    implementation(projects.core.sharedResources)
 
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)

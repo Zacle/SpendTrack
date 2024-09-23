@@ -25,9 +25,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun TertiaryButton(
@@ -117,7 +117,7 @@ fun GoogleButton(
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
-                    text = stringResource(id = R.string.google_auth),
+                    text = stringResource(id = SharedR.string.google_auth),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

@@ -2,10 +2,7 @@ package com.zacle.spendtrack.navigation
 
 import com.zacle.spendtrack.core.designsystem.icon.Icon
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
-import com.zacle.spendtrack.feature.budget.R as budgetR
-import com.zacle.spendtrack.feature.home.R as homeR
-import com.zacle.spendtrack.feature.profile.R as profileR
-import com.zacle.spendtrack.feature.transaction.R as transactionR
+import com.zacle.spendtrack.core.shared_resources.R
 
 /**
  * Type for the top level destinations in the application. Each of these destinations
@@ -18,18 +15,18 @@ enum class TopLevelDestination(
 ) {
     HOME(
         icon = Icon.DrawableResourceIcon(SpendTrackIcons.home),
-        titleTextId = homeR.string.home
+        titleTextId = R.string.home
     ),
     TRANSACTION(
         icon = Icon.DrawableResourceIcon(SpendTrackIcons.transaction),
-        titleTextId = transactionR.string.transaction
+        titleTextId = R.string.transaction
     ),
     BUDGET(
         icon = Icon.DrawableResourceIcon(SpendTrackIcons.budget),
-        titleTextId = budgetR.string.budget
+        titleTextId = R.string.budget
     ),
     PROFILE(
         icon = Icon.DrawableResourceIcon(SpendTrackIcons.profile),
-        titleTextId = profileR.string.profile
+        titleTextId = R.string.profile
     )
 }

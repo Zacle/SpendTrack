@@ -3,10 +3,12 @@ package com.zacle.spendtrack.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.zacle.spendtrack.feature.expense.add_edit_expense.addEditExpenseScreen
 import com.zacle.spendtrack.feature.forgot_password.forgotPasswordScreen
 import com.zacle.spendtrack.feature.forgot_password.navigateToForgotPassword
 import com.zacle.spendtrack.feature.home.homeScreen
 import com.zacle.spendtrack.feature.home.navigateToHome
+import com.zacle.spendtrack.feature.income.add_edit_income.addEditIncomeScreen
 import com.zacle.spendtrack.feature.login.loginScreen
 import com.zacle.spendtrack.feature.login.navigateToLogin
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
@@ -64,6 +66,14 @@ fun STNavHost(
             navigateToIncome = {},
             navigateToBudgetDetails = {},
             navigateToLogin = navController::navigateToLogin
+        )
+        addEditExpenseScreen(
+            navigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToHome
+        )
+        addEditIncomeScreen(
+            navigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToHome
         )
     }
 }

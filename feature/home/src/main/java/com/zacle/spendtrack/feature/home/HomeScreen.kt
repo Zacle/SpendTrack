@@ -46,6 +46,7 @@ import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.ext.formatDate
 import kotlinx.datetime.Instant
+import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun HomeRoute(
@@ -108,7 +109,6 @@ fun HomeScreen(
     navigateToBudgetDetails: (String) -> Unit,
     navigateToBudgets: () -> Unit,
     navigateToTransactions: () -> Unit,
-
     snackbarHostState: SnackbarHostState,
     modifier: Modifier
 ) {

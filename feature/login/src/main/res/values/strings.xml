@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="login">Log In</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="no_account">Don\'t have an account yet?</string>
-    <string name="signup">Sign Up</string>
-    <string name="or">Or</string>
-
-    <string name="unknown_error">An unknown error occurred</string>
-
-    <string name="login_failed">Wrong email or password</string>
 
 </resources>

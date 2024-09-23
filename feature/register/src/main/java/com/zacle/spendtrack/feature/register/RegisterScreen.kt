@@ -43,6 +43,7 @@ import com.zacle.spendtrack.core.ui.previews.DevicePreviews
 import com.zacle.spendtrack.core.ui.types.NameError
 import com.zacle.spendtrack.core.ui.types.PasswordError
 import kotlinx.coroutines.flow.collectLatest
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun RegisterRoute(
@@ -58,7 +59,7 @@ fun RegisterRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val registrationFailed = stringResource(id = R.string.registration_failed)
+    val registrationFailed = stringResource(id = SharedR.string.registration_failed)
 
     LaunchedEffect(Unit) {
         viewModel.singleEventFlow.collectLatest { event ->
@@ -114,7 +115,7 @@ fun RegisterScreen(
         topBar = {
             STTopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.register))
+                    Text(text = stringResource(id = SharedR.string.register))
                 },
                 navigationIcon = {
                     Icon(
@@ -179,7 +180,7 @@ fun RegisterContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = stringResource(id = R.string.or),
+                text = stringResource(id = SharedR.string.or),
                 style = MaterialTheme.typography.labelMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -193,10 +194,10 @@ fun RegisterContent(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = stringResource(id = R.string.have_account))
+            Text(text = stringResource(id = SharedR.string.have_account))
             Spacer(modifier = Modifier.width(2.dp))
             Text(
-                text = stringResource(id = R.string.login),
+                text = stringResource(id = SharedR.string.login),
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary,
                 textDecoration = TextDecoration.Underline,
@@ -226,31 +227,31 @@ fun RegisterForm(
     ) {
         STOutlinedTextField(
             name = uiState.firstName,
-            placeholder = stringResource(id = R.string.first_name),
+            placeholder = stringResource(id = SharedR.string.first_name),
             onValueChange = { onFirstNameChanged(it) },
             errorResId = uiState.firstNameError?.errorMessageResId
         )
         STOutlinedTextField(
             name = uiState.lastName,
-            placeholder = stringResource(id = R.string.last_name),
+            placeholder = stringResource(id = SharedR.string.last_name),
             onValueChange = { onLastNameChanged(it) },
             errorResId = uiState.lastNameError?.errorMessageResId
         )
         STOutlinedTextField(
             name = uiState.email,
-            placeholder = stringResource(id = R.string.email),
+            placeholder = stringResource(id = SharedR.string.email),
             onValueChange = { onEmailChanged(it) },
             errorResId = uiState.emailError?.errorMessageResId
         )
         STPasswordTextField(
             password = uiState.password,
-            placeholder = stringResource(id = R.string.password),
+            placeholder = stringResource(id = SharedR.string.password),
             onValueChange = { onPasswordChanged(it) },
             errorResId = uiState.passwordError?.errorMessageResId
         )
         Spacer(modifier = Modifier.height(12.dp))
         SpendTrackButton(
-            text = stringResource(id = R.string.register),
+            text = stringResource(id = SharedR.string.register),
             onClick = onRegisterClicked,
             enabled = !isOffline
         )

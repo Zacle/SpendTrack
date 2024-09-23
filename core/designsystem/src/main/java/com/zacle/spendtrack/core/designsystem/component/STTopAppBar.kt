@@ -10,12 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 const val TOP_APP_BAR_PADDING = 64
 
@@ -26,13 +27,20 @@ fun STTopAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actionIcon: @Composable () -> Unit = {},
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
+    navigationIconContentColor: Color = MaterialTheme.colorScheme.onSurface,
+    actionIconContentColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     CenterAlignedTopAppBar(
         title = title,
         navigationIcon = navigationIcon,
         actions = { actionIcon() },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = containerColor,
+            titleContentColor = titleContentColor,
+            navigationIconContentColor = navigationIconContentColor,
+            actionIconContentColor = actionIconContentColor
         ),
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -45,7 +53,7 @@ fun STTopAppBarPreview(modifier: Modifier = Modifier) {
     SpendTrackTheme {
         STTopAppBar(
             title = {
-                Text(text = stringResource(id = R.string.google_auth))
+                Text(text = stringResource(id = SharedR.string.google_auth))
             },
             navigationIcon = {
                 IconButton(onClick = {}) {

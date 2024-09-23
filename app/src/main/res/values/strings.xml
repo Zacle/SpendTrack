@@ -1,7 +1,3 @@
 <resources>
-    <string name="app_name">SpendTrack</string>
-    
-    <string name="unknown_error">An unknown error occurred!</string>
-    <string name="not_connected">You are not connected to the internet!</string>
-    <string name="add_transaction">Click to add a transaction</string>
+
 </resources>

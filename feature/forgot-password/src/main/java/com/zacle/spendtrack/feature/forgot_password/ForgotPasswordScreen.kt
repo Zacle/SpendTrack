@@ -29,6 +29,7 @@ import com.zacle.spendtrack.core.designsystem.component.SpendTrackButton
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun ForgotPasswordRoute(
@@ -42,7 +43,7 @@ fun ForgotPasswordRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val emailNotFound = stringResource(id = R.string.email_not_found)
+    val emailNotFound = stringResource(id = SharedR.string.email_not_found)
 
     LaunchedEffect(Unit) {
         viewModel.singleEventFlow.collect { event ->
@@ -82,7 +83,7 @@ fun ForgotPasswordScreen(
         topBar = {
             STTopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.title))
+                    Text(text = stringResource(id = SharedR.string.title))
                 },
                 navigationIcon = {
                     Icon(
@@ -123,7 +124,7 @@ fun ForgotPasswordContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.reset_password_text),
+            text = stringResource(id = SharedR.string.reset_password_text),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -131,12 +132,12 @@ fun ForgotPasswordContent(
         )
         STOutlinedTextField(
             name = uiState.email,
-            placeholder = stringResource(id = R.string.email),
+            placeholder = stringResource(id = SharedR.string.email),
             onValueChange = { onEmailChanged(it) },
             errorResId = uiState.emailError?.errorMessageResId
         )
         SpendTrackButton(
-            text = stringResource(id = R.string.submit),
+            text = stringResource(id = SharedR.string.submit),
             onClick = onResetPasswordClicked,
             enabled = !isOffline
         )

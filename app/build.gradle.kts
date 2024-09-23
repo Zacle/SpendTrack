@@ -55,10 +55,12 @@ dependencies {
     implementation(projects.core.ui)
 
     implementation(projects.feature.budget)
+    implementation(projects.feature.expense)
     implementation(projects.feature.forgotPassword)
     implementation(projects.feature.home)
-    implementation(projects.feature.onboarding)
+    implementation(projects.feature.income)
     implementation(projects.feature.login)
+    implementation(projects.feature.onboarding)
     implementation(projects.feature.profile)
     implementation(projects.feature.register)
     implementation(projects.feature.transaction)

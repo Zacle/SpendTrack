@@ -1,7 +1,6 @@
 package com.zacle.spendtrack.core.designsystem.component
 
 import android.content.Context
-import com.zacle.spendtrack.core.designsystem.R
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
 import java.time.LocalDateTime
@@ -10,6 +9,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 fun formatLocalDateTime(context: Context, dateTime: LocalDateTime): String {
     val today = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
@@ -19,11 +19,11 @@ fun formatLocalDateTime(context: Context, dateTime: LocalDateTime): String {
     val endOfNextWeek = startOfNextWeek.plusDays(6)
 
     return when {
-        inputDate.isEqual(today) -> context.getString(R.string.today)
-        inputDate.isEqual(today.plusDays(1)) -> context.getString(R.string.tomorrow)
-        inputDate.isEqual(today.minusDays(1)) -> context.getString(R.string.yesterday)
+        inputDate.isEqual(today) -> context.getString(SharedR.string.today)
+        inputDate.isEqual(today.plusDays(1)) -> context.getString(SharedR.string.tomorrow)
+        inputDate.isEqual(today.minusDays(1)) -> context.getString(SharedR.string.yesterday)
         inputDate.isAfter(startOfNextWeek) && inputDate.isBefore(endOfNextWeek.plusDays(1)) -> {
-            "${context.getString(R.string.this_day)} ${inputDate.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}"
+            "${context.getString(SharedR.string.this_day)} ${inputDate.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}"
         }
         else -> {
             // Fallback to standard format: dd MMM yyyy

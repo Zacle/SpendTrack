@@ -1,21 +1,20 @@
 package com.zacle.spendtrack.core.ui.transaction
 
-import com.zacle.spendtrack.core.ui.R
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 interface TransactionFormError {
     val errorMessageResId: Int
 }
 
 enum class NameError(override val errorMessageResId: Int) : TransactionFormError {
-    BLANK(R.string.name_error_blank),
-    INVALID(R.string.name_error_invalid),
-    SHORT(R.string.name_error_short)
+    BLANK(SharedR.string.name_error_blank),
+    SHORT(SharedR.string.name_error_short)
 }
 
 enum class CategoryError(override val errorMessageResId: Int) : TransactionFormError {
-    NOT_SELECTED(R.string.category_not_selected)
+    NOT_SELECTED(SharedR.string.category_not_selected)
 }
 
 enum class AmountError(override val errorMessageResId: Int) : TransactionFormError {
-    INVALID(R.string.amount_error_invalid)
+    INVALID(SharedR.string.amount_error_invalid)
 }

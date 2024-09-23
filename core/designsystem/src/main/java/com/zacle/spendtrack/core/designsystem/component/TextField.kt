@@ -160,8 +160,8 @@ fun STPasswordTextField(
                 unfocusedIndicatorColor = Color.Transparent,
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                focusedTextColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
             textStyle = TextStyle(

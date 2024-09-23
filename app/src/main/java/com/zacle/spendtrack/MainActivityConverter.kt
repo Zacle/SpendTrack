@@ -7,6 +7,7 @@ import com.zacle.spendtrack.core.ui.CommonResultConverter
 import com.zacle.spendtrack.data.UserStateModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import com.zacle.spendtrack.core.shared_resources.R
 
 class MainActivityConverter @Inject constructor(
     @ApplicationContext private val context: Context

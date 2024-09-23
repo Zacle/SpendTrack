@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(private val configuration: Configuration) {
 
@@ -16,6 +17,7 @@ abstract class UseCase<I: UseCase.Request, O: UseCase.Response>(private val conf
         }
         .flowOn(configuration.dispatcher)
         .catch {
+            Timber.e(it)
             emit(Result.Error(UseCaseException.createFromThrowable(it)))
         }
 

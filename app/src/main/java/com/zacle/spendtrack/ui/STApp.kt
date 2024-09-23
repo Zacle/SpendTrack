@@ -39,19 +39,22 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.zacle.spendtrack.R
 import com.zacle.spendtrack.core.designsystem.component.STNavigationBar
 import com.zacle.spendtrack.core.designsystem.component.STNavigationBarItem
 import com.zacle.spendtrack.core.designsystem.component.STNavigationDefaults
 import com.zacle.spendtrack.core.designsystem.component.STNavigationSuiteScope
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
+import com.zacle.spendtrack.core.model.auth.AuthenticatedUserInfo
 import com.zacle.spendtrack.data.UserStateModel
+import com.zacle.spendtrack.feature.expense.add_edit_expense.navigateToAddEditExpense
 import com.zacle.spendtrack.feature.home.Home
+import com.zacle.spendtrack.feature.income.add_edit_income.navigateToAddEditIncome
 import com.zacle.spendtrack.feature.login.Login
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.verify_auth.VerifyAuth
 import com.zacle.spendtrack.navigation.STNavHost
 import com.zacle.spendtrack.navigation.TopLevelDestination
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun STApp(
@@ -64,7 +67,7 @@ fun STApp(
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
         // If user is not connected to the internet show a snack bar to inform them
-        val notConnectedMessage = stringResource(R.string.not_connected)
+        val notConnectedMessage = stringResource(SharedR.string.not_connected)
         LaunchedEffect(isOffline) {
             if (isOffline) {
                 snackbarHostState.showSnackbar(
@@ -79,7 +82,8 @@ fun STApp(
             appState = appState,
             startDestination = startDestination,
             isOffline = isOffline,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            userInfo = userStateModel.userInfo
         )
     }
 }
@@ -89,6 +93,7 @@ fun STApp(
 @Composable
 fun STApp(
     appState: STAppState,
+    userInfo: AuthenticatedUserInfo?,
     startDestination: Any,
     isOffline: Boolean,
     snackbarHostState: SnackbarHostState,
@@ -143,15 +148,21 @@ fun STApp(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             floatingActionButton = {
-                Box {
-                    if (layoutType == NavigationSuiteType.NavigationBar) {
-                        STFloatingActionButton(
-                            onAddNewExpense = {},
-                            onAddNewIncome = {},
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .offset(y = 50.dp)
-                        )
+                if (currentTopLevelDestination != null) {
+                    Box {
+                        if (layoutType == NavigationSuiteType.NavigationBar) {
+                            STFloatingActionButton(
+                                onAddNewExpense = {
+                                    appState.navController.navigateToAddEditExpense()
+                                },
+                                onAddNewIncome = {
+                                    appState.navController.navigateToAddEditIncome()
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .offset(y = 50.dp)
+                            )
+                        }
                     }
                 }
             },

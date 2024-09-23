@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,8 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Category
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun BudgetCard(
@@ -73,7 +76,10 @@ fun BudgetCard(
                     .fillMaxWidth()
             ) {
                 CategoryChip(
-                    name = stringResource(id = budget.category.name),
+                    name = CategoryKeyResource.getStringResourceForCategory(
+                        context = LocalContext.current,
+                        categoryKey = budget.category.key
+                    ),
                     color = color,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
@@ -93,7 +99,7 @@ fun BudgetCard(
                 if (isBudgetExceeded) 0
                 else budget.remainingAmount.toInt()
             Text(
-                text = stringResource(id = R.string.remaining) + " $$remainingAmount",
+                text = stringResource(id = SharedR.string.remaining) + " $$remainingAmount",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -107,13 +113,13 @@ fun BudgetCard(
                     .padding(horizontal = 4.dp)
             )
             Text(
-                text = "$$totalExpense " + stringResource(id = R.string.of) + " $${budget.amount.toInt()}",
+                text = "$$totalExpense " + stringResource(id = SharedR.string.of) + " $${budget.amount.toInt()}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
             )
             if (isBudgetExceeded) {
                 Text(
-                    text = stringResource(id = R.string.exceeded_limit),
+                    text = stringResource(id = SharedR.string.exceeded_limit),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
                 )
@@ -201,7 +207,7 @@ fun BudgetCardPreview() {
             budget = Budget(
                 category = Category(
                     categoryId = "1",
-                    name = R.string.food_drinks,
+                    key = "food_dining",
                     icon = R.drawable.food_dinning,
                     color = "#FF7043"
                 ),
@@ -222,7 +228,7 @@ fun BudgetCardExceedPreview() {
             budget = Budget(
                 category = Category(
                     categoryId = "1",
-                    name = R.string.food_drinks,
+                    key = "food_dining",
                     icon = R.drawable.travel,
                     color = "#FF7043"
                 ),

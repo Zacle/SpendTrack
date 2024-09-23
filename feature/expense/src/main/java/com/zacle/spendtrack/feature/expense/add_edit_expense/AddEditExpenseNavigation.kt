@@ -21,9 +21,13 @@ fun NavController.navigateToAddEditExpense(
 }
 
 fun NavGraphBuilder.addEditExpenseScreen(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
     composable<AddEditExpense> {
-        // TODO: Add edit expense screen
+        AddEditExpenseRoute(
+            navigateBack = navigateBack,
+            navigateToLogin = navigateToLogin
+        )
     }
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.ui.previews.DevicePreviews
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun <T : Any> CommonScreen(
@@ -78,7 +79,7 @@ fun Error(
                 Column {
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(onClick = tryAgain) {
-                        Text(text = stringResource(id = R.string.try_again))
+                        Text(text = stringResource(id = SharedR.string.try_again))
                     }
                 }
             }
@@ -87,9 +88,9 @@ fun Error(
 }
 
 @Composable
-fun Loading() {
+fun Loading(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

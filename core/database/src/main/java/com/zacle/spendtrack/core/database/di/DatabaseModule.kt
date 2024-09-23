@@ -7,6 +7,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
 import com.zacle.spendtrack.core.common.di.ApplicationScope
+import com.zacle.spendtrack.core.database.DatabaseMigrations.MIGRATION_2_3
+import com.zacle.spendtrack.core.database.DatabaseMigrations.MIGRATION_3_4
 import com.zacle.spendtrack.core.database.STDatabase
 import com.zacle.spendtrack.core.database.dao.BudgetDao
 import com.zacle.spendtrack.core.database.dao.CategoryDao
@@ -57,6 +59,7 @@ internal object DatabaseModule {
                 }
             }
         )
+        .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
         .build()
 
     @Provides

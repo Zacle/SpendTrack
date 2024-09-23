@@ -10,6 +10,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 
 /**
  * Add expense to the database. We also need to update the corresponding category budget remaining amount.
@@ -23,6 +24,7 @@ class AddExpenseUseCase(
 ): UseCase<AddExpenseUseCase.Request, AddExpenseUseCase.Response>(configuration) {
 
     override suspend fun process(request: Request): Flow<Response> = flow {
+        Timber.d("Expense: ${request.expense}")
         val expense = request.expense
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
         val categoryBudget: Budget? = budgets.find { it.category.categoryId == expense.category.categoryId }

@@ -10,6 +10,7 @@ import androidx.work.Constraints
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import com.zacle.spendtrack.core.data.R
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 private const val BUDGET_SYNC_NOTIFICATION_ID = 0
 private const val EXPENSE_SYNC_NOTIFICATION_ID = 1
@@ -27,9 +28,9 @@ fun Context.syncBudgetForegroundInfo() = ForegroundInfo(
     BUDGET_SYNC_NOTIFICATION_ID,
     syncWorkNotification(
         channelId = BUDGET_SYNC_NOTIFICATION_CHANNEL_ID,
-        channelNameResId = R.string.budget_sync_work_notification_channel_name,
-        channelDescriptionResId = R.string.budget_sync_work_notification_channel_description,
-        titleResId = R.string.budget_sync_work_notification_title
+        channelNameResId = SharedR.string.budget_sync_work_notification_channel_name,
+        channelDescriptionResId = SharedR.string.budget_sync_work_notification_channel_description,
+        titleResId = SharedR.string.budget_sync_work_notification_title
     )
 )
 
@@ -37,9 +38,9 @@ fun Context.syncExpenseForegroundInfo() = ForegroundInfo(
     EXPENSE_SYNC_NOTIFICATION_ID,
     syncWorkNotification(
         channelId = EXPENSE_SYNC_NOTIFICATION_CHANNEL_ID,
-        channelNameResId = R.string.expense_sync_work_notification_channel_name,
-        channelDescriptionResId = R.string.expense_sync_work_notification_channel_description,
-        titleResId = R.string.expense_sync_work_notification_title
+        channelNameResId = SharedR.string.expense_sync_work_notification_channel_name,
+        channelDescriptionResId = SharedR.string.expense_sync_work_notification_channel_description,
+        titleResId = SharedR.string.expense_sync_work_notification_title
     )
 )
 
@@ -47,9 +48,9 @@ fun Context.syncIncomeForegroundInfo() = ForegroundInfo(
     INCOME_SYNC_NOTIFICATION_ID,
     syncWorkNotification(
         channelId = INCOME_SYNC_NOTIFICATION_CHANNEL_ID,
-        channelNameResId = R.string.income_sync_work_notification_channel_name,
-        channelDescriptionResId = R.string.income_sync_work_notification_channel_description,
-        titleResId = R.string.income_sync_work_notification_title
+        channelNameResId = SharedR.string.income_sync_work_notification_channel_name,
+        channelDescriptionResId = SharedR.string.income_sync_work_notification_channel_description,
+        titleResId = SharedR.string.income_sync_work_notification_title
     )
 )
 

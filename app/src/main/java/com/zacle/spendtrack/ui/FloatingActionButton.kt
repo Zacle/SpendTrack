@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.zacle.spendtrack.R
+import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 
 @Composable
@@ -94,13 +94,13 @@ fun STFloatingActionButton(
                 ExpandedFloatingActionButton(
                     painter = painterResource(id = SpendTrackIcons.addIncome),
                     onClick = onAddNewIncome,
-                    color = MaterialTheme.colorScheme.tertiaryContainer
+                    color = Color(0xFFF3CC42)
                 )
                 Spacer(modifier = Modifier.width(24.dp))
                 ExpandedFloatingActionButton(
                     painter = painterResource(id = SpendTrackIcons.addExpense),
                     onClick = onAddNewExpense,
-                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                    color = Color(0xFFEA6830)
                 )
             }
         }

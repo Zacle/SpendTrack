@@ -13,6 +13,7 @@ dependencies {
     api(projects.core.datastore)
     api(projects.core.domain)
     api(projects.core.model)
+    api(projects.core.sharedResources)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.work.ktx)

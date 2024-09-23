@@ -19,6 +19,7 @@ dependencies {
     api(projects.core.common)
     api(projects.core.data)
     api(projects.core.model)
+    api(projects.core.sharedResources)
 
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.coroutines.core)

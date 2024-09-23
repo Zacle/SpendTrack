@@ -14,6 +14,7 @@ android {
 
 dependencies {
     implementation(projects.core.model)
+    api(projects.core.sharedResources)
 
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)

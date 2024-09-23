@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App module -->
+    <string name="app_name">SpendTrack</string>
+    <string name="unknown_error">An unknown error occurred!</string>
+    <string name="not_connected">You are not connected to the internet!</string>
+    <string name="add_transaction">Click to add a transaction</string>
+
+    <!-- Database module resources -->
+    <string name="food_dining">Food &amp; Dining</string>
+    <string name="shopping">Shopping</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="groceries">Groceries</string>
+    <string name="utilities">Utilities</string>
+    <string name="transportation">Transportation</string>
+    <string name="rent_housing">Rent &amp; Housing</string>
+    <string name="health_fitness">Health &amp; Fitness</string>
+    <string name="education">Education</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="insurance">Insurance</string>
+    <string name="travel">Travel</string>
+    <string name="personal_care">Personal Care</string>
+    <string name="gifts_donations">Gifts &amp; Donations</string>
+    <string name="savings_investments">Savings &amp; Investments</string>
+    <string name="taxes">Taxes</string>
+    <string name="pets">Pets</string>
+    <string name="loans_debt">Loans &amp; Debt</string>
+    <string name="kids">Kids</string>
+    <string name="business_expenses">Business Expenses</string>
+
+    <!-- Data module resources -->
+    <string name="budget_sync_work_notification_title">SpendTrack Budget Sync</string>
+    <string name="expense_sync_work_notification_title">SpendTrack Expense Sync</string>
+    <string name="income_sync_work_notification_title">SpendTrack Income Sync</string>
+
+    <string name="budget_sync_work_notification_channel_name">Syncing Budgets</string>
+    <string name="expense_sync_work_notification_channel_name">Syncing Expenses</string>
+    <string name="income_sync_work_notification_channel_name">Syncing Incomes</string>
+
+    <string name="budget_sync_work_notification_channel_description">
+        Background tasks for syncing budgets
+    </string>
+    <string name="expense_sync_work_notification_channel_description">
+        Background tasks for syncing expenses
+    </string>
+    <string name="income_sync_work_notification_channel_description">
+        Background tasks for syncing incomes
+    </string>
+
+    <!-- Design system module -->
+    <string name="google_auth">
+        Continue with Google
+    </string>
+    <string name="food_drinks">Food &amp; Drinks</string>
+    <string name="remaining">Remaining</string>
+    <string name="exceeded_limit">You\'ve exceeded the limit!</string>
+    <string name="of">of</string>
+
+    <string name="how_much">How much?</string>
+    <string name="categories">Categories</string>
+    <string name="name">Enter name</string>
+    <string name="description">Description</string>
+    <string name="add_attachment">Add attachment</string>
+    <string name="save">Save</string>
+
+    <string name="select_date">Select transaction date</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_day">This</string>
+
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Image</string>
+    <string name="camera_description">Take a picture of the receipt</string>
+    <string name="gallery_description">Select a picture from the gallery</string>
+    <string name="delete_receipt">Remove receipt</string>
+
+    <string name="camera_permission">Please grant the permission to access the camera</string>
+
+    <!-- UI module -->
+    <string name="try_again">Try again</string>
+    <string name="name_error_blank">Name should not be blank</string>
+    <string name="name_error_invalid">Invalid name</string>
+    <string name="name_error_short">Name should be at least 3 characters long</string>
+    <string name="email_error_blank">Email should not be blank</string>
+    <string name="email_error_invalid">Invalid email</string>
+    <string name="password_error_blank">Password should not be blank</string>
+    <string name="password_error_short">Password should be at least 8 characters</string>
+    <string name="password_error_invalid">Invalid password. Password should contain at least 1 uppercase letter, 1 lowercase letter, 1 number</string>
+    <string name="category_not_selected">Category not selected. Please select a category!</string>
+    <string name="amount_error_invalid">Invalid amount. Amount should be greater than 0</string>
+    <string name="date_error_blank">Please select the transaction date</string>
+
+    <!-- Budget module -->
+    <string name="budget">Budget</string>
+
+    <!-- Expense module -->
+    <string name="expense">Expense</string>
+    <string name="back">Navigate back</string>
+
+    <!-- Forgot password module -->
+    <string name="email_not_found">Email not found. Sign up instead!</string>
+    <string name="title">Forgot Password</string>
+    <string name="email">Email</string>
+    <string name="reset_password_text">
+        Please enter your registered email address. We will send you a password reset link.
+        Press on the link to reset your password.
+    </string>
+    <string name="submit">Continue</string>
+
+    <!-- Home module -->
+    <string name="home">Home</string>
+    <string name="notifications">Show notifications</string>
+    <string name="no_transactions">No transactions found</string>
+    <string name="no_transactions_description">
+        You\'ve not done any transactions for this period. Please press the + button to add a transaction.
+    </string>
+    <string name="account_balance">Account Balance</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="transactions">Transactions</string>
+    <string name="see_all">See All</string>
+
+    <!-- Income module -->
+    <string name="income">Income</string>
+
+    <!-- Login module -->
+    <string name="login">Log In</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="signup">Sign Up</string>
+    <string name="or">Or</string>
+    <string name="login_failed">Wrong email or password</string>
+
+    <!-- Onboarding module -->
+    <string name="skip">Skip</string>
+    <string name="get_started">Get Started</string>
+    <string name="take_full_control">
+        Take full control of your finances
+    </string>
+    <string name="take_full_control_description">
+        Take ownership of your finances and make the most of every cent
+    </string>
+    <string name="keep_tabs">
+        Keep tabs on your finances
+    </string>
+    <string name="keep_tabs_description">
+        Easily track transactions with categories and financial reports
+    </string>
+    <string name="be_proactive">
+        Be proactive
+    </string>
+    <string name="be_proactive_description">
+        Implement a budget for each category to ensure control
+    </string>
+
+    <!-- Profile module -->
+    <string name="profile">Profile</string>
+
+    <!-- Register module -->
+    <string name="registration_failed">Registration failed. Try again</string>
+    <string name="register">Sign Up</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="have_account">Already have an account?</string>
+
+    <!-- Transaction module -->
+    <string name="transaction">Transaction</string>
+
+    <!-- verify Auth module -->
+    <string name="verify_auth_title">Verification</string>
+    <string name="email_not_verified">The email is not verified yet. Please verify it before!</string>
+
+    <string name="email_verification_text">
+        You\'re almost there! We just sent a verification email to you. Click the link to confirm your
+        address and start using the app!
+    </string>
+    <string name="already_verified">Already verified</string>
+</resources>

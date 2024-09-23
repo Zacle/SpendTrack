@@ -1,6 +1,5 @@
 package com.zacle.spendtrack.core.designsystem.component
 
-import android.graphics.Color as AndroidColor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -29,14 +28,12 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
 import com.zacle.spendtrack.core.model.Category
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toJavaInstant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import kotlin.time.Duration.Companion.days
+import android.graphics.Color as AndroidColor
 
 enum class TransactionType {
     INCOME,
@@ -92,7 +89,10 @@ fun TransactionCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(id = category.name),
+                    text = CategoryKeyResource.getStringResourceForCategory(
+                        context = LocalContext.current,
+                        categoryKey = category.key
+                    ),
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.labelSmall,
                 )
@@ -139,7 +139,7 @@ fun TransactionCardPreview() {
         TransactionCard(
             category = Category(
                 categoryId = "1",
-                name = R.string.food_drinks,
+                key = "food_dining",
                 icon = R.drawable.food_dinning,
                 color = "#FF7043"
             ),

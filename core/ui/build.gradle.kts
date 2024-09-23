@@ -11,6 +11,7 @@ dependencies {
 
     api(projects.core.designsystem)
     api(projects.core.model)
+    implementation(projects.core.sharedResources)
 
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)

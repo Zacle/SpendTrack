@@ -1,23 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="food_dining">Food &amp; Dining</string>
-    <string name="shopping">Shopping</string>
-    <string name="entertainment">Entertainment</string>
-    <string name="groceries">Groceries</string>
-    <string name="utilities">Utilities</string>
-    <string name="transportation">Transportation</string>
-    <string name="rent_housing">Rent &amp; Housing</string>
-    <string name="health_fitness">Health &amp; Fitness</string>
-    <string name="education">Education</string>
-    <string name="miscellaneous">Miscellaneous</string>
-    <string name="insurance">Insurance</string>
-    <string name="travel">Travel</string>
-    <string name="personal_care">Personal Care</string>
-    <string name="gifts_donations">Gifts &amp; Donations</string>
-    <string name="savings_investments">Savings &amp; Investments</string>
-    <string name="taxes">Taxes</string>
-    <string name="pets">Pets</string>
-    <string name="loans_debt">Loans &amp; Debt</string>
-    <string name="kids">Kids</string>
-    <string name="business_expenses">Business Expenses</string>
+
 </resources>

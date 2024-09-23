@@ -1,34 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="google_auth">
-        Continue with Google
-    </string>
-    <string name="food_drinks">Food &amp; Drinks</string>
-    <string name="remaining">Remaining</string>
-    <string name="exceeded_limit">You\'ve exceeded the limit!</string>
-    <string name="of">of</string>
 
-    <string name="how_much">How much?</string>
-    <string name="categories">Categories</string>
-    <string name="name">Enter name</string>
-    <string name="description">Description</string>
-    <string name="add_attachment">Add attachment</string>
-    <string name="save">Save</string>
-
-    <string name="select_date">Select transaction date</string>
-    <string name="today">Today</string>
-    <string name="tomorrow">Tomorrow</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_day">This</string>
-
-    <string name="done">Done</string>
-    <string name="cancel">Cancel</string>
-
-    <string name="camera">Camera</string>
-    <string name="gallery">Image</string>
-    <string name="camera_description">Take a picture of the receipt</string>
-    <string name="gallery_description">Select a picture from the gallery</string>
-    <string name="delete_receipt">Remove receipt</string>
-
-    <string name="camera_permission">Please grant the permission to access the camera</string>
 </resources>

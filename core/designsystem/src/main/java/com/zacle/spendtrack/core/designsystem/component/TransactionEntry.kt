@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,12 +27,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ModalBottomSheet
@@ -68,6 +72,7 @@ import coil.request.ImageRequest
 import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
 import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.model.ImageData
 import kotlinx.datetime.Clock
@@ -76,13 +81,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.io.File
 import android.graphics.Color as AndroidColor
+import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun RecordTransaction(
     name: String,
     description: String,
     categories: List<Category>,
-    selectedCategoryId: String?,
+    selectedCategoryId: String,
     onAmountChanged: (Int) -> Unit,
     onCategorySelected: (Category) -> Unit,
     onNameChanged: (String) -> Unit,
@@ -146,35 +152,55 @@ fun TransactionEntryAmount(
             .padding(vertical = 8.dp)
     ) {
         Text(
-            text = stringResource(id = R.string.how_much),
+            text = stringResource(id = SharedR.string.how_much),
             style = MaterialTheme.typography.labelLarge,
             color = contentColor,
             fontWeight = FontWeight.Medium,
             modifier = Modifier
                 .padding(start = 16.dp)
         )
-        TextField(
-            value = "$$amount",
-            onValueChange = { entry -> onAmountChanged(entry.filter { it.isDigit() }.toIntOrNull() ?: 0) },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedTextColor = contentColor,
-                unfocusedTextColor = contentColor
-            ),
-            textStyle = TextStyle(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 16.dp)
+        ) {
+            Text(
+                text = "$",
+                style = MaterialTheme.typography.displayMedium,
                 color = contentColor,
-                fontStyle = MaterialTheme.typography.displayMedium.fontStyle,
-                fontSize = MaterialTheme.typography.displayMedium.fontSize,
-                fontFamily = MaterialTheme.typography.displayMedium.fontFamily,
                 fontWeight = FontWeight.Bold
-            ),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        )
+            )
+            TextField(
+                value = if (amount > 0) "$amount" else "",
+                onValueChange = { entry -> onAmountChanged(entry.toIntOrNull() ?: 0) },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedTextColor = contentColor,
+                    unfocusedTextColor = contentColor
+                ),
+                textStyle = TextStyle(
+                    color = contentColor,
+                    fontStyle = MaterialTheme.typography.displayMedium.fontStyle,
+                    fontSize = MaterialTheme.typography.displayMedium.fontSize,
+                    fontFamily = MaterialTheme.typography.displayMedium.fontFamily,
+                    fontWeight = FontWeight.Bold
+                ),
+                placeholder = {
+                    Text(
+                        text = "0",
+                        style = MaterialTheme.typography.displayMedium,
+                        color = contentColor.copy(alpha = 0.7f),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            )
+        }
     }
 }
 
@@ -183,7 +209,7 @@ fun TransactionEntry(
     name: String,
     description: String,
     categories: List<Category>,
-    selectedCategoryId: String?,
+    selectedCategoryId: String,
     onCategorySelected: (Category) -> Unit,
     onNameChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
@@ -217,13 +243,13 @@ fun TransactionEntry(
             STTextField(
                 name = name,
                 onValueChange = onNameChanged,
-                placeholder = stringResource(id = R.string.name),
+                placeholder = stringResource(id = SharedR.string.name),
                 singleLine = true
             )
             STTextField(
                 name = description,
                 onValueChange = onDescriptionChanged,
-                placeholder = stringResource(id = R.string.description)
+                placeholder = stringResource(id = SharedR.string.description)
             )
             Attachment(
                 onAttachmentSelected = onAttachmentSelected,
@@ -235,8 +261,9 @@ fun TransactionEntry(
             )
             Spacer(modifier = Modifier.weight(1f))
             SpendTrackButton(
-                text = stringResource(id = R.string.save),
-                onClick = onTransactionSaved
+                text = stringResource(id = SharedR.string.save),
+                onClick = onTransactionSaved,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     }
@@ -245,7 +272,7 @@ fun TransactionEntry(
 @Composable
 fun CategoryDropdown(
     categories: List<Category>,
-    selectedCategoryId: String?,
+    selectedCategoryId: String,
     onCategorySelected: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -253,6 +280,8 @@ fun CategoryDropdown(
     val scrollState = rememberScrollState()
 
     val category = categories.find { it.categoryId == selectedCategoryId }
+
+    val context = LocalContext.current
 
     Box {
         STOutline(
@@ -265,15 +294,40 @@ fun CategoryDropdown(
                     .padding(vertical = 16.dp, horizontal = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = category?.let { stringResource(id = it.name) } ?: stringResource(id = R.string.categories),
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    modifier = Modifier
-                        .padding(end = 2.dp)
-                        .align(Alignment.CenterStart)
-                )
+                if (selectedCategoryId.isNotEmpty() && category != null) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .align(Alignment.CenterStart)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .size(12.dp)
+                                .background(Color(AndroidColor.parseColor(category.color)))
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = CategoryKeyResource.getStringResourceForCategory(
+                                context = context,
+                                categoryKey = category.key
+                            ),
+                            fontWeight = FontWeight.Medium,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                } else {
+                    Text(
+                        text = stringResource(id = SharedR.string.categories),
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .align(Alignment.CenterStart)
+                    )
+                }
                 Icon(
                     imageVector = SpendTrackIcons.dropDown,
                     contentDescription = null,
@@ -285,8 +339,6 @@ fun CategoryDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .fillMaxWidth(),
             scrollState = scrollState,
             containerColor = MaterialTheme.colorScheme.surface,
             tonalElevation = 5.dp,
@@ -307,8 +359,11 @@ fun CategoryDropdown(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(id = category.name),
-                                style = MaterialTheme.typography.labelSmall,
+                                text = CategoryKeyResource.getStringResourceForCategory(
+                                    context = context,
+                                    categoryKey = category.key
+                                ),
+                                style = MaterialTheme.typography.labelLarge,
                             )
                         }
                     },
@@ -376,20 +431,14 @@ fun Attachment(
 ) {
     var showPicturePickerDialog by remember { mutableStateOf(false) }
 
-    var selectedImage by remember(receiptUriImage) {
-        mutableStateOf<ImageData?>(null)
-    }
-
-    STOutline(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                if (selectedImage == null) {
-                    showPicturePickerDialog = !showPicturePickerDialog
+    if (receiptUriImage == null) {
+        STOutline(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable {
+                    showPicturePickerDialog = true
                 }
-            }
-    ) {
-        if (selectedImage == null) {
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -404,63 +453,64 @@ fun Attachment(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(id = R.string.add_attachment),
+                    text = stringResource(id = SharedR.string.add_attachment),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-        } else {
-            Box(modifier = Modifier
-                .padding(vertical = 16.dp)
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                ) {
-                    Icon(
-                        painter = painterResource(id = SpendTrackIcons.cross_remove),
-                        contentDescription = stringResource(id = R.string.delete_receipt),
-                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(4.dp)
-                            .clickable { selectedImage = null }
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()         // Fill the available width
+                .height(200.dp)         // Set a fixed height for the image box
+                .padding(16.dp)
+        ) {
+            when (receiptUriImage) {
+                is ImageData.UriImage -> {
+                    val uri = receiptUriImage.uri
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(uri)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
                     )
                 }
-                when (selectedImage) {
-                    is ImageData.UriImage -> {
-                        val uri = (selectedImage as ImageData.UriImage).uri
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(uri)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                        )
-                    }
-                    is ImageData.BitmapImage -> {
-                        val bitmap = (selectedImage as ImageData.BitmapImage).bitmap
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    is ImageData.LocalPathImage -> {
-                        val path = (selectedImage as ImageData.LocalPathImage).path
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(File(path))
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Local Receipt Image"
-                        )
-                    }
-                    else -> {}
+                is ImageData.BitmapImage -> {
+                    val bitmap = receiptUriImage.bitmap
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
+                    )
                 }
+                is ImageData.LocalPathImage -> {
+                    val path = receiptUriImage.path
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(File(path))
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "Local Receipt Image"
+                    )
+                }
+            }
+            // Cross Icon to remove the image, positioned at the top right of the Box
+            IconButton(
+                onClick = { onAttachmentSelected(null) },
+                modifier = Modifier
+                    .size(32.dp)               // Size of the cross button
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape) // Background circle
+                    .padding(4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Clear, // Cross icon
+                    contentDescription = "Remove image",
+                    tint = Color.White,                // Icon color
+                    modifier = Modifier.size(16.dp)    // Size of the cross icon
+                )
             }
         }
     }
@@ -486,6 +536,7 @@ internal fun PicturePickerModalBottomSheet(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             onAttachmentSelected(uri?.let { ImageData.UriImage(it) })
+            dismissPicturePickerDialog()
         }
     )
 
@@ -493,11 +544,12 @@ internal fun PicturePickerModalBottomSheet(
         contract = ActivityResultContracts.TakePicturePreview(),
         onResult = { bitmap ->
             onAttachmentSelected(bitmap?.let { ImageData.BitmapImage(it) })
+            dismissPicturePickerDialog()
         }
     )
 
     val context = LocalContext.current
-    val cameraPermissionMessage = stringResource(id = R.string.camera_permission)
+    val cameraPermissionMessage = stringResource(id = SharedR.string.camera_permission)
     val cameraPermission = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -524,24 +576,22 @@ internal fun PicturePickerModalBottomSheet(
                 .padding(16.dp)
         ) {
             PicturePicker(
-                name = stringResource(id = R.string.camera),
+                name = stringResource(id = SharedR.string.camera),
                 painter = painterResource(id = SpendTrackIcons.camera),
-                contentDescription = stringResource(id = R.string.camera_description),
+                contentDescription = stringResource(id = SharedR.string.camera_description),
                 onClick = {
                     cameraPermission.launch(Manifest.permission.CAMERA)
-                    dismissPicturePickerDialog()
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))
             PicturePicker(
-                name = stringResource(id = R.string.gallery),
+                name = stringResource(id = SharedR.string.gallery),
                 painter = painterResource(id = SpendTrackIcons.image),
-                contentDescription = stringResource(id = R.string.gallery_description),
+                contentDescription = stringResource(id = SharedR.string.gallery_description),
                 onClick = {
                     galleryPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                    dismissPicturePickerDialog()
                 }
             )
         }
@@ -595,7 +645,7 @@ fun TransactionDate(
 ) {
     val context = LocalContext.current
     val text =
-        if (transactionDate == null) stringResource(id = R.string.select_date)
+        if (transactionDate == null) stringResource(id = SharedR.string.select_date)
         else formatLocalDateTime(context, convertInstantToLocalDateTime(transactionDate))
 
     var openDialog by remember { mutableStateOf(false) }
@@ -640,7 +690,7 @@ fun TransactionDate(
 
                 override fun isSelectableYear(year: Int): Boolean {
                     val currentYear = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
-                    return currentYear <= year
+                    return currentYear > year
                 }
             }
         )
@@ -653,7 +703,7 @@ fun TransactionDate(
                         onDateSelected(Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!))
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.done))
+                    Text(text = stringResource(id = SharedR.string.done))
                 }
             },
             dismissButton = {
@@ -662,7 +712,7 @@ fun TransactionDate(
                         openDialog = false
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.cancel))
+                    Text(text = stringResource(id = SharedR.string.cancel))
                 }
             }
         ) {
@@ -685,24 +735,24 @@ fun Previews() {
             categories = listOf(
                 Category(
                     categoryId = "1",
-                    name = R.string.food_drinks,
+                    key = "food_dining",
                     icon = R.drawable.food_dinning,
                     color = "#FF7043"
                 ),
                 Category(
                     categoryId = "2",
-                    name = R.string.remaining,
+                    key = "entertainment",
                     icon = R.drawable.travel,
                     color = "#5C6BC0"
                 ),
                 Category(
                     categoryId = "3",
-                    name = R.string.exceeded_limit,
+                    key = "travel",
                     icon = R.drawable.travel,
                     color = "#4DB6AC"
                 ),
             ),
-            selectedCategoryId = "",
+            selectedCategoryId = "1",
             onCategorySelected = {},
             onNameChanged = {},
             onDescriptionChanged = {},
@@ -785,16 +835,16 @@ fun PicturePickerModalSheetPreview(modifier: Modifier = Modifier) {
                     .padding(16.dp)
             ) {
                 PicturePicker(
-                    name = stringResource(id = R.string.camera),
+                    name = stringResource(id = SharedR.string.camera),
                     painter = painterResource(id = SpendTrackIcons.camera),
-                    contentDescription = stringResource(id = R.string.camera_description),
+                    contentDescription = stringResource(id = SharedR.string.camera_description),
                     onClick = {  }
                 )
                 Spacer(modifier = Modifier.width(32.dp))
                 PicturePicker(
-                    name = stringResource(id = R.string.gallery),
+                    name = stringResource(id = SharedR.string.gallery),
                     painter = painterResource(id = SpendTrackIcons.image),
-                    contentDescription = stringResource(id = R.string.gallery_description),
+                    contentDescription = stringResource(id = SharedR.string.gallery_description),
                     onClick = {  }
                 )
             }
