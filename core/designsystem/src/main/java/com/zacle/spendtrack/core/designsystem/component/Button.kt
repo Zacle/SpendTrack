@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -58,7 +59,8 @@ fun SpendTrackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isUploading: Boolean = false
 ) {
 
     Button(
@@ -71,12 +73,22 @@ fun SpendTrackButton(
             containerColor = color
         )
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+        if (isUploading) {
+            CircularProgressIndicator(
+                color = Color.White, // Adjust the color to match your design
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .size(20.dp)
+                    .padding(vertical = 8.dp)
+            )
+        } else {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        }
     }
 }
 

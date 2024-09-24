@@ -4,7 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -139,7 +143,12 @@ fun HomeScreen(
         contentColor = MaterialTheme.colorScheme.onSurface,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        val contentPadding = Modifier.padding(innerPadding)
+        // Get the bottom navigation bar insets (padding)
+        val bottomPadding = innerPadding.calculateBottomPadding().minus(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+        val contentPadding = Modifier.padding(
+            top = innerPadding.calculateTopPadding(),
+            bottom = bottomPadding
+        )
         CommonScreen(state = uiState) { homeModel ->
             HomeContent(
                 homeModel = homeModel,
@@ -234,7 +243,7 @@ fun HomeList(
             )
         }
         if (homeUiStateHolder.isTransactionViewActive) {
-            items(homeModel.transactions.take(5), key = { it.id }) { transaction ->
+            items(homeModel.transactions, key = { it.id }) { transaction ->
                 TransactionCard(
                     category = transaction.category,
                     transactionName = transaction.name,

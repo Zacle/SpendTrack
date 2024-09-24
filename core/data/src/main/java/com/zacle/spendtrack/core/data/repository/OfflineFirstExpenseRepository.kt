@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 import javax.inject.Inject
@@ -58,12 +59,13 @@ class OfflineFirstExpenseRepository @Inject constructor(
         localExpenseDataSource.getExpenses(userId, period).flatMapLatest { expenses ->
             val isOnline = networkMonitor.isOnline.first()
             if (expenses.isEmpty() && isOnline) {
-                remoteExpenseDataSource.getExpenses(userId, period).flatMapLatest { remoteExpenses ->
-                    remoteExpenses.forEach { expense ->
-                        localExpenseDataSource.addExpense(expense)
-                    }
-                    flow { emit(remoteExpenses) }
+                val remoteExpenses = remoteExpenseDataSource.getExpenses(userId, period).first()
+                Timber.d("Syncing expenses from server = ${remoteExpenses.count()}")
+                remoteExpenses.forEach { expense ->
+                    Timber.d("Syncing expense = $expense")
+                    localExpenseDataSource.addExpense(expense)
                 }
+                flowOf(remoteExpenses)
             } else {
                 flow { emit(expenses) }
             }
@@ -147,6 +149,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
                 expenseToUpload = expense.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
             }
         }
+
         // Upload the expense to the remote data source (Firebase, etc.)
         remoteExpenseDataSource.addExpense(expenseToUpload)
 

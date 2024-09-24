@@ -4,18 +4,16 @@ import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
 import com.zacle.spendtrack.core.model.Budget
-import com.zacle.spendtrack.core.model.Exceptions.CategoryBudgetNotExistsException
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import timber.log.Timber
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * Add expense to the database. We also need to update the corresponding category budget remaining amount.
  *
- * @throws CategoryBudgetNotExistsException if the category budget does not exist
+ * If the category budget does not exist, create one and add the expense.
  */
 class AddExpenseUseCase(
     configuration: Configuration,
@@ -23,19 +21,25 @@ class AddExpenseUseCase(
     private val budgetRepository: BudgetRepository
 ): UseCase<AddExpenseUseCase.Request, AddExpenseUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> = flow {
-        Timber.d("Expense: ${request.expense}")
+    override suspend fun process(request: Request): Flow<Response> {
         val expense = request.expense
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
-        val categoryBudget: Budget? = budgets.find { it.category.categoryId == expense.category.categoryId }
+        var categoryBudget: Budget? = budgets.find { it.category.categoryId == expense.category.categoryId }
 
-        if (categoryBudget == null) throw CategoryBudgetNotExistsException()
+        if (categoryBudget == null) {
+            categoryBudget = Budget(
+                userId = request.userId,
+                category = expense.category,
+                amount = -expense.amount,
+            )
+            budgetRepository.addBudget(categoryBudget)
+        }
 
         val remainingAmount = categoryBudget.remainingAmount - expense.amount
         budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
 
         expenseRepository.addExpense(request.expense.copy(userId = request.userId))
-        emit(Response)
+        return flowOf(Response)
     }
 
 

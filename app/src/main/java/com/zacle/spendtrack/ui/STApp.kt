@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,7 +45,6 @@ import com.zacle.spendtrack.core.designsystem.component.STNavigationBarItem
 import com.zacle.spendtrack.core.designsystem.component.STNavigationDefaults
 import com.zacle.spendtrack.core.designsystem.component.STNavigationSuiteScope
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
-import com.zacle.spendtrack.core.model.auth.AuthenticatedUserInfo
 import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.feature.expense.add_edit_expense.navigateToAddEditExpense
 import com.zacle.spendtrack.feature.home.Home
@@ -82,8 +82,7 @@ fun STApp(
             appState = appState,
             startDestination = startDestination,
             isOffline = isOffline,
-            snackbarHostState = snackbarHostState,
-            userInfo = userStateModel.userInfo
+            snackbarHostState = snackbarHostState
         )
     }
 }
@@ -93,7 +92,6 @@ fun STApp(
 @Composable
 fun STApp(
     appState: STAppState,
-    userInfo: AuthenticatedUserInfo?,
     startDestination: Any,
     isOffline: Boolean,
     snackbarHostState: SnackbarHostState,
@@ -140,7 +138,8 @@ fun STApp(
         windowAdaptiveInfo = windowAdaptiveInfo
     ) {
         Scaffold(
-            modifier = modifier.semantics {
+            modifier = modifier
+                .semantics {
                 testTagsAsResourceId = true
             },
             contentColor = MaterialTheme.colorScheme.onBackground,
@@ -198,11 +197,14 @@ fun STApp(
                     }
                 }
             }
-        ) {
+        ) { innerPadding ->
+            val contentPadding = innerPadding.calculateBottomPadding()
             STNavHost(
                 isOffline = isOffline,
                 appState = appState,
-                startDestination = startDestination
+                startDestination = startDestination,
+                modifier = Modifier
+                    .padding(bottom = contentPadding)
             )
         }
     }

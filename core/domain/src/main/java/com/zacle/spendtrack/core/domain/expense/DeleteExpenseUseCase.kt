@@ -9,7 +9,7 @@ import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * Delete the expense. Add the expense amount to the corresponding category budget remaining amount.
@@ -20,7 +20,7 @@ class DeleteExpenseUseCase(
     private val budgetRepository: BudgetRepository
 ): UseCase<DeleteExpenseUseCase.Request, DeleteExpenseUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> = flow {
+    override suspend fun process(request: Request): Flow<Response> {
         val expense = request.expense
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
@@ -32,7 +32,7 @@ class DeleteExpenseUseCase(
         budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
 
         expenseRepository.deleteExpense(expense)
-        emit(Response)
+        return flowOf(Response)
     }
 
     data class Request(val userId: String, val expense: Expense, val period: Period): UseCase.Request

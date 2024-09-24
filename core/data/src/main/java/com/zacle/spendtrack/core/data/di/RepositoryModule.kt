@@ -4,10 +4,12 @@ import android.content.Context
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers
 import com.zacle.spendtrack.core.common.di.LocalBudgetData
+import com.zacle.spendtrack.core.common.di.LocalCategoryData
 import com.zacle.spendtrack.core.common.di.LocalExpenseData
 import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.LocalUserData
 import com.zacle.spendtrack.core.common.di.RemoteBudgetData
+import com.zacle.spendtrack.core.common.di.RemoteCategoryData
 import com.zacle.spendtrack.core.common.di.RemoteExpenseData
 import com.zacle.spendtrack.core.common.di.RemoteIncomeData
 import com.zacle.spendtrack.core.common.di.RemoteUserData
@@ -86,8 +88,17 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideCategoryRepository(
-        categoryDataSource: CategoryDataSource
-    ): CategoryRepository = OfflineFirstCategoryRepository(categoryDataSource)
+        @LocalCategoryData categoryDataSource: CategoryDataSource,
+        @RemoteCategoryData remoteCategoryDataSource: CategoryDataSource,
+        @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+        networkMonitor: NetworkMonitor
+    ): CategoryRepository =
+        OfflineFirstCategoryRepository(
+            localCategoryDataSource = categoryDataSource,
+            remoteCategoryDataSource = remoteCategoryDataSource,
+            ioDispatcher = ioDispatcher,
+            networkMonitor = networkMonitor
+        )
 
     @Provides
     @Singleton

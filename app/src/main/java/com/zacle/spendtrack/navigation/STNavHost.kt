@@ -39,7 +39,8 @@ fun STNavHost(
             navigateToRegister = navController::navigateToRegister,
             navigateToForgotPassword = navController::navigateToForgotPassword,
             navigateToVerifyEmail = navController::navigateToVerifyAuth,
-            navigateToHome = navController::navigateToHome
+            navigateToHome = navController::navigateToHome,
+            isOnline = !isOffline
         )
         registerScreen(
             isOffline = isOffline,

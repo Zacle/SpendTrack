@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 import javax.inject.Inject
@@ -58,12 +59,13 @@ class OfflineFirstIncomeRepository @Inject constructor(
         localIncomeDataSource.getIncomes(userId, period).flatMapLatest { incomes ->
             val isOnline = networkMonitor.isOnline.first()
             if (incomes.isEmpty() && isOnline) {
-                remoteIncomeDataSource.getIncomes(userId, period).flatMapLatest { remoteIncomes ->
-                    remoteIncomes.forEach { income ->
-                        localIncomeDataSource.addIncome(income)
-                    }
-                    flow { emit(remoteIncomes) }
+                val remoteIncomes = remoteIncomeDataSource.getIncomes(userId, period).first()
+                Timber.d("Syncing incomes from server = ${remoteIncomes.count()}")
+                remoteIncomes.forEach { income ->
+                    Timber.d("Syncing income = $income")
+                    localIncomeDataSource.addIncome(income)
                 }
+                flowOf(remoteIncomes)
             } else {
                 flow { emit(incomes) }
             }

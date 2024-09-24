@@ -44,6 +44,7 @@ import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun LoginRoute(
+    isOnline: Boolean,
     navigateToRegister: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateToHome: () -> Unit,
@@ -81,6 +82,7 @@ fun LoginRoute(
 
     LoginScreen(
         uiState = uiState,
+        isOnline = isOnline,
         onEmailChanged = { viewModel.submitAction(LoginUiAction.OnEmailChanged(it)) },
         onPasswordChanged = { viewModel.submitAction(LoginUiAction.OnPasswordChanged(it)) },
         onLoginClicked = { viewModel.submitAction(LoginUiAction.OnLoginClicked) },
@@ -95,6 +97,7 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     uiState: LoginUiState,
+    isOnline: Boolean,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onLoginClicked: () -> Unit,
@@ -122,6 +125,7 @@ fun LoginScreen(
 
         LoginContent(
             uiState = uiState,
+            isOnline = isOnline,
             onEmailChanged = onEmailChanged,
             onPasswordChanged = onPasswordChanged,
             onLoginClicked = onLoginClicked,
@@ -136,6 +140,7 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     uiState: LoginUiState,
+    isOnline: Boolean,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onLoginClicked: () -> Unit,
@@ -153,6 +158,7 @@ fun LoginContent(
     ) {
         LogInForm(
             uiState = uiState,
+            isOnline = isOnline,
             onEmailChanged = onEmailChanged,
             onPasswordChanged = onPasswordChanged,
             onLoginClicked = onLoginClicked
@@ -187,7 +193,8 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(8.dp))
             GoogleButton(
                 onClick = { onGoogleSignInClicked(context) },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                enabled = isOnline
             )
         }
     }
@@ -196,6 +203,7 @@ fun LoginContent(
 @Composable
 fun LogInForm(
     uiState: LoginUiState,
+    isOnline: Boolean,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onLoginClicked: () -> Unit,
@@ -223,7 +231,8 @@ fun LogInForm(
         Spacer(modifier = Modifier.height(24.dp))
         SpendTrackButton(
             text = stringResource(id = R.string.login),
-            onClick = onLoginClicked
+            onClick = onLoginClicked,
+            enabled = isOnline
         )
     }
 }
@@ -235,6 +244,7 @@ fun LoginContentPreview(modifier: Modifier = Modifier) {
         SpendTrackBackground {
             LoginContent(
                 uiState = LoginUiState(),
+                isOnline = true,
                 onEmailChanged = {},
                 onPasswordChanged = {},
                 onLoginClicked = {},

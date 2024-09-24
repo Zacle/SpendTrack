@@ -16,6 +16,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -44,52 +45,57 @@ class FirebaseExpenseDataSource @Inject constructor(
         emit(null)
     }
 
-    override suspend fun getExpenses(userId: String, period: Period): Flow<List<Expense>> = flow {
+    override suspend fun getExpenses(userId: String, period: Period): Flow<List<Expense>> {
         if (userId.isEmpty()) {
-            emit(emptyList())
+            return flowOf(emptyList())
         }
-        val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
-        val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
-        val task = expenseCollection(userId)
-            .whereGreaterThanOrEqualTo("transactionDate", start)
-            .whereLessThanOrEqualTo("transactionDate", end)
-            .get()
 
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
-        val expenses = snapshot.documents.mapNotNull {
-            it.toObject(FirebaseExpense::class.java)?.asExternalModel()
+        try {
+            val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
+            val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
+            val task = expenseCollection(userId)
+                .whereGreaterThanOrEqualTo("transactionDate", start)
+                .whereLessThanOrEqualTo("transactionDate", end)
+                .get()
+
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+            val expenses = snapshot.documents.mapNotNull {
+                it.toObject(FirebaseExpense::class.java)?.asExternalModel()
+            }
+            return flowOf(expenses)
+        } catch (e: Exception) {
+            Timber.e(e)
+            return flowOf(emptyList())
         }
-        emit(expenses)
-    }.catch { e ->
-        Timber.e(e)
-        emit(emptyList())
     }
 
     override suspend fun getExpensesByCategory(
         userId: String,
         categoryId: String,
         period: Period
-    ): Flow<List<Expense>> = flow {
+    ): Flow<List<Expense>> {
         if (userId.isEmpty()) {
-            emit(emptyList())
+            return flowOf(emptyList())
         }
 
-        val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
-        val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
-        val task = expenseCollection(userId)
-            .whereEqualTo("category.categoryId", categoryId)
-            .whereGreaterThanOrEqualTo("transactionDate", start)
-            .whereLessThanOrEqualTo("transactionDate", end)
-            .get()
+        try {
+            val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
+            val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
+            val task = expenseCollection(userId)
+                .whereEqualTo("category.categoryId", categoryId)
+                .whereGreaterThanOrEqualTo("transactionDate", start)
+                .whereLessThanOrEqualTo("transactionDate", end)
+                .get()
 
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
-        val expenses = snapshot.documents.mapNotNull {
-            it.toObject(FirebaseExpense::class.java)?.asExternalModel()
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+            val expenses = snapshot.documents.mapNotNull {
+                it.toObject(FirebaseExpense::class.java)?.asExternalModel()
+            }
+            return flowOf(expenses)
+        } catch (e: Exception) {
+            Timber.e(e)
+            return flowOf(emptyList())
         }
-        emit(expenses)
-    }.catch { e ->
-        Timber.e(e)
-        emit(emptyList())
     }
 
     override suspend fun addExpense(expense: Expense) {

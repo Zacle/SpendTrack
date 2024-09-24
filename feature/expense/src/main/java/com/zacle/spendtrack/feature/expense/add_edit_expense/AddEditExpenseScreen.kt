@@ -168,6 +168,7 @@ fun AddEditExpenseContent(
         onDateSelected = onDateSelected,
         onAttachmentSelected = onAttachmentSelected,
         onTransactionSaved = onExpenseSaved,
+        isUploading = stateHolder.isUploading,
         modifier = modifier
     )
 }

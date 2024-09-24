@@ -34,3 +34,11 @@ annotation class RemoteIncomeData
 @Retention(RUNTIME)
 @Qualifier
 annotation class LocalIncomeData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class LocalCategoryData
+
+@Retention(RUNTIME)
+@Qualifier
+annotation class RemoteCategoryData

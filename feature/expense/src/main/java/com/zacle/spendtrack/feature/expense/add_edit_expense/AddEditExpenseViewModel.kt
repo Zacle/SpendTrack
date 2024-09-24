@@ -165,6 +165,8 @@ class AddEditExpenseViewModel @Inject constructor(
         )
         if (errors.any { it != null }) return
 
+        _uiState.value = uiState.value.copy(isUploading = true)
+
         val expense = expense.value
         var didImageChange = false
         if (uiState.value.receiptImage != null) {
@@ -206,8 +208,10 @@ class AddEditExpenseViewModel @Inject constructor(
                     period = uiState.value.transactionDate.toMonthlyPeriod()
                 )
             )
+            _uiState.value = uiState.value.copy(isUploading = false)
             submitSingleEvent(TransactionUiEvent.NavigateBack)
         }
+        _uiState.value = uiState.value.copy(isUploading = false)
     }
 
     private suspend fun addExpense() {
@@ -218,6 +222,8 @@ class AddEditExpenseViewModel @Inject constructor(
             uiState.value.categoryError,
         )
         if (errors.any { it != null }) return
+
+        _uiState.value = uiState.value.copy(isUploading = true)
 
         val localReceiptImagePath = uiState.value.receiptImage?.let {
             imageStorageManager.saveImageLocally(it, "receipt_${System.currentTimeMillis()}")
@@ -239,9 +245,9 @@ class AddEditExpenseViewModel @Inject constructor(
                 expense = expense,
                 period = uiState.value.transactionDate.toMonthlyPeriod()
             )
-        ).collect {
-            submitSingleEvent(TransactionUiEvent.NavigateBack)
-        }
+        )
+        _uiState.value = uiState.value.copy(isUploading = false)
+        submitSingleEvent(TransactionUiEvent.NavigateBack)
     }
 
     private fun formValidation(name: String, amount: Int, category: Category) {

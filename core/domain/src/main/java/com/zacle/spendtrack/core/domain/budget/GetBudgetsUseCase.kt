@@ -15,7 +15,7 @@ class GetBudgetsUseCase(
     override suspend fun process(request: Request): Flow<Response> =
         budgetRepository.getBudgets(request.userId, request.budgetPeriod).map { budgets ->
             val totalBudget = budgets.sumOf { it.amount }
-            val remainingBudget = budgets.sumOf { if (it.remainingAmount > 0) it.remainingAmount else 0.0 }
+            val remainingBudget = budgets.sumOf { it.remainingAmount }
             Response(totalBudget, remainingBudget, budgets)
         }
 

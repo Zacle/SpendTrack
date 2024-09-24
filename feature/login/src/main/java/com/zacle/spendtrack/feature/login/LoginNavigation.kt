@@ -22,10 +22,12 @@ fun NavGraphBuilder.loginScreen(
     navigateToRegister: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateToVerifyEmail: () -> Unit,
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    isOnline: Boolean = false
 ) {
     composable<Login> {
         LoginRoute(
+            isOnline = isOnline,
             navigateToRegister = navigateToRegister,
             navigateToForgotPassword = navigateToForgotPassword,
             navigateToVerifyEmail = navigateToVerifyEmail,

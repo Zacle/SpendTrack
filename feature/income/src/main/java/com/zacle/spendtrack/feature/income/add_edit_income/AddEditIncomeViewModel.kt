@@ -74,10 +74,10 @@ class AddEditIncomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getIncome(expenseId: String, userId: String) {
-        val expenseResult = getIncomeUseCase.execute(GetIncomeUseCase.Request(userId, expenseId)).first()
-        if (expenseResult is Result.Success) {
-            val income = expenseResult.data.income
+    private suspend fun getIncome(incomeId: String, userId: String) {
+        val incomeResult = getIncomeUseCase.execute(GetIncomeUseCase.Request(userId, incomeId)).first()
+        if (incomeResult is Result.Success) {
+            val income = incomeResult.data.income
             this.income.value = income
             if (income != null) {
                 _uiState.value = uiState.value.copy(
@@ -165,6 +165,8 @@ class AddEditIncomeViewModel @Inject constructor(
         )
         if (errors.any { it != null }) return
 
+        _uiState.value = uiState.value.copy(isUploading = true)
+
         val localReceiptImagePath = uiState.value.receiptImage?.let {
             imageStorageManager.saveImageLocally(it, "receipt_${System.currentTimeMillis()}")
         }
@@ -186,6 +188,7 @@ class AddEditIncomeViewModel @Inject constructor(
                 period = uiState.value.transactionDate.toMonthlyPeriod()
             )
         )
+        _uiState.value = uiState.value.copy(isUploading = false)
         submitSingleEvent(TransactionUiEvent.NavigateBack)
     }
 
@@ -197,6 +200,8 @@ class AddEditIncomeViewModel @Inject constructor(
             uiState.value.categoryError,
         )
         if (errors.any { it != null }) return
+
+        _uiState.value = uiState.value.copy(isUploading = true)
 
         val income = income.value
         var didImageChange = false
@@ -238,10 +243,11 @@ class AddEditIncomeViewModel @Inject constructor(
                     income = updateIncome,
                     period = uiState.value.transactionDate.toMonthlyPeriod()
                 )
-            ).collect {
-                submitSingleEvent(TransactionUiEvent.NavigateBack)
-            }
+            )
+            _uiState.value = uiState.value.copy(isUploading = false)
+            submitSingleEvent(TransactionUiEvent.NavigateBack)
         }
+        _uiState.value = uiState.value.copy(isUploading = false)
     }
 
     private fun formValidation(name: String, amount: Int, category: Category) {

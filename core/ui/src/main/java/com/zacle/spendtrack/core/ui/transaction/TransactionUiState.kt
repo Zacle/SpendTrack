@@ -15,6 +15,7 @@ data class TransactionUiState(
     val transactionDate: Instant = Clock.System.now(),
     val receiptImage: ImageData? = null,
     val isLoading: Boolean = false,
+    val isUploading: Boolean = false,
     val nameError: TransactionFormError? = null,
     val amountError: TransactionFormError? = null,
     val categoryError: TransactionFormError? = null,

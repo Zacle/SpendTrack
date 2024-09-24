@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.zacle.spendtrack.core.data.datasource.StorageDataSource
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -28,12 +29,22 @@ class FirebaseStorageDataSource @Inject constructor(
             val fileUri = Uri.fromFile(File(imagePath))
 
             // Upload the file to Firebase Storage
-            storageRef.putFile(fileUri).await()
+            val uploadTask = storageRef.putFile(fileUri).await()
 
-            // Retrieve the download URL after the upload completes
-            val downloadUrl = storageRef.downloadUrl.await()
+            // Check if upload was successful
+            if (uploadTask.task.isSuccessful) {
+                // Retrieve the download URL after the upload completes
+                val downloadUrl = storageRef.downloadUrl.await()
 
-            return downloadUrl.toString()
+                // Log the obtained URL for debugging purposes
+                Timber.d("Download URL: $downloadUrl")
+
+                return downloadUrl.toString()
+            } else {
+                // Handle case where uploadTask failed without exception
+                Timber.e("Upload failed: ${uploadTask.task.exception?.message}")
+                return null
+            }
         } catch (e: Exception) {
             return null
         }

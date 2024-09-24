@@ -6,7 +6,7 @@ import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
 
 /**
@@ -20,7 +20,7 @@ class AddBudgetUseCase(
     private val budgetRepository: BudgetRepository
 ): UseCase<AddBudgetUseCase.Request, AddBudgetUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> = flow {
+    override suspend fun process(request: Request): Flow<Response> {
         val budget = request.budget
         var budgetAmount = budget.amount
         var remainingAmount = budgetAmount
@@ -46,7 +46,7 @@ class AddBudgetUseCase(
             budgetRepository.addBudget(insertedBudget)
         }
 
-        emit(Response(insertedBudget))
+        return flowOf(Response(insertedBudget))
     }
 
     data class Request(val userId: String, val budget: Budget, val period: Period): UseCase.Request

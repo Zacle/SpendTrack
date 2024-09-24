@@ -1,6 +1,7 @@
 package com.zacle.spendtrack.core.database.di
 
 import com.zacle.spendtrack.core.common.di.LocalBudgetData
+import com.zacle.spendtrack.core.common.di.LocalCategoryData
 import com.zacle.spendtrack.core.common.di.LocalExpenseData
 import com.zacle.spendtrack.core.common.di.LocalIncomeData
 import com.zacle.spendtrack.core.common.di.LocalUserData
@@ -62,6 +63,7 @@ object LocalDataSourceModule {
 
     @Provides
     @Singleton
+    @LocalCategoryData
     fun provideLocalCategoryDataSource(categoryDao: CategoryDao): CategoryDataSource =
         LocalCategoryDataSource(categoryDao)
 

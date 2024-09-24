@@ -5,4 +5,5 @@ object Collections {
     const val BUDGETS_COLLECTION = "budgets"
     const val EXPENSES_COLLECTION = "expenses"
     const val INCOMES_COLLECTION = "incomes"
+    const val CATEGORIES_COLLECTION = "categories"
 }

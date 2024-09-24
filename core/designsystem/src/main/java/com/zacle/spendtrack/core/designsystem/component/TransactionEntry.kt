@@ -100,7 +100,8 @@ fun RecordTransaction(
     amount: Int = 0,
     transactionDate: Instant? = null,
     receiptUriImage: ImageData? = null,
-    contentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer
+    contentColor: Color = MaterialTheme.colorScheme.onTertiaryContainer,
+    isUploading: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -131,6 +132,7 @@ fun RecordTransaction(
             onTransactionSaved = onTransactionSaved,
             transactionDate = transactionDate,
             receiptUriImage = receiptUriImage,
+            isUploading = isUploading,
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -218,7 +220,8 @@ fun TransactionEntry(
     onTransactionSaved: () -> Unit,
     modifier: Modifier = Modifier,
     transactionDate: Instant? = null,
-    receiptUriImage: ImageData? = null
+    receiptUriImage: ImageData? = null,
+    isUploading: Boolean = false
 ) {
     val scrollState = rememberScrollState()
 
@@ -263,6 +266,8 @@ fun TransactionEntry(
             SpendTrackButton(
                 text = stringResource(id = SharedR.string.save),
                 onClick = onTransactionSaved,
+                isUploading = isUploading,
+                enabled = !isUploading,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
@@ -690,7 +695,7 @@ fun TransactionDate(
 
                 override fun isSelectableYear(year: Int): Boolean {
                     val currentYear = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
-                    return currentYear > year
+                    return currentYear >= year
                 }
             }
         )

@@ -8,7 +8,7 @@ import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class DeleteIncomeUseCase(
     configuration: Configuration,
@@ -16,7 +16,7 @@ class DeleteIncomeUseCase(
     private val budgetRepository: BudgetRepository
 ): UseCase<DeleteIncomeUseCase.Request, DeleteIncomeUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> = flow {
+    override suspend fun process(request: Request): Flow<Response> {
         val income = request.income
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
@@ -29,7 +29,7 @@ class DeleteIncomeUseCase(
         budgetRepository.updateBudget(categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
 
         incomeRepository.deleteIncome(income)
-        emit(Response)
+        return flowOf(Response)
     }
 
     data class Request(val userId: String, val income: Income, val period: Period): UseCase.Request

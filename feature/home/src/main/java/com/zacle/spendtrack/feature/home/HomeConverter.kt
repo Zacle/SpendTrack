@@ -7,6 +7,7 @@ import com.zacle.spendtrack.core.ui.CommonResultConverter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import com.zacle.spendtrack.core.shared_resources.R
+import timber.log.Timber
 
 class HomeConverter @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -22,6 +23,9 @@ class HomeConverter @Inject constructor(
             budgets = data.budgets
         )
 
-    override fun convertError(useCaseException: UseCaseException): String =
-        context.getString(R.string.unknown_error)
+    override fun convertError(useCaseException: UseCaseException): String {
+        Timber.e(useCaseException)
+        return context.getString(R.string.unknown_error)
+    }
+
 }

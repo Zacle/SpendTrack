@@ -16,6 +16,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -49,25 +50,28 @@ class FirebaseBudgetDataSource @Inject constructor(
         emit(null)
     }
 
-    override suspend fun getBudgets(userId: String, budgetPeriod: Period): Flow<List<Budget>> = flow {
+    override suspend fun getBudgets(userId: String, budgetPeriod: Period): Flow<List<Budget>> {
         if (userId.isEmpty()) {
-            emit(emptyList())
+            return flowOf(emptyList())
         }
-        val start = Timestamp(budgetPeriod.start.epochSeconds, budgetPeriod.start.nanosecondsOfSecond)
-        val end = Timestamp(budgetPeriod.end.epochSeconds, budgetPeriod.end.nanosecondsOfSecond)
-        val task = budgetCollection(userId)
-            .whereGreaterThanOrEqualTo("budgetPeriod", start)
-            .whereLessThanOrEqualTo("budgetPeriod", end)
-            .get()
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
 
-        val budgets = snapshot.documents.mapNotNull {
-            it.toObject(FirebaseBudget::class.java)?.asExternalModel()
+        try {
+            val start = Timestamp(budgetPeriod.start.epochSeconds, budgetPeriod.start.nanosecondsOfSecond)
+            val end = Timestamp(budgetPeriod.end.epochSeconds, budgetPeriod.end.nanosecondsOfSecond)
+            val task = budgetCollection(userId)
+                .whereGreaterThanOrEqualTo("budgetPeriod", start)
+                .whereLessThanOrEqualTo("budgetPeriod", end)
+                .get()
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+
+            val budgets = snapshot.documents.mapNotNull {
+                it.toObject(FirebaseBudget::class.java)?.asExternalModel()
+            }
+            return flowOf(budgets)
+        } catch (e: Exception) {
+            Timber.e(e)
+            return flowOf(emptyList())
         }
-        emit(budgets)
-    }.catch { e ->
-        Timber.e(e)
-        emit(emptyList())
     }
 
     override suspend fun addBudget(budget: Budget) {

@@ -9,7 +9,7 @@ import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
 
 class UpdateIncomeUseCase(
@@ -18,7 +18,7 @@ class UpdateIncomeUseCase(
     private val budgetRepository: BudgetRepository
 ): UseCase<UpdateIncomeUseCase.Request, UpdateIncomeUseCase.Response>(configuration) {
 
-    override suspend fun process(request: Request): Flow<Response> = flow {
+    override suspend fun process(request: Request): Flow<Response> {
         val income = request.income
         val incomeId = income.id
 
@@ -40,7 +40,7 @@ class UpdateIncomeUseCase(
         budgetRepository.updateBudget(updatedBudget)
 
         incomeRepository.updateIncome(request.income)
-        emit(Response(updatedBudget))
+        return flowOf(Response(updatedBudget))
     }
 
     data class Request(val userId: String, val income: Income, val period: Period): UseCase.Request

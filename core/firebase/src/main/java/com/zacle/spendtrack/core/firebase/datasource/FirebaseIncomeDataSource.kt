@@ -16,6 +16,7 @@ import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -44,53 +45,57 @@ class FirebaseIncomeDataSource @Inject constructor(
         emit(null)
     }
 
-    override suspend fun getIncomes(userId: String, period: Period): Flow<List<Income>> = flow {
+    override suspend fun getIncomes(userId: String, period: Period): Flow<List<Income>> {
         if (userId.isEmpty()) {
-            emit(emptyList())
+            return flowOf(emptyList())
         }
 
-        val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
-        val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
-        val task = incomeCollection(userId)
-            .whereGreaterThanOrEqualTo("transactionDate", start)
-            .whereLessThanOrEqualTo("transactionDate", end)
-            .get()
+        try {
+            val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
+            val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
+            val task = incomeCollection(userId)
+                .whereGreaterThanOrEqualTo("transactionDate", start)
+                .whereLessThanOrEqualTo("transactionDate", end)
+                .get()
 
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
-        val incomes = snapshot.documents.mapNotNull {
-            it.toObject(FirebaseIncome::class.java)?.asExternalModel()
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+            val incomes = snapshot.documents.mapNotNull {
+                it.toObject(FirebaseIncome::class.java)?.asExternalModel()
+            }
+            return flowOf(incomes)
+        } catch (e: Exception){
+            Timber.e(e)
+            return flowOf(emptyList())
         }
-        emit(incomes)
-    }.catch { e ->
-        Timber.e(e)
-        emit(emptyList())
     }
 
     override suspend fun getIncomesByCategory(
         userId: String,
         categoryId: String,
         period: Period
-    ): Flow<List<Income>> = flow {
+    ): Flow<List<Income>> {
         if (userId.isEmpty()) {
-            emit(emptyList())
+            return flowOf(emptyList())
         }
 
-        val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
-        val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
-        val task = incomeCollection(userId)
-            .whereEqualTo("category.categoryId", categoryId)
-            .whereGreaterThanOrEqualTo("transactionDate", start)
-            .whereLessThanOrEqualTo("transactionDate", end)
-            .get()
+        try {
+            val start = Timestamp(period.start.epochSeconds, period.start.nanosecondsOfSecond)
+            val end = Timestamp(period.end.epochSeconds, period.end.nanosecondsOfSecond)
+            val task = incomeCollection(userId)
+                .whereEqualTo("category.categoryId", categoryId)
+                .whereGreaterThanOrEqualTo("transactionDate", start)
+                .whereLessThanOrEqualTo("transactionDate", end)
+                .get()
 
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
-        val incomes = snapshot.documents.mapNotNull {
-            it.toObject(FirebaseIncome::class.java)?.asExternalModel()
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+            val incomes = snapshot.documents.mapNotNull {
+                it.toObject(FirebaseIncome::class.java)?.asExternalModel()
+            }
+            return flowOf(incomes)
+        } catch (e: Exception) {
+            Timber.e(e)
+            return flowOf(emptyList())
         }
-        emit(incomes)
-    }.catch { e ->
-        Timber.e(e)
-        emit(emptyList())
     }
 
     override suspend fun addIncome(income: Income) {
