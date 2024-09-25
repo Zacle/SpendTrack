@@ -55,9 +55,7 @@ class OfflineFirstBudgetRepository @Inject constructor(
             val isOnline = networkMonitor.isOnline.first()
             if (budgets.isEmpty() && isOnline) {
                 remoteBudgetDataSource.getBudgets(userId, budgetPeriod).flatMapLatest { remoteBudgets ->
-                    remoteBudgets.forEach { budget ->
-                        localBudgetDataSource.addBudget(budget)
-                    }
+                    localBudgetDataSource.addAllBudgets(remoteBudgets)
                     flow { emit(remoteBudgets) }
                 }
             } else {

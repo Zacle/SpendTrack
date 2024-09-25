@@ -61,10 +61,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
             if (incomes.isEmpty() && isOnline) {
                 val remoteIncomes = remoteIncomeDataSource.getIncomes(userId, period).first()
                 Timber.d("Syncing incomes from server = ${remoteIncomes.count()}")
-                remoteIncomes.forEach { income ->
-                    Timber.d("Syncing income = $income")
-                    localIncomeDataSource.addIncome(income)
-                }
+                localIncomeDataSource.addAllIncomes(remoteIncomes)
                 flowOf(remoteIncomes)
             } else {
                 flow { emit(incomes) }
@@ -80,9 +77,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
             val isOnline = networkMonitor.isOnline.first()
             if (incomes.isEmpty() && isOnline) {
                 remoteIncomeDataSource.getIncomesByCategory(userId, categoryId, period).flatMapLatest { remoteIncomes ->
-                    remoteIncomes.forEach { income ->
-                        localIncomeDataSource.addIncome(income)
-                    }
+                    localIncomeDataSource.addAllIncomes(remoteIncomes)
                     flow { emit(remoteIncomes) }
                 }
             } else {

@@ -69,6 +69,23 @@ class FirebaseIncomeDataSource @Inject constructor(
         }
     }
 
+    override suspend fun addAllIncomes(incomes: List<Income>) {
+        val batch = firestore.batch()
+
+        incomes.forEach { income ->
+            val docRef = incomeCollection(income.userId).document(income.id)
+            batch.set(docRef, income.asFirebaseModel())
+        }
+
+        try {
+            // Commit the batch
+            batch.commit().await()
+        } catch (e: Exception) {
+            // Handle failure
+            Timber.e("FirestoreError", "Batch insert failed", e)
+        }
+    }
+
     override suspend fun getIncomesByCategory(
         userId: String,
         categoryId: String,

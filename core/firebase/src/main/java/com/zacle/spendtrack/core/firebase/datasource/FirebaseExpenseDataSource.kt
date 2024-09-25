@@ -98,6 +98,23 @@ class FirebaseExpenseDataSource @Inject constructor(
         }
     }
 
+    override suspend fun addAllExpenses(expenses: List<Expense>) {
+        val batch = firestore.batch() // Firestore batch write
+
+        expenses.forEach { expense ->
+            val docRef = expenseCollection(expense.userId).document(expense.id)
+            batch.set(docRef, expense.asFirebaseModel())
+        }
+
+        try {
+            // Commit the batch
+            batch.commit().await()
+        } catch (e: Exception) {
+            // Handle failure
+            Timber.e("FirestoreError", "Batch insert failed", e)
+        }
+    }
+
     override suspend fun addExpense(expense: Expense) {
         val firebaseExpense = expense.asFirebaseModel()
         expenseCollection(expense.userId)

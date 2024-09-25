@@ -74,6 +74,23 @@ class FirebaseBudgetDataSource @Inject constructor(
         }
     }
 
+    override suspend fun addAllBudgets(budgets: List<Budget>) {
+        val batch = firestore.batch() // Firestore batch write
+
+        budgets.forEach { budget ->
+            val docRef = budgetCollection(budget.userId).document(budget.budgetId)
+            batch.set(docRef, budget.asFirebaseModel())
+        }
+
+        try {
+            // Commit the batch
+            batch.commit().await()
+        } catch (e: Exception) {
+            // Handle failure
+            Timber.e("FirestoreError", "Batch insert failed", e)
+        }
+    }
+
     override suspend fun addBudget(budget: Budget) {
         val firebaseBudget = budget.asFirebaseModel()
         budgetCollection(budget.userId)

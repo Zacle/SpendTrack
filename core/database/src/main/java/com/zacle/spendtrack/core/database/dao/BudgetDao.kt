@@ -30,6 +30,9 @@ interface BudgetDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertBudget(budget: BudgetEntity)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAllBudgets(budgets: List<BudgetEntity>)
+
     @Update
     suspend fun updateBudget(budget: BudgetEntity)
 

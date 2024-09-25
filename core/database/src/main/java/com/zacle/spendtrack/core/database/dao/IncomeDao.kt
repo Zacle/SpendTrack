@@ -31,6 +31,9 @@ interface IncomeDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIncome(income: IncomeEntity)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAllIncomes(incomes: List<IncomeEntity>)
+
     @Update
     suspend fun updateIncome(income: IncomeEntity)
 

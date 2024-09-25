@@ -8,6 +8,7 @@ interface BudgetDataSource {
     suspend fun getBudget(userId: String, budgetId: String): Flow<Budget?>
     suspend fun getBudgets(userId: String, budgetPeriod: Period): Flow<List<Budget>>
     suspend fun addBudget(budget: Budget)
+    suspend fun addAllBudgets(budgets: List<Budget>)
     suspend fun updateBudget(budget: Budget)
     suspend fun deleteBudget(userId: String, budgetId: String)
 }

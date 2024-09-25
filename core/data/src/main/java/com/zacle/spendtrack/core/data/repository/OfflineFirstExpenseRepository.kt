@@ -61,10 +61,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
             if (expenses.isEmpty() && isOnline) {
                 val remoteExpenses = remoteExpenseDataSource.getExpenses(userId, period).first()
                 Timber.d("Syncing expenses from server = ${remoteExpenses.count()}")
-                remoteExpenses.forEach { expense ->
-                    Timber.d("Syncing expense = $expense")
-                    localExpenseDataSource.addExpense(expense)
-                }
+                localExpenseDataSource.addAllExpenses(remoteExpenses)
                 flowOf(remoteExpenses)
             } else {
                 flow { emit(expenses) }
@@ -80,9 +77,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
             val isOnline = networkMonitor.isOnline.first()
             if (expenses.isEmpty() && isOnline) {
                 remoteExpenseDataSource.getExpensesByCategory(userId, categoryId, period).flatMapLatest { remoteExpenses ->
-                    remoteExpenses.forEach { expense ->
-                        localExpenseDataSource.addExpense(expense)
-                    }
+                    localExpenseDataSource.addAllExpenses(remoteExpenses)
                     flow { emit(remoteExpenses) }
                 }
             } else {

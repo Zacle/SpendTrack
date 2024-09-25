@@ -6,13 +6,9 @@ import com.zacle.spendtrack.core.database.model.asEntity
 import com.zacle.spendtrack.core.database.model.asExternalModel
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * [SyncableExpenseDataSource] implementation based on a Room
@@ -43,22 +39,11 @@ class LocalExpenseDataSource @Inject constructor(
             .mapLatest { expenses -> expenses.map { it.asExternalModel() } }
 
     override suspend fun addExpense(expense: Expense) {
-        try {
-            Timber.d("Adding expense = ${expense.name}")
+        expenseDao.insertExpense(expense.asEntity())
+    }
 
-            // Ensure the insert is non-cancellable if that's the desired behavior
-            withContext(NonCancellable) {
-                expenseDao.insertExpense(expense.asEntity())
-            }
-
-            Timber.d("Expense added successfully = ${expense.name}")
-        } catch (e: CancellationException) {
-            // Handle coroutine cancellation specifically
-            Timber.e("Coroutine was cancelled while adding expense = ${expense.name}")
-            throw e // Re-throw cancellation exceptions
-        } catch (e: Exception) {
-            Timber.e(e, "Error adding expense = ${expense.name}")
-        }
+    override suspend fun addAllExpenses(expenses: List<Expense>) {
+        expenseDao.insertAllExpenses(expenses.map { it.asEntity() })
     }
 
     override suspend fun updateExpense(expense: Expense) {
