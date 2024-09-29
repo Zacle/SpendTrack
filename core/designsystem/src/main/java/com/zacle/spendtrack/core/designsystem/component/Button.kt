@@ -59,6 +59,7 @@ fun SpendTrackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     enabled: Boolean = true,
     isUploading: Boolean = false
 ) {
@@ -70,7 +71,8 @@ fun SpendTrackButton(
         modifier = modifier
             .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = color
+            containerColor = color,
+            contentColor = contentColor
         )
     ) {
         if (isUploading) {
@@ -85,7 +87,7 @@ fun SpendTrackButton(
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = contentColor,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }

@@ -3,6 +3,7 @@ package com.zacle.spendtrack.core.designsystem.icon
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Visibility
@@ -28,12 +29,12 @@ object SpendTrackIcons {
     val arrowBack = Icons.AutoMirrored.Filled.ArrowBack
     val dropDown = Icons.Default.KeyboardArrowDown
     val notification = Icons.Default.Notifications
+    val done = Icons.Default.Done
 }
 
 /**
  * A sealed class to make dealing with [ImageVector] and [DrawableRes] icons easier.
  */
 sealed class Icon {
-    data class ImageVectorIcon(val imageVector: ImageVector) : Icon()
     data class DrawableResourceIcon(@DrawableRes val id: Int) : Icon()
 }

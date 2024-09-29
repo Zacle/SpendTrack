@@ -4,11 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.zacle.spendtrack.feature.expense.add_edit_expense.addEditExpenseScreen
+import com.zacle.spendtrack.feature.expense.add_edit_expense.navigateToAddEditExpense
+import com.zacle.spendtrack.feature.expense.view_expense.expenseDetailScreen
+import com.zacle.spendtrack.feature.expense.view_expense.navigateToExpenseDetail
 import com.zacle.spendtrack.feature.forgot_password.forgotPasswordScreen
 import com.zacle.spendtrack.feature.forgot_password.navigateToForgotPassword
+import com.zacle.spendtrack.feature.home.Home
 import com.zacle.spendtrack.feature.home.homeScreen
 import com.zacle.spendtrack.feature.home.navigateToHome
 import com.zacle.spendtrack.feature.income.add_edit_income.addEditIncomeScreen
+import com.zacle.spendtrack.feature.income.add_edit_income.navigateToAddEditIncome
+import com.zacle.spendtrack.feature.income.view_income.incomeDetailScreen
+import com.zacle.spendtrack.feature.income.view_income.navigateToIncomeDetail
 import com.zacle.spendtrack.feature.login.loginScreen
 import com.zacle.spendtrack.feature.login.navigateToLogin
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
@@ -63,8 +70,8 @@ fun STNavHost(
             navigateToProfile = {},
             navigateToBudgets = {},
             navigateToTransactions = {},
-            navigateToExpense = {},
-            navigateToIncome = {},
+            navigateToExpense = navController::navigateToExpenseDetail,
+            navigateToIncome = navController::navigateToIncomeDetail,
             navigateToBudgetDetails = {},
             navigateToLogin = navController::navigateToLogin
         )
@@ -75,6 +82,34 @@ fun STNavHost(
         addEditIncomeScreen(
             navigateBack = navController::navigateUp,
             navigateToLogin = navController::navigateToHome
+        )
+        expenseDetailScreen(
+            navigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToLogin,
+            navigateToEditExpense = {
+                navController.navigateToAddEditExpense(
+                    expenseId = it,
+                    navOptionsBuilder = {
+                        popUpTo<Home> {
+                            inclusive = false
+                        }
+                    }
+                )
+            }
+        )
+        incomeDetailScreen(
+            onNavigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToLogin,
+            navigateToEditIncome = {
+                navController.navigateToAddEditIncome(
+                    incomeId = it,
+                    navOptionsBuilder = {
+                        popUpTo<Home> {
+                            inclusive = false
+                        }
+                    }
+                )
+            }
         )
     }
 }
