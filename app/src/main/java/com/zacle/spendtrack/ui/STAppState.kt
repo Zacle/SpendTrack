@@ -12,8 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.common.util.TimeZoneMonitor
-import com.zacle.spendtrack.feature.budget.Budget
+import com.zacle.spendtrack.feature.budget.budgets.Budgets
+import com.zacle.spendtrack.feature.budget.budgets.navigateToBudgets
 import com.zacle.spendtrack.feature.home.Home
+import com.zacle.spendtrack.feature.home.navigateToHome
 import com.zacle.spendtrack.feature.profile.Profile
 import com.zacle.spendtrack.feature.transaction.Transaction
 import com.zacle.spendtrack.navigation.TopLevelDestination
@@ -78,7 +80,7 @@ class STAppState(
         @Composable get() = when (currentDestination?.route?.substringAfterLast(".")) {
             Home.toString() -> HOME
             Transaction.toString() -> TRANSACTION
-            Budget.toString() -> BUDGET
+            Budgets.toString() -> BUDGET
             Profile.toString() -> PROFILE
             else -> null
         }
@@ -111,6 +113,11 @@ class STAppState(
             // Restore state when reselecting a previously selected item
             restoreState = true
         }
-        // TODO: Handle top level destination navigation
+        when (topLevelDestination) {
+            HOME -> navController.navigateToHome(topLevelNavOptions)
+            TRANSACTION -> {}
+            BUDGET -> navController.navigateToBudgets(topLevelNavOptions)
+            PROFILE -> {}
+        }
     }
 }

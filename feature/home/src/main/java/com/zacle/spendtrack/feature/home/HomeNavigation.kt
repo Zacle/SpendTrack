@@ -2,20 +2,21 @@ package com.zacle.spendtrack.feature.home
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object Home
 
 fun NavController.navigateToHome(
-    navOptionsBuilder: NavOptionsBuilder.() -> Unit = {
+    navOptions: NavOptions = navOptions {
         launchSingleTop = true
         popUpTo(0)
     }
 ) {
-    navigate(Home, navOptionsBuilder)
+    navigate(Home, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(

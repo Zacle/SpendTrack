@@ -22,7 +22,7 @@ object SpendTrackIcons {
     val addIncome = R.drawable.add_income
     val camera = R.drawable.camera
     val image = R.drawable.image
-    val cross_remove = R.drawable.cross_remove
+    val warning = R.drawable.warning
 
     val visibility = Icons.Default.Visibility
     val visibilityOff = Icons.Default.VisibilityOff

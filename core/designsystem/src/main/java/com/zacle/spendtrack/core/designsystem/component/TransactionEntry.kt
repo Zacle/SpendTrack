@@ -116,7 +116,8 @@ fun RecordTransaction(
             TransactionEntryAmount(
                 onAmountChanged = onAmountChanged,
                 amount = amount,
-                contentColor = contentColor
+                contentColor = contentColor,
+                title = stringResource(id = SharedR.string.how_much)
             )
         }
         TransactionEntry(
@@ -141,6 +142,7 @@ fun RecordTransaction(
 
 @Composable
 fun TransactionEntryAmount(
+    title: String,
     onAmountChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     amount: Int = 0,
@@ -154,7 +156,7 @@ fun TransactionEntryAmount(
             .padding(vertical = 8.dp)
     ) {
         Text(
-            text = stringResource(id = SharedR.string.how_much),
+            text = title,
             style = MaterialTheme.typography.labelLarge,
             color = contentColor,
             fontWeight = FontWeight.Medium,

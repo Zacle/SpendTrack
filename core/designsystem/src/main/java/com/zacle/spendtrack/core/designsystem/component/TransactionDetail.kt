@@ -305,7 +305,9 @@ fun TransactionType(
 fun RemoveTransactionModalSheet(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String = stringResource(R.string.remove_transaction_title),
+    description: String = stringResource(R.string.remove_transaction_description)
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -322,13 +324,13 @@ fun RemoveTransactionModalSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.remove_transaction_title),
+                text = title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(R.string.remove_transaction_description),
+                text = description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

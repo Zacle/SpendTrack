@@ -109,6 +109,35 @@
 
     <!-- Budget module -->
     <string name="budget">Budget</string>
+    <string name="setup_budget">Setup your budget for this month</string>
+    <string name="setup_budget_description">
+        Let\'s make the budget so you are in control
+    </string>
+    <string name="budget_previous">You didn\'t set a budget for this month</string>
+    <string name="budget_previous_description">
+        You can only set the budget for the current month
+    </string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_budget">Repeat this budget every month?</string>
+    <string name="receive_alert">Receive Alert</string>
+    <string name="receive_alert_description">
+        Receive an alert when it reaches some point.
+    </string>
+    <string name="budget_amount">
+        How much do you want to spend?
+    </string>
+    <string name="create_budget">Create Budget</string>
+    <string name="edit_budget">Edit Budget</string>
+    <string name="planned_budget">Total planned expense of</string>
+    <string name="with">with</string>
+    <string name="budget_left">left to the total budget</string>
+    <string name="budget_spent">Budget spent</string>
+    <string name="detail_budget">Detail Budget</string>
+    <string name="delete_budget">Delete this budget?</string>
+    <string name="delete_budget_description">
+        This action cannot be undone. Are you sure you want to delete this budget?
+    </string>
+    <string name="overview">Overview</string>
 
     <!-- Expense module -->
     <string name="expense">Expense</string>

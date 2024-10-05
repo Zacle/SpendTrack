@@ -3,6 +3,11 @@ package com.zacle.spendtrack.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.zacle.spendtrack.feature.budget.add_edit_budget.addEditBudgetScreen
+import com.zacle.spendtrack.feature.budget.add_edit_budget.navigateToAddEditBudget
+import com.zacle.spendtrack.feature.budget.budgets.budgetsScreen
+import com.zacle.spendtrack.feature.budget.view_budget.budgetDetailScreen
+import com.zacle.spendtrack.feature.budget.view_budget.navigateToBudgetDetail
 import com.zacle.spendtrack.feature.expense.add_edit_expense.addEditExpenseScreen
 import com.zacle.spendtrack.feature.expense.add_edit_expense.navigateToAddEditExpense
 import com.zacle.spendtrack.feature.expense.view_expense.expenseDetailScreen
@@ -110,6 +115,22 @@ fun STNavHost(
                     }
                 )
             }
+        )
+        budgetsScreen(
+            navigateToBudgetDetails = navController::navigateToBudgetDetail,
+            navigateToLogin = navController::navigateToLogin,
+            navigateToCreateBudget = navController::navigateToAddEditBudget
+        )
+        addEditBudgetScreen(
+            navigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToLogin
+        )
+        budgetDetailScreen(
+            navigateBack = navController::navigateUp,
+            navigateToLogin = navController::navigateToLogin,
+            onEditBudgetClick = navController::navigateToAddEditBudget,
+            onExpenseClick = navController::navigateToExpenseDetail,
+            onIncomeClick = navController::navigateToIncomeDetail
         )
     }
 }
