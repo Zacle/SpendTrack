@@ -25,11 +25,13 @@ import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -149,11 +151,13 @@ class OfflineFirstBudgetRepository @Inject constructor(
                 val addedBudgetsNotSynced = localBudgetDataSource.getNonSyncedBudgets(userId)
 
                 addedBudgetsNotSynced.forEach { budget ->
-                    try {
-                        remoteBudgetDataSource.addBudget(budget)
-                        localBudgetDataSource.updateBudget(budget.copy(synced = true))
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            remoteBudgetDataSource.addBudget(budget)
+                            localBudgetDataSource.updateBudget(budget.copy(synced = true))
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -161,11 +165,13 @@ class OfflineFirstBudgetRepository @Inject constructor(
                 val updatedBudgetsNotSynced = localBudgetDataSource.getNonSyncedBudgets(userId)
 
                 updatedBudgetsNotSynced.forEach { budget ->
-                    try {
-                        remoteBudgetDataSource.updateBudget(budget)
-                        localBudgetDataSource.updateBudget(budget.copy(synced = true))
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            remoteBudgetDataSource.updateBudget(budget)
+                            localBudgetDataSource.updateBudget(budget.copy(synced = true))
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -173,11 +179,13 @@ class OfflineFirstBudgetRepository @Inject constructor(
                 val deletedBudgetIds = deletedBudgetDataSource.getDeletedBudgets(userId).map { it.budgetId }
 
                 deletedBudgetIds.forEach { budgetId ->
-                    try {
-                        remoteBudgetDataSource.deleteBudget(userId, budgetId)
-                        deletedBudgetDataSource.delete(userId, budgetId)
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            remoteBudgetDataSource.deleteBudget(userId, budgetId)
+                            deletedBudgetDataSource.delete(userId, budgetId)
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             }

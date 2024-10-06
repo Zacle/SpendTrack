@@ -27,12 +27,14 @@ import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -284,10 +286,12 @@ class OfflineFirstExpenseRepository @Inject constructor(
                 val addedExpensesNotSynced = localExpenseDataSource.getNonSyncedExpenses(userId)
 
                 addedExpensesNotSynced.forEach { expense ->
-                    try {
-                        addExpenseToServer(expense)
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            addExpenseToServer(expense)
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -295,10 +299,12 @@ class OfflineFirstExpenseRepository @Inject constructor(
                 val updatedExpensesNotSynced = localExpenseDataSource.getNonSyncedExpenses(userId)
 
                 updatedExpensesNotSynced.forEach { expense ->
-                    try {
-                        updateExpenseOnServer(expense)
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            updateExpenseOnServer(expense)
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -306,14 +312,16 @@ class OfflineFirstExpenseRepository @Inject constructor(
                 val deletedExpenseIds = deletedExpenseDataSource.getDeletedExpenses(userId).map { it.expenseId }
 
                 deletedExpenseIds.forEach { expenseId ->
-                    try {
-                        val expense = remoteExpenseDataSource.getExpense(userId, expenseId).first()
-                        if (expense != null) {
-                            deleteExpenseOnServer(expense)
+                    withContext(NonCancellable) {
+                        try {
+                            val expense = remoteExpenseDataSource.getExpense(userId, expenseId).first()
+                            if (expense != null) {
+                                deleteExpenseOnServer(expense)
+                            }
+                            deletedExpenseDataSource.delete(userId, expenseId)
+                        } catch (e: Exception) {
+                            Timber.e(e)
                         }
-                        deletedExpenseDataSource.delete(userId, expenseId)
-                    } catch (e: Exception) {
-                        Timber.e(e)
                     }
                 }
             }

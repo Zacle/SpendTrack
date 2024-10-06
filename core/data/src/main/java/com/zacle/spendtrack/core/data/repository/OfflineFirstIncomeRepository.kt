@@ -27,12 +27,14 @@ import com.zacle.spendtrack.core.model.util.Synchronizer
 import com.zacle.spendtrack.core.model.util.changeLastSyncTimes
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -277,10 +279,12 @@ class OfflineFirstIncomeRepository @Inject constructor(
                 val addedIncomesNotSynced = localIncomeDataSource.getNonSyncedIncomes(userId)
 
                 addedIncomesNotSynced.forEach { income ->
-                    try {
-                        addIncomeToServer(income)
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            addIncomeToServer(income)
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -288,10 +292,12 @@ class OfflineFirstIncomeRepository @Inject constructor(
                 val updatedIncomesNotSynced = localIncomeDataSource.getNonSyncedIncomes(userId)
 
                 updatedIncomesNotSynced.forEach { income ->
-                    try {
-                        updateIncomeOnServer(income)
-                    } catch (e: Exception) {
-                        Timber.e(e)
+                    withContext(NonCancellable) {
+                        try {
+                            updateIncomeOnServer(income)
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                        }
                     }
                 }
             },
@@ -299,14 +305,16 @@ class OfflineFirstIncomeRepository @Inject constructor(
                 val deletedIncomeIds = deletedIncomeDataSource.getDeletedIncomes(userId).map { it.incomeId }
 
                 deletedIncomeIds.forEach { incomeId ->
-                    try {
-                        val income = remoteIncomeDataSource.getIncome(userId, incomeId).first()
-                        if (income != null) {
-                            deleteIncomeOnServer(income)
+                    withContext(NonCancellable) {
+                        try {
+                            val income = remoteIncomeDataSource.getIncome(userId, incomeId).first()
+                            if (income != null) {
+                                deleteIncomeOnServer(income)
+                            }
+                            deletedIncomeDataSource.delete(userId, incomeId)
+                        } catch (e: Exception) {
+                            Timber.e(e)
                         }
-                        deletedIncomeDataSource.delete(userId, incomeId)
-                    } catch (e: Exception) {
-                        Timber.e(e)
                     }
                 }
             }

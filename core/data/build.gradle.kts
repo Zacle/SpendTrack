@@ -15,8 +15,10 @@ dependencies {
     api(projects.core.model)
     api(projects.core.sharedResources)
 
-    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.work.ktx)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.ext.work)
     implementation(libs.timber)
 
