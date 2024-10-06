@@ -250,9 +250,7 @@ fun BudgetCircularIndicator(
     modifier: Modifier = Modifier,
     indicatorSize: Dp = 130.dp,
     strokeWidth: Dp = 15.dp,
-    backgroundIndicatorColor: List<Color> = listOf(
-        MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.surfaceContainer
-    ),
+    backgroundIndicatorColor: Color = Color.LightGray,
     progressGradientColors: List<Color> = listOf(
         MaterialTheme.colorScheme.primary, Color(0xFF71AA13)
     )
@@ -278,12 +276,6 @@ fun BudgetCircularIndicator(
             val innerPadding = strokeWidth.toPx() / 2
             val radius = size / 2 - innerPadding
 
-            // Create the gradient brush for the background
-            val backgroundGradientBrush = Brush.sweepGradient(
-                colors = backgroundIndicatorColor,
-                center = Offset(size / 2, size / 2)
-            )
-
             // Create the gradient brush for the progress arc
             val progressGradientBrush = Brush.linearGradient(
                 colors = progressGradientColors
@@ -291,7 +283,7 @@ fun BudgetCircularIndicator(
 
             // Draw the background circular track
             drawArc(
-                brush = backgroundGradientBrush,
+                color = backgroundIndicatorColor,
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,

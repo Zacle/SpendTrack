@@ -148,7 +148,7 @@ internal fun BudgetDetailScreen(
     ) { innerPadding ->
         when (uiState) {
             is UiState.Loading -> Loading()
-            is UiState.Error -> onNavigateBack()
+            is UiState.Error -> {}
             is UiState.Success -> {
                 val budgetDetailModel = uiState.data
                 Box(
@@ -168,7 +168,7 @@ internal fun BudgetDetailScreen(
                         text = stringResource(R.string.edit),
                         onClick = { onEditBudgetClick(budgetDetailModel.budget.budgetId) },
                         modifier = Modifier
-                            .padding(horizontal = 16.dp)
+                            .padding(16.dp)
                             .align(Alignment.BottomCenter)
                     )
                 }
