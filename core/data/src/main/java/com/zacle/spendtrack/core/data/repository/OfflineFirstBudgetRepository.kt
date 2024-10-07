@@ -15,6 +15,7 @@ import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.DeletedBudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
+import com.zacle.spendtrack.core.data.sync.RecurrentBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncConstraints
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
@@ -58,6 +59,12 @@ class OfflineFirstBudgetRepository @Inject constructor(
             if (budgets.isEmpty() && isOnline) {
                 remoteBudgetDataSource.getBudgets(userId, budgetPeriod).flatMapLatest { remoteBudgets ->
                     localBudgetDataSource.addAllBudgets(remoteBudgets)
+                    // Schedule a recurrent budget work for each budget obtained from the network
+                    remoteBudgets.forEach { budget ->
+                        if (budget.recurrent) {
+                            RecurrentBudgetWorker.scheduleNextRecurrentBudgetWork(budget, context)
+                        }
+                    }
                     flow { emit(remoteBudgets) }
                 }
             } else {
@@ -92,6 +99,11 @@ class OfflineFirstBudgetRepository @Inject constructor(
             startUpSyncWork(budget.userId)
             localBudgetDataSource.addBudget(budget)
         }
+
+        // If the budget is recurrent, schedule the next recurrent budget work
+        if (budget.recurrent) {
+            RecurrentBudgetWorker.scheduleNextRecurrentBudgetWork(budget, context)
+        }
     }
 
     override suspend fun updateBudget(budget: Budget) {
@@ -103,6 +115,14 @@ class OfflineFirstBudgetRepository @Inject constructor(
             startUpSyncWork(budget.userId)
             localBudgetDataSource.updateBudget(budget.copy(synced = false))
         }
+
+        // If the budget is recurrent, cancel the next recurrent budget work and reschedule the next recurrent budget work
+        if (budget.recurrent) {
+            WorkManager
+                .getInstance(context)
+                .cancelUniqueWork("RecurrentBudgetWork_${budget.category.categoryId}")
+            RecurrentBudgetWorker.scheduleNextRecurrentBudgetWork(budget, context)
+        }
     }
 
     override suspend fun deleteBudget(budget: Budget) {
@@ -113,6 +133,13 @@ class OfflineFirstBudgetRepository @Inject constructor(
         } else {
             startUpSyncWork(budget.userId)
             deletedBudgetDataSource.insert(DeletedBudget(budget.budgetId, budget.userId))
+        }
+
+        // If the budget is recurrent, cancel the next recurrent budget work
+        if (budget.recurrent) {
+            WorkManager
+                .getInstance(context)
+                .cancelUniqueWork("RecurrentBudgetWork_${budget.category.categoryId}")
         }
     }
 

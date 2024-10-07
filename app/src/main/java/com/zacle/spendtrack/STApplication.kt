@@ -6,6 +6,7 @@ import androidx.work.Configuration
 import androidx.work.DelegatingWorkerFactory
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
+import com.zacle.spendtrack.core.data.sync.RecurrentBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncExpenseWorker
 import com.zacle.spendtrack.core.data.sync.SyncIncomeWorker
@@ -66,6 +67,11 @@ class STWorkersFactory @Inject constructor(
                 incomeRepository = incomeRepository,
                 userPreferencesDataSource = userPreferencesDataSource,
                 ioDispatcher = ioDispatcher
+            )
+        )
+        addFactory(
+            RecurrentBudgetWorker.Factory(
+                budgetRepository = budgetRepository
             )
         )
     }
