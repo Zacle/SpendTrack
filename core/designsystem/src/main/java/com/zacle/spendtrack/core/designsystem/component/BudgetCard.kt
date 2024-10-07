@@ -33,12 +33,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Category
-import com.zacle.spendtrack.core.shared_resources.R as SharedR
+import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun BudgetCard(
@@ -47,10 +46,10 @@ fun BudgetCard(
     modifier: Modifier = Modifier
 ) {
     val color = Color(AndroidColor.parseColor(budget.category.color))
-    val isBudgetExceeded = budget.remainingAmount < 0
+    val isBudgetExceeded = budget.remainingAmount <= 0
     val progress =
         if (isBudgetExceeded) 1f
-        else budget.remainingAmount.toFloat() / budget.amount.toFloat()
+        else (budget.amount - budget.remainingAmount).toFloat() / budget.amount.toFloat()
     val totalExpense =
         if (isBudgetExceeded) (budget.amount - budget.remainingAmount).toInt()
         else budget.remainingAmount.toInt()
@@ -99,7 +98,7 @@ fun BudgetCard(
                 if (isBudgetExceeded) 0
                 else budget.remainingAmount.toInt()
             Text(
-                text = stringResource(id = SharedR.string.remaining) + " $$remainingAmount",
+                text = stringResource(id = R.string.remaining) + " $$remainingAmount",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -113,13 +112,13 @@ fun BudgetCard(
                     .padding(horizontal = 4.dp)
             )
             Text(
-                text = "$$totalExpense " + stringResource(id = SharedR.string.of) + " $${budget.amount.toInt()}",
+                text = "$$totalExpense " + stringResource(id = R.string.of) + " $${budget.amount.toInt()}",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
             )
             if (isBudgetExceeded) {
                 Text(
-                    text = stringResource(id = SharedR.string.exceeded_limit),
+                    text = stringResource(id = R.string.exceeded_limit),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
                 )

@@ -195,7 +195,8 @@ fun BudgetsContent(
                 item {
                     SpendTrackButton(
                         text = stringResource(R.string.create_budget),
-                        onClick = onCreateBudgetPressed
+                        onClick = onCreateBudgetPressed,
+                        modifier = Modifier.padding(top = 24.dp)
                     )
                 }
             }

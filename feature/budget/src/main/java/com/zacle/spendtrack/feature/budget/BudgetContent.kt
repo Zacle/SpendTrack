@@ -258,7 +258,9 @@ fun BudgetCircularIndicator(
     // Amount spent
     val amountSpent = totalAmount - remainingAmount
     // Calculate the progress as a ratio of remaining to total
-    val progress = amountSpent / totalAmount
+    val progress =
+        if (amountSpent >= totalAmount) 1f
+        else amountSpent / totalAmount
 
     // Box to center the remaining amount text
     Box(

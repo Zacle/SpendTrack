@@ -178,7 +178,7 @@ fun HomeContent(
     navigateToTransactions: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (homeModel.transactions.isEmpty()) {
+    if (homeModel.transactions.isEmpty() && homeModel.budgets.isEmpty()) {
         EmptyScreen(
             message = stringResource(id = R.string.no_transactions),
             description = stringResource(id = R.string.no_transactions_description),

@@ -69,19 +69,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.zacle.spendtrack.core.designsystem.R
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
 import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.model.ImageData
+import com.zacle.spendtrack.core.shared_resources.R
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.io.File
 import android.graphics.Color as AndroidColor
-import com.zacle.spendtrack.core.shared_resources.R as SharedR
 
 @Composable
 fun RecordTransaction(
@@ -117,7 +116,7 @@ fun RecordTransaction(
                 onAmountChanged = onAmountChanged,
                 amount = amount,
                 contentColor = contentColor,
-                title = stringResource(id = SharedR.string.how_much)
+                title = stringResource(id = R.string.how_much)
             )
         }
         TransactionEntry(
@@ -180,7 +179,7 @@ fun TransactionEntryAmount(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     focusedTextColor = contentColor,
@@ -248,13 +247,13 @@ fun TransactionEntry(
             STTextField(
                 name = name,
                 onValueChange = onNameChanged,
-                placeholder = stringResource(id = SharedR.string.name),
+                placeholder = stringResource(id = R.string.name),
                 singleLine = true
             )
             STTextField(
                 name = description,
                 onValueChange = onDescriptionChanged,
-                placeholder = stringResource(id = SharedR.string.description)
+                placeholder = stringResource(id = R.string.description)
             )
             Attachment(
                 onAttachmentSelected = onAttachmentSelected,
@@ -266,7 +265,7 @@ fun TransactionEntry(
             )
             Spacer(modifier = Modifier.weight(1f))
             SpendTrackButton(
-                text = stringResource(id = SharedR.string.save),
+                text = stringResource(id = R.string.save),
                 onClick = onTransactionSaved,
                 isUploading = isUploading,
                 enabled = !isUploading,
@@ -326,7 +325,7 @@ fun CategoryDropdown(
                     }
                 } else {
                     Text(
-                        text = stringResource(id = SharedR.string.categories),
+                        text = stringResource(id = R.string.categories),
                         fontWeight = FontWeight.Medium,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
@@ -460,7 +459,7 @@ fun Attachment(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = stringResource(id = SharedR.string.add_attachment),
+                    text = stringResource(id = R.string.add_attachment),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
@@ -556,7 +555,7 @@ internal fun PicturePickerModalBottomSheet(
     )
 
     val context = LocalContext.current
-    val cameraPermissionMessage = stringResource(id = SharedR.string.camera_permission)
+    val cameraPermissionMessage = stringResource(id = R.string.camera_permission)
     val cameraPermission = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -583,18 +582,18 @@ internal fun PicturePickerModalBottomSheet(
                 .padding(16.dp)
         ) {
             PicturePicker(
-                name = stringResource(id = SharedR.string.camera),
+                name = stringResource(id = R.string.camera),
                 painter = painterResource(id = SpendTrackIcons.camera),
-                contentDescription = stringResource(id = SharedR.string.camera_description),
+                contentDescription = stringResource(id = R.string.camera_description),
                 onClick = {
                     cameraPermission.launch(Manifest.permission.CAMERA)
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))
             PicturePicker(
-                name = stringResource(id = SharedR.string.gallery),
+                name = stringResource(id = R.string.gallery),
                 painter = painterResource(id = SpendTrackIcons.image),
-                contentDescription = stringResource(id = SharedR.string.gallery_description),
+                contentDescription = stringResource(id = R.string.gallery_description),
                 onClick = {
                     galleryPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -652,7 +651,7 @@ fun TransactionDate(
 ) {
     val context = LocalContext.current
     val text =
-        if (transactionDate == null) stringResource(id = SharedR.string.select_date)
+        if (transactionDate == null) stringResource(id = R.string.select_date)
         else formatLocalDateTime(context, convertInstantToLocalDateTime(transactionDate))
 
     var openDialog by remember { mutableStateOf(false) }
@@ -710,7 +709,7 @@ fun TransactionDate(
                         onDateSelected(Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!))
                     }
                 ) {
-                    Text(text = stringResource(id = SharedR.string.done))
+                    Text(text = stringResource(id = R.string.done))
                 }
             },
             dismissButton = {
@@ -719,7 +718,7 @@ fun TransactionDate(
                         openDialog = false
                     }
                 ) {
-                    Text(text = stringResource(id = SharedR.string.cancel))
+                    Text(text = stringResource(id = R.string.cancel))
                 }
             }
         ) {
@@ -842,16 +841,16 @@ fun PicturePickerModalSheetPreview(modifier: Modifier = Modifier) {
                     .padding(16.dp)
             ) {
                 PicturePicker(
-                    name = stringResource(id = SharedR.string.camera),
+                    name = stringResource(id = R.string.camera),
                     painter = painterResource(id = SpendTrackIcons.camera),
-                    contentDescription = stringResource(id = SharedR.string.camera_description),
+                    contentDescription = stringResource(id = R.string.camera_description),
                     onClick = {  }
                 )
                 Spacer(modifier = Modifier.width(32.dp))
                 PicturePicker(
-                    name = stringResource(id = SharedR.string.gallery),
+                    name = stringResource(id = R.string.gallery),
                     painter = painterResource(id = SpendTrackIcons.image),
-                    contentDescription = stringResource(id = SharedR.string.gallery_description),
+                    contentDescription = stringResource(id = R.string.gallery_description),
                     onClick = {  }
                 )
             }

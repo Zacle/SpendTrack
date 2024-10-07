@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -122,7 +123,9 @@ fun STApp(
                             Icon(
                                 painter = painterResource(id = destination.icon.id),
                                 contentDescription = null,
-                                tint = tintColor
+                                tint = tintColor,
+                                modifier = Modifier
+                                    .size(24.dp)
                             )
                         },
                         label = {
@@ -182,7 +185,9 @@ fun STApp(
                                         Icon(
                                             painter = painterResource(id = destination.icon.id),
                                             contentDescription = null,
-                                            tint = tintColor
+                                            tint = tintColor,
+                                            modifier = Modifier
+                                                .size(24.dp)
                                         )
                                     },
                                     label = {

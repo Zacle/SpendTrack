@@ -30,6 +30,7 @@ import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableExpenseDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableIncomeDataSource
 import com.zacle.spendtrack.core.data.datasource.UserDataSource
+import com.zacle.spendtrack.core.data.notification.BudgetAlertNotifier
 import com.zacle.spendtrack.core.data.repository.DefaultAuthStateUserRepository
 import com.zacle.spendtrack.core.data.repository.DefaultAuthenticationRepository
 import com.zacle.spendtrack.core.data.repository.OfflineFirstBudgetRepository
@@ -108,7 +109,8 @@ object RepositoryModule {
         @STDispatcher(STDispatchers.IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context,
         networkMonitor: NetworkMonitor,
-        deletedBudgetDataSource: DeletedBudgetDataSource
+        deletedBudgetDataSource: DeletedBudgetDataSource,
+        budgetAlarmNotifier: BudgetAlertNotifier
     ): BudgetRepository =
         OfflineFirstBudgetRepository(
             localBudgetDataSource = localBudgetDataSource,
@@ -116,7 +118,8 @@ object RepositoryModule {
             ioDispatcher = ioDispatcher,
             networkMonitor = networkMonitor,
             deletedBudgetDataSource = deletedBudgetDataSource,
-            context = context
+            context = context,
+            budgetAlarmNotifier = budgetAlarmNotifier
         )
 
     @Provides

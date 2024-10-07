@@ -22,8 +22,7 @@ class AddBudgetUseCase(
 
     override suspend fun process(request: Request): Flow<Response> {
         val budget = request.budget
-        var budgetAmount = budget.amount
-        var remainingAmount = budgetAmount
+        val budgetAmount = budget.amount
         val insertedBudget: Budget
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
@@ -33,16 +32,19 @@ class AddBudgetUseCase(
 
         /* If the budget exists, update it, otherwise create a new one */
         if (currentBudget != null) {
-            budgetAmount += currentBudget.amount
-            remainingAmount  += currentBudget.remainingAmount
+            val remainingAmount = budgetAmount - currentBudget.amount + currentBudget.remainingAmount
             insertedBudget = currentBudget.copy(
                 amount = budgetAmount,
                 remainingAmount = remainingAmount,
-                updatedAt = Clock.System.now()
+                updatedAt = Clock.System.now(),
+                recurrent = budget.recurrent,
+                budgetAlert = budget.budgetAlert,
+                budgetAlertPercentage = budget.budgetAlertPercentage,
+                synced = false
             )
             budgetRepository.updateBudget(insertedBudget)
         } else {
-            insertedBudget = budget.copy(userId = request.userId, remainingAmount = remainingAmount)
+            insertedBudget = budget.copy(userId = request.userId, remainingAmount = budgetAmount)
             budgetRepository.addBudget(insertedBudget)
         }
 

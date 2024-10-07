@@ -77,7 +77,7 @@ fun STNavHost(
             navigateToTransactions = {},
             navigateToExpense = navController::navigateToExpenseDetail,
             navigateToIncome = navController::navigateToIncomeDetail,
-            navigateToBudgetDetails = {},
+            navigateToBudgetDetails = navController::navigateToBudgetDetail,
             navigateToLogin = navController::navigateToLogin
         )
         addEditExpenseScreen(

@@ -138,6 +138,13 @@
         This action cannot be undone. Are you sure you want to delete this budget?
     </string>
     <string name="overview">Overview</string>
+    <string name="budget_channel_name">Budget Warning</string>
+    <string name="budget_channel_exceeded_description">
+        You have exceeded the budget set for this month. Please check your expenses.
+    </string>
+    <string name="budget_channel_remaining_description">
+        You are about to reach the limit set for the budget set for this month. Please be cautious.
+    </string>
 
     <!-- Expense module -->
     <string name="expense">Expense</string>

@@ -15,6 +15,7 @@ import com.zacle.spendtrack.core.data.Constants.USER_ID_KEY
 import com.zacle.spendtrack.core.data.datasource.BudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.DeletedBudgetDataSource
 import com.zacle.spendtrack.core.data.datasource.SyncableBudgetDataSource
+import com.zacle.spendtrack.core.data.notification.BudgetAlertNotifier
 import com.zacle.spendtrack.core.data.sync.RecurrentBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncConstraints
@@ -48,10 +49,11 @@ import javax.inject.Inject
 class OfflineFirstBudgetRepository @Inject constructor(
     @LocalBudgetData private val localBudgetDataSource: SyncableBudgetDataSource,
     @RemoteBudgetData private val remoteBudgetDataSource: BudgetDataSource,
+    private val deletedBudgetDataSource: DeletedBudgetDataSource,
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
     private val networkMonitor: NetworkMonitor,
-    private val deletedBudgetDataSource: DeletedBudgetDataSource
+    private val budgetAlarmNotifier: BudgetAlertNotifier,
 ): BudgetRepository {
     override suspend fun getBudgets(userId: String, budgetPeriod: Period): Flow<List<Budget>> =
         localBudgetDataSource.getBudgets(userId, budgetPeriod).flatMapLatest { budgets ->
@@ -114,6 +116,18 @@ class OfflineFirstBudgetRepository @Inject constructor(
         } else {
             startUpSyncWork(budget.userId)
             localBudgetDataSource.updateBudget(budget.copy(synced = false))
+        }
+
+        // Send a notification to the user if the budget is exceeded or about to be exceeded
+        if (budget.budgetAlert) {
+            if (budget.remainingAmount <= 0) {
+                budgetAlarmNotifier.showBudgetAlertNotification(true)
+            } else {
+                val amountSpentPercentage = (budget.amount - budget.remainingAmount) / budget.amount
+                if (amountSpentPercentage >= budget.budgetAlertPercentage) {
+                    budgetAlarmNotifier.showBudgetAlertNotification(false)
+                }
+            }
         }
 
         // If the budget is recurrent, cancel the next recurrent budget work and reschedule the next recurrent budget work

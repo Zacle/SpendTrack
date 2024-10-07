@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.zacle.spendtrack.core.designsystem.R
+import com.zacle.spendtrack.core.shared_resources.R
 
 @Composable
 fun EmptyScreen(

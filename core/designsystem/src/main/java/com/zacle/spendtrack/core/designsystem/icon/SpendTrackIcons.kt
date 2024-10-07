@@ -9,7 +9,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.zacle.spendtrack.core.designsystem.R
+import com.zacle.spendtrack.core.shared_resources.R
 
 object SpendTrackIcons {
     val home = R.drawable.home

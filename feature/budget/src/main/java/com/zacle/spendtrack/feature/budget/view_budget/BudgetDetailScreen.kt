@@ -238,10 +238,10 @@ fun BudgetDetailHeader(
     modifier: Modifier = Modifier
 ) {
     val color = Color(AndroidColor.parseColor(budget.category.color))
-    val isBudgetExceeded = budget.remainingAmount < 0
+    val isBudgetExceeded = budget.remainingAmount <= 0
     val progress =
         if (isBudgetExceeded) 1f
-        else budget.remainingAmount.toFloat() / budget.amount.toFloat()
+        else (budget.amount - budget.remainingAmount).toFloat() / budget.amount.toFloat()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
