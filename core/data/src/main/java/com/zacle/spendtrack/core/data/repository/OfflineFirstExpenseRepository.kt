@@ -234,9 +234,9 @@ class OfflineFirstExpenseRepository @Inject constructor(
         if (isOnline) {
             deleteExpenseOnServer(expense)
         } else {
+            deletedExpenseDataSource.insert(DeletedExpense(expense.id, expense.userId))
             // If offline, schedule a WorkManager task to sync deletions when back online
             startUpSyncWork(expense.userId)
-            deletedExpenseDataSource.insert(DeletedExpense(expense.id, expense.userId))
         }
     }
 
@@ -314,10 +314,7 @@ class OfflineFirstExpenseRepository @Inject constructor(
                 deletedExpenseIds.forEach { expenseId ->
                     withContext(NonCancellable) {
                         try {
-                            val expense = remoteExpenseDataSource.getExpense(userId, expenseId).first()
-                            if (expense != null) {
-                                deleteExpenseOnServer(expense)
-                            }
+                            remoteExpenseDataSource.deleteExpense(userId, expenseId)
                             deletedExpenseDataSource.delete(userId, expenseId)
                         } catch (e: Exception) {
                             Timber.e(e)

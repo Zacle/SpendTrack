@@ -14,8 +14,6 @@ import com.zacle.spendtrack.core.model.Exceptions
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -28,21 +26,23 @@ import javax.inject.Inject
 class FirebaseExpenseDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ): ExpenseDataSource {
-    override suspend fun getExpense(userId: String, expenseId: String): Flow<Expense?> = flow {
-        if (userId.isEmpty() || expenseId.isEmpty()) {
-            emit(null)
+    override suspend fun getExpense(userId: String, expenseId: String): Flow<Expense?> {
+        try {
+            if (userId.isEmpty() || expenseId.isEmpty()) {
+                return flowOf(null)
+            }
+
+            val task = expenseCollection(userId)
+                .whereEqualTo("expenseId", expenseId)
+                .get()
+
+            val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
+            val expense = snapshot.documents.firstOrNull()?.toObject(FirebaseExpense::class.java)?.asExternalModel()
+            return flowOf(expense)
+        } catch (e: Exception) {
+            Timber.e(e)
+            return flowOf(null)
         }
-
-        val task = expenseCollection(userId)
-            .whereEqualTo("expenseId", expenseId)
-            .get()
-
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
-        val expense = snapshot.documents.firstOrNull()?.toObject(FirebaseExpense::class.java)?.asExternalModel()
-        emit(expense)
-    }.catch { e ->
-        Timber.e(e)
-        emit(null)
     }
 
     override suspend fun getExpenses(userId: String, period: Period): Flow<List<Expense>> {

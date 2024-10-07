@@ -29,7 +29,9 @@ class DeleteExpenseUseCase(
             ?: throw BudgetNotFoundException()
 
         val remainingAmount = categoryBudget.remainingAmount + expense.amount
-        budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
+        if (remainingAmount <= categoryBudget.amount) {
+            budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
+        }
 
         expenseRepository.deleteExpense(expense)
         return flowOf(Response)

@@ -145,8 +145,8 @@ class OfflineFirstBudgetRepository @Inject constructor(
         if (isOnline) {
             remoteBudgetDataSource.deleteBudget(budget.userId, budget.budgetId)
         } else {
-            startUpSyncWork(budget.userId)
             deletedBudgetDataSource.insert(DeletedBudget(budget.budgetId, budget.userId))
+            startUpSyncWork(budget.userId)
         }
 
         // If the budget is recurrent, cancel the next recurrent budget work

@@ -228,8 +228,8 @@ class OfflineFirstIncomeRepository @Inject constructor(
         if (isOnline) {
             deleteIncomeOnServer(income)
         } else {
-            startUpSyncWork(income.userId)
             deletedIncomeDataSource.insert(DeletedIncome(income.id, income.userId))
+            startUpSyncWork(income.userId)
         }
     }
 
@@ -307,10 +307,7 @@ class OfflineFirstIncomeRepository @Inject constructor(
                 deletedIncomeIds.forEach { incomeId ->
                     withContext(NonCancellable) {
                         try {
-                            val income = remoteIncomeDataSource.getIncome(userId, incomeId).first()
-                            if (income != null) {
-                                deleteIncomeOnServer(income)
-                            }
+                            remoteIncomeDataSource.deleteIncome(userId, incomeId)
                             deletedIncomeDataSource.delete(userId, incomeId)
                         } catch (e: Exception) {
                             Timber.e(e)
