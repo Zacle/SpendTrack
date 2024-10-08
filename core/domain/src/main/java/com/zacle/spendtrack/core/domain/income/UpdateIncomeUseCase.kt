@@ -3,7 +3,6 @@ package com.zacle.spendtrack.core.domain.income
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
 import com.zacle.spendtrack.core.domain.repository.IncomeRepository
-import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Exceptions
 import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
@@ -32,18 +31,19 @@ class UpdateIncomeUseCase(
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
         val categoryBudget = budgets
             .find { it.category.categoryId == income.category.categoryId }
-            ?: throw Exceptions.BudgetNotFoundException()
 
-        val amount = categoryBudget.amount - incomeAmountDelta
-        val remainingAmount = categoryBudget.remainingAmount - incomeAmountDelta
-        val updatedBudget = categoryBudget.copy(amount = amount, remainingAmount = remainingAmount, updatedAt = Clock.System.now())
-        budgetRepository.updateBudget(updatedBudget)
+        if (categoryBudget != null) {
+            val amount = categoryBudget.amount - incomeAmountDelta
+            val remainingAmount = categoryBudget.remainingAmount - incomeAmountDelta
+            val updatedBudget = categoryBudget.copy(amount = amount, remainingAmount = remainingAmount, updatedAt = Clock.System.now())
+            budgetRepository.updateBudget(updatedBudget)
+        }
 
         incomeRepository.updateIncome(request.income)
-        return flowOf(Response(updatedBudget))
+        return flowOf(Response)
     }
 
     data class Request(val userId: String, val income: Income, val period: Period): UseCase.Request
 
-    data class Response(val budget: Budget): UseCase.Response
+    data object Response: UseCase.Response
 }

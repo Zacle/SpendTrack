@@ -24,19 +24,12 @@ class AddExpenseUseCase(
     override suspend fun process(request: Request): Flow<Response> {
         val expense = request.expense
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
-        var categoryBudget: Budget? = budgets.find { it.category.categoryId == expense.category.categoryId }
+        val categoryBudget: Budget? = budgets.find { it.category.categoryId == expense.category.categoryId }
 
-        if (categoryBudget == null) {
-            categoryBudget = Budget(
-                userId = request.userId,
-                category = expense.category,
-                amount = -expense.amount,
-            )
-            budgetRepository.addBudget(categoryBudget)
+        if (categoryBudget != null) {
+            val remainingAmount = categoryBudget.remainingAmount - expense.amount
+            budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
         }
-
-        val remainingAmount = categoryBudget.remainingAmount - expense.amount
-        budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
 
         expenseRepository.addExpense(request.expense.copy(userId = request.userId))
         return flowOf(Response)

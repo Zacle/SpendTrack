@@ -30,20 +30,20 @@ class UpdateExpenseUseCase(
         val expenseAmountDelta = currentExpense.amount - newExpense.amount
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
-        val categoryBudget: Budget = budgets
+        val categoryBudget: Budget? = budgets
             .find { it.category.categoryId == newExpense.category.categoryId }
-            ?: throw Exceptions.BudgetNotFoundException()
 
-
-        val remainingAmount = categoryBudget.remainingAmount + expenseAmountDelta
-        val updatedBudget = categoryBudget.copy(remainingAmount = remainingAmount, updatedAt = Clock.System.now())
-        budgetRepository.updateBudget(updatedBudget)
+        if (categoryBudget != null) {
+            val remainingAmount = categoryBudget.remainingAmount + expenseAmountDelta
+            val updatedBudget = categoryBudget.copy(remainingAmount = remainingAmount, updatedAt = Clock.System.now())
+            budgetRepository.updateBudget(updatedBudget)
+        }
 
         expenseRepository.updateExpense(request.expense)
-        return flowOf(Response(updatedBudget))
+        return flowOf(Response)
     }
 
     data class Request(val userId: String, val expense: Expense, val period: Period): UseCase.Request
 
-    data class Response(val budget: Budget): UseCase.Response
+    data object Response: UseCase.Response
 }

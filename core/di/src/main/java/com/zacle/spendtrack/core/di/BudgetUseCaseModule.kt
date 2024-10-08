@@ -22,8 +22,11 @@ object BudgetUseCaseModule {
     @Singleton
     fun provideAddBudgetUseCase(
         configuration: UseCase.Configuration,
-        budgetRepository: BudgetRepository
-    ): AddBudgetUseCase = AddBudgetUseCase(configuration, budgetRepository)
+        budgetRepository: BudgetRepository,
+        expenseRepository: ExpenseRepository,
+        incomeRepository: IncomeRepository
+    ): AddBudgetUseCase =
+        AddBudgetUseCase(configuration, budgetRepository, expenseRepository, incomeRepository)
 
     @Provides
     @Singleton

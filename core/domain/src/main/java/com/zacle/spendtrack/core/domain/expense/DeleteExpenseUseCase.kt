@@ -4,7 +4,6 @@ import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
 import com.zacle.spendtrack.core.model.Budget
-import com.zacle.spendtrack.core.model.Exceptions.BudgetNotFoundException
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Period
 import kotlinx.coroutines.flow.Flow
@@ -24,12 +23,11 @@ class DeleteExpenseUseCase(
         val expense = request.expense
 
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
-        val categoryBudget: Budget = budgets
+        val categoryBudget: Budget? = budgets
             .find { it.category.categoryId == expense.category.categoryId }
-            ?: throw BudgetNotFoundException()
 
-        val remainingAmount = categoryBudget.remainingAmount + expense.amount
-        if (remainingAmount <= categoryBudget.amount) {
+        if (categoryBudget != null) {
+            val remainingAmount = categoryBudget.remainingAmount + expense.amount
             budgetRepository.updateBudget(categoryBudget.copy(remainingAmount = remainingAmount))
         }
 

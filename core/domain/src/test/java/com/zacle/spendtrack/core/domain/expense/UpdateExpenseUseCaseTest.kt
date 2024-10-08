@@ -15,7 +15,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class UpdateExpenseUseCaseTest {
@@ -25,54 +24,6 @@ class UpdateExpenseUseCaseTest {
 
     private val userId = "userId"
     private val period = Period()
-
-    @Test
-    fun `should update expense and update category budget remaining amount`() = runTest {
-        val foodBudget = Budget(category = foodCategory, amount = 100.0, remainingAmount = 50.0)
-        val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
-        val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
-
-        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
-        whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
-
-        val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 50.0), period)
-
-        val response = useCase.process(request).first()
-
-        assertEquals(response.budget.remainingAmount, 150.0)
-    }
-
-    @Test
-    fun `should not update remaining amount if expense amount is the same`() = runTest {
-        val foodBudget = Budget(category = foodCategory, amount = 100.0, remainingAmount = 50.0)
-        val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
-        val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
-
-        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
-        whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
-
-        val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 20.0), period)
-
-        val response = useCase.process(request).first()
-
-        assertEquals(response.budget.remainingAmount, 180.0)
-    }
-
-    @Test
-    fun `should update remaining amount if expense amount less than the previous`() = runTest {
-        val foodBudget = Budget(category = foodCategory, amount = 100.0, remainingAmount = 50.0)
-        val shoppingBudget = Budget(category = shoppingCategory, amount = 200.0, remainingAmount = 180.0)
-        val entertainmentBudget = Budget(category = entertainmentCategory, amount = 300.0, remainingAmount = 300.0)
-
-        whenever(expenseRepository.getExpense(userId, shopping.id)).thenReturn(flowOf(shopping))
-        whenever(budgetRepository.getBudgets(userId, period)).thenReturn(flowOf(listOf(foodBudget, shoppingBudget, entertainmentBudget)))
-
-        val request = UpdateExpenseUseCase.Request(userId, shopping.copy(amount = 10.0), period)
-
-        val response = useCase.process(request).first()
-
-        assertEquals(response.budget.remainingAmount, 190.0)
-    }
 
     @Test
     fun `should throw an error if expense does not exist`() = runTest {

@@ -1,4 +1,4 @@
-package com.zacle.spendtrack.core.designsystem.component
+package com.zacle.spendtrack.core.model.util
 
 import android.content.Context
 import kotlinx.datetime.Instant

@@ -7,5 +7,7 @@ android {
 }
 
 dependencies {
+    api(projects.core.sharedResources)
+
     api(libs.kotlinx.datetime)
 }

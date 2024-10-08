@@ -24,19 +24,13 @@ class AddIncomeUseCase(
     override suspend fun process(request: Request): Flow<Response> {
         val income = request.income
         val budgets = budgetRepository.getBudgets(request.userId, request.period).first()
-        var categoryBudget: Budget? = budgets.find { it.category.categoryId == income.category.categoryId }
+        val categoryBudget: Budget? = budgets.find { it.category.categoryId == income.category.categoryId }
 
-        if (categoryBudget == null) {
-            categoryBudget = Budget(
-                userId = request.userId,
-                category = income.category,
-            )
-            budgetRepository.addBudget(categoryBudget)
+        if (categoryBudget != null) {
+            val amount = categoryBudget.amount + income.amount
+            val remainingAmount = categoryBudget.remainingAmount + income.amount
+            budgetRepository.updateBudget(categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
         }
-
-        val amount = categoryBudget.amount + income.amount
-        val remainingAmount = categoryBudget.remainingAmount + income.amount
-        budgetRepository.updateBudget(categoryBudget.copy(amount = amount, remainingAmount = remainingAmount))
 
         incomeRepository.addIncome(request.income.copy(userId = request.userId))
         return flowOf(Response)
