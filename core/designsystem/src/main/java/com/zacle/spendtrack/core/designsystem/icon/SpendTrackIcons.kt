@@ -23,6 +23,7 @@ object SpendTrackIcons {
     val camera = R.drawable.camera
     val image = R.drawable.image
     val warning = R.drawable.warning
+    val filter = R.drawable.filter
 
     val visibility = Icons.Default.Visibility
     val visibilityOff = Icons.Default.VisibilityOff

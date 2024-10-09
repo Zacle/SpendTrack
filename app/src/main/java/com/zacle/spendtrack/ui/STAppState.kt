@@ -18,6 +18,7 @@ import com.zacle.spendtrack.feature.home.Home
 import com.zacle.spendtrack.feature.home.navigateToHome
 import com.zacle.spendtrack.feature.profile.Profile
 import com.zacle.spendtrack.feature.transaction.Transaction
+import com.zacle.spendtrack.feature.transaction.navigateToTransaction
 import com.zacle.spendtrack.navigation.TopLevelDestination
 import com.zacle.spendtrack.navigation.TopLevelDestination.BUDGET
 import com.zacle.spendtrack.navigation.TopLevelDestination.HOME
@@ -115,7 +116,7 @@ class STAppState(
         }
         when (topLevelDestination) {
             HOME -> navController.navigateToHome(topLevelNavOptions)
-            TRANSACTION -> {}
+            TRANSACTION -> navController.navigateToTransaction(topLevelNavOptions)
             BUDGET -> navController.navigateToBudgets(topLevelNavOptions)
             PROFILE -> {}
         }

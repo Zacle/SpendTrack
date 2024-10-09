@@ -228,6 +228,19 @@
 
     <!-- Transaction module -->
     <string name="transaction">Transaction</string>
+    <string name="no_transaction">There are currently no transactions</string>
+    <string name="filter_transaction">Filter Transaction</string>
+    <string name="filter_by">Filter By</string>
+    <string name="sort_by">Sort By</string>
+    <string name="Highest">Highest</string>
+    <string name="Lowest">Lowest</string>
+    <string name="Newest">Newest</string>
+    <string name="Oldest">Oldest</string>
+    <string name="choose_category">Choose Category</string>
+    <string name="reset">Reset</string>
+    <string name="selected">Selected</string>
+    <string name="apply">Apply</string>
+    <string name="financial_report">See your financial report</string>
 
     <!-- verify Auth module -->
     <string name="verify_auth_title">Verification</string>

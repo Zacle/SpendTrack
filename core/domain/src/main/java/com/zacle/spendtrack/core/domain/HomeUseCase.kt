@@ -1,8 +1,8 @@
 package com.zacle.spendtrack.core.domain
 
 import com.zacle.spendtrack.core.domain.budget.GetBudgetsUseCase
-import com.zacle.spendtrack.core.domain.util.FilterState
-import com.zacle.spendtrack.core.domain.util.SortOrder
+import com.zacle.spendtrack.core.model.util.FilterState
+import com.zacle.spendtrack.core.model.util.SortOrder
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.Transaction

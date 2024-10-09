@@ -27,6 +27,7 @@ import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.onboarding.navigation.onboardingScreen
 import com.zacle.spendtrack.feature.register.navigateToRegister
 import com.zacle.spendtrack.feature.register.registerScreen
+import com.zacle.spendtrack.feature.transaction.transactionScreen
 import com.zacle.spendtrack.feature.verify_auth.navigateToVerifyAuth
 import com.zacle.spendtrack.feature.verify_auth.verifyAuthScreen
 import com.zacle.spendtrack.ui.STAppState
@@ -131,6 +132,12 @@ fun STNavHost(
             onEditBudgetClick = navController::navigateToAddEditBudget,
             onExpenseClick = navController::navigateToExpenseDetail,
             onIncomeClick = navController::navigateToIncomeDetail
+        )
+        transactionScreen(
+            navigateToExpense = navController::navigateToExpenseDetail,
+            navigateToIncome = navController::navigateToIncomeDetail,
+            navigateToFinancialReport = { month, year -> },
+            navigateToLogin = navController::navigateToLogin
         )
     }
 }

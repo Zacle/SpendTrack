@@ -86,7 +86,7 @@ fun SpendTrackButton(
         } else {
             Text(
                 text = text,
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 color = contentColor,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
@@ -132,7 +132,7 @@ fun GoogleButton(
                 Spacer(modifier = Modifier.size(4.dp))
                 Text(
                     text = stringResource(id = SharedR.string.google_auth),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
