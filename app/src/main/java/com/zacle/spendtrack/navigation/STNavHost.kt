@@ -2,10 +2,13 @@ package com.zacle.spendtrack.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.zacle.spendtrack.feature.budget.add_edit_budget.addEditBudgetScreen
 import com.zacle.spendtrack.feature.budget.add_edit_budget.navigateToAddEditBudget
 import com.zacle.spendtrack.feature.budget.budgets.budgetsScreen
+import com.zacle.spendtrack.feature.budget.budgets.navigateToBudgets
 import com.zacle.spendtrack.feature.budget.view_budget.budgetDetailScreen
 import com.zacle.spendtrack.feature.budget.view_budget.navigateToBudgetDetail
 import com.zacle.spendtrack.feature.expense.add_edit_expense.addEditExpenseScreen
@@ -27,6 +30,9 @@ import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.onboarding.navigation.onboardingScreen
 import com.zacle.spendtrack.feature.register.navigateToRegister
 import com.zacle.spendtrack.feature.register.registerScreen
+import com.zacle.spendtrack.feature.transaction.financial_report.financialReportScreen
+import com.zacle.spendtrack.feature.transaction.financial_report.navigateToFinancialReport
+import com.zacle.spendtrack.feature.transaction.navigateToTransaction
 import com.zacle.spendtrack.feature.transaction.transactionScreen
 import com.zacle.spendtrack.feature.verify_auth.navigateToVerifyAuth
 import com.zacle.spendtrack.feature.verify_auth.verifyAuthScreen
@@ -74,8 +80,28 @@ fun STNavHost(
         )
         homeScreen(
             navigateToProfile = {},
-            navigateToBudgets = {},
-            navigateToTransactions = {},
+            navigateToBudgets = {
+                navController.navigateToBudgets(
+                    navOptions {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
+            },
+            navigateToTransactions = {
+                navController.navigateToTransaction(
+                    navOptions {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                )
+            },
             navigateToExpense = navController::navigateToExpenseDetail,
             navigateToIncome = navController::navigateToIncomeDetail,
             navigateToBudgetDetails = navController::navigateToBudgetDetail,
@@ -136,7 +162,16 @@ fun STNavHost(
         transactionScreen(
             navigateToExpense = navController::navigateToExpenseDetail,
             navigateToIncome = navController::navigateToIncomeDetail,
-            navigateToFinancialReport = { month, year -> },
+            navigateToFinancialReport = { month, year ->
+                navController.navigateToFinancialReport(
+                    month = month,
+                    year = year
+                )
+            },
+            navigateToLogin = navController::navigateToLogin
+        )
+        financialReportScreen(
+            navigateUp = navController::navigateUp,
             navigateToLogin = navController::navigateToLogin
         )
     }

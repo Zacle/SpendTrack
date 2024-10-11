@@ -94,7 +94,7 @@ fun TransactionRoute(
                 is TransactionUiEvent.NavigateToExpense -> navigateToExpense(event.expenseId)
                 is TransactionUiEvent.NavigateToIncome -> navigateToIncome(event.incomeId)
                 is TransactionUiEvent.NavigateToFinancialReport ->
-                    navigateToFinancialReport(event.year, event.month)
+                    navigateToFinancialReport(event.month, event.year)
                 is TransactionUiEvent.NavigateToLogin -> navigateToLogin()
             }
         }

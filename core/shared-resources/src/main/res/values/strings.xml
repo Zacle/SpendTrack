@@ -241,6 +241,23 @@
     <string name="selected">Selected</string>
     <string name="apply">Apply</string>
     <string name="financial_report">See your financial report</string>
+    <string name="amount_spent">You spent</string>
+    <string name="no_spending">
+        You didn\'t spend any money yet.
+    </string>
+    <string name="amount_earned">You earned</string>
+    <string name="no_earning">
+        You didn\'t earn any money yet.
+    </string>
+    <string name="biggest_spending">
+        and your biggest spending is from 
+    </string>
+    <string name="biggest_income">
+        and your biggest income is from
+    </string>
+    <string name="budget_exceeds">Budget exceeded the limit</string>
+    <string name="no_budget_exceeds">No Budget is exceeding the limit</string>
+    <string name="no_budget_set">No budget set for this month</string>
 
     <!-- verify Auth module -->
     <string name="verify_auth_title">Verification</string>

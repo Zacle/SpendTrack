@@ -2,15 +2,14 @@ package com.zacle.spendtrack.core.domain
 
 import com.zacle.spendtrack.core.domain.expense.GetExpensesUseCase
 import com.zacle.spendtrack.core.domain.income.GetIncomesUseCase
-import com.zacle.spendtrack.core.model.util.FilterState
-import com.zacle.spendtrack.core.model.util.SortOrder
 import com.zacle.spendtrack.core.model.Expense
 import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.Transaction
+import com.zacle.spendtrack.core.model.util.FilterState
+import com.zacle.spendtrack.core.model.util.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import timber.log.Timber
 
 /**
  * Get transactions for a specific user and period. We filter the transactions by the category ids
@@ -43,9 +42,6 @@ class TransactionsUseCase(
             val sortOrder = request.sortOrder
 
             val transactions = expensesResponse.expenses + incomesResponse.incomes
-
-            Timber.d("Request = $request")
-            Timber.d("Transactions: $transactions")
 
             /**
              * We need to see if we can include the incomes and expenses in the results or filter them out.
