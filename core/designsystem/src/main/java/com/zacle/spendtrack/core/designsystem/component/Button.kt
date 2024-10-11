@@ -46,7 +46,7 @@ fun TertiaryButton(
         Text(
             text = text,
             color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelLarge,
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 6.dp)
         )

@@ -216,7 +216,7 @@ fun HomeList(
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center
     ) {
         item {
@@ -253,7 +253,7 @@ fun HomeList(
                         if (transaction is Income) navigateToIncome(transaction.id)
                         else navigateToExpense(transaction.id)
                     },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         } else {
@@ -283,7 +283,7 @@ fun AccountBalance(
         Text(
             text = stringResource(id = R.string.account_balance),
             fontWeight = FontWeight.Medium,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
         Text(

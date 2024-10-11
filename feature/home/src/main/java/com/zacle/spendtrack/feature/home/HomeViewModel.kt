@@ -5,6 +5,7 @@ import com.zacle.spendtrack.core.domain.HomeUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.usecase.Result
+import com.zacle.spendtrack.core.model.util.period.toDailyPeriod
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
 import com.zacle.spendtrack.core.model.util.period.toWeeklyPeriod
 import com.zacle.spendtrack.core.model.util.period.toYearlyPeriod
@@ -98,7 +99,7 @@ class  HomeViewModel @Inject constructor(
 
     private fun getPeriodFromTransactionType(transactionPeriodType: TransactionPeriodType): Period =
         when (transactionPeriodType) {
-            TransactionPeriodType.DAILY -> uiState.value.selectedDate.toMonthlyPeriod()
+            TransactionPeriodType.DAILY -> uiState.value.selectedDate.toDailyPeriod()
             TransactionPeriodType.WEEKLY -> uiState.value.selectedDate.toWeeklyPeriod()
             TransactionPeriodType.MONTHLY -> uiState.value.selectedDate.toMonthlyPeriod()
             TransactionPeriodType.YEARLY -> uiState.value.selectedDate.toYearlyPeriod()

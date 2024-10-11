@@ -45,7 +45,7 @@ fun STDropdown(
             Text(
                 text = text,
                 fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(end = 2.dp)
             )
         }

@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zacle.spendtrack.core.designsystem.component.STOutline
 import com.zacle.spendtrack.core.designsystem.component.noRippleEffect
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
@@ -269,7 +270,9 @@ fun BudgetFinancialReport(
     ) {
         LazyColumn(
             modifier = Modifier
-                .align(Alignment.Center)
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
                 Text(
@@ -293,7 +296,7 @@ fun BudgetFinancialReport(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(end = 12.dp)
+                            .padding(16.dp)
                     ) {
                         val category = budget.category
                         val color = Color(android.graphics.Color.parseColor(category.color))
@@ -308,7 +311,9 @@ fun BudgetFinancialReport(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    painter = painterResource(id = category.icon),
+                                    painter = painterResource(
+                                        CategoryKeyResource.getIconResourceForCategory(category.key)
+                                    ),
                                     contentDescription = null,
                                     tint = color,
                                     modifier = Modifier
@@ -454,39 +459,45 @@ fun FinancialReportHighlight(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            STOutline(
                 modifier = Modifier
-                    .padding(end = 12.dp)
             ) {
-                Surface(
-                    color = color.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(10.dp),
-                    tonalElevation = 5.dp
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(12.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 6.dp, vertical = 3.dp),
-                        contentAlignment = Alignment.Center
+                    Surface(
+                        color = color.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(10.dp),
+                        tonalElevation = 5.dp
                     ) {
-                        Icon(
-                            painter = painterResource(id = category.icon),
-                            contentDescription = null,
-                            tint = color,
+                        Box(
                             modifier = Modifier
-                                .size(24.dp)
-                        )
+                                .padding(horizontal = 6.dp, vertical = 3.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(
+                                    CategoryKeyResource.getIconResourceForCategory(category.key)
+                                ),
+                                contentDescription = null,
+                                tint = color,
+                                modifier = Modifier
+                                    .size(24.dp)
+                            )
+                        }
                     }
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = CategoryKeyResource.getStringResourceForCategory(
+                            context = LocalContext.current,
+                            categoryKey = category.key
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = CategoryKeyResource.getStringResourceForCategory(
-                        context = LocalContext.current,
-                        categoryKey = category.key
-                    ),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
             }
             Text(
                 text = "$ $amount",

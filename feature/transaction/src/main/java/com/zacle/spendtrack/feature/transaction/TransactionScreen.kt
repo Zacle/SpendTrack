@@ -215,7 +215,7 @@ fun TransactionContent(
                     if (transaction is Income) navigateToIncome(transaction.id)
                     else navigateToExpense(transaction.id)
                 },
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 4.dp)
             )
         }
     }
@@ -247,7 +247,7 @@ internal fun FinancialReport(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
+            modifier = Modifier
                 .padding(16.dp)
         ) {
             Text(
@@ -748,7 +748,9 @@ fun CategoryCheckBox(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = category.icon),
+                        painter = painterResource(
+                            CategoryKeyResource.getIconResourceForCategory(category.key)
+                        ),
                         contentDescription = null,
                         tint = color,
                         modifier = Modifier

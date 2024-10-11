@@ -217,7 +217,7 @@ fun BudgetDetailContent(
                         if (transaction is Income) onIncomeClicked(transaction.id)
                         else onExpenseClicked(transaction.id)
                     },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
         }
@@ -323,7 +323,9 @@ fun CategoryName(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = category.icon),
+                        painter = painterResource(
+                            CategoryKeyResource.getIconResourceForCategory(category.key)
+                        ),
                         contentDescription = null,
                         tint = color,
                         modifier = Modifier

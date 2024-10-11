@@ -29,4 +29,30 @@ object CategoryKeyResource {
             else -> categoryKey
         }
     }
+
+    fun getIconResourceForCategory(categoryKey: String): Int {
+        return when (categoryKey) {
+            "food_dining" -> R.drawable.food_dinning
+            "groceries" -> R.drawable.groceries
+            "shopping" -> R.drawable.shopping
+            "entertainment" -> R.drawable.entertainment
+            "utilities" -> R.drawable.utilities
+            "transportation" -> R.drawable.transportation
+            "rent_housing" -> R.drawable.rent_housing
+            "health_fitness" -> R.drawable.health_fitness
+            "education" -> R.drawable.education
+            "miscellaneous" -> R.drawable.miscellaneous
+            "insurance" -> R.drawable.insurance
+            "travel" -> R.drawable.travel
+            "personal_care" -> R.drawable.personal_care
+            "gifts_donations" -> R.drawable.gift_donation
+            "savings_investments" -> R.drawable.savings_investment
+            "taxes" -> R.drawable.taxes
+            "pets" -> R.drawable.pets
+            "loans_debt" -> R.drawable.loans_debt
+            "kids" -> R.drawable.kids
+            "business_expenses" -> R.drawable.business_expenses
+            else -> R.drawable.miscellaneous
+        }
+    }
 }

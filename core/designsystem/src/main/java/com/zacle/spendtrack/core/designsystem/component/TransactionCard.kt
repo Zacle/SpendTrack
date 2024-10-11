@@ -23,8 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
@@ -53,14 +51,10 @@ fun TransactionCard(
     modifier: Modifier = Modifier
 ) {
     val color = Color(AndroidColor.parseColor(category.color))
-    Surface(
+    STOutline(
         modifier = modifier
             .fillMaxWidth()
             .noRippleEffect { onClick() }
-            .padding(vertical = 4.dp, horizontal = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.3f),
-        tonalElevation = 2.dp
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -78,15 +72,19 @@ fun TransactionCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = category.icon),
+                        painter = painterResource(
+                            id = CategoryKeyResource.getIconResourceForCategory(
+                                categoryKey = category.key
+                            )
+                        ),
                         contentDescription = null,
                         tint = color,
                         modifier = Modifier
-                            .size(24.dp)
+                            .size(36.dp)
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(6.dp))
+            Spacer(modifier = Modifier.width(12.dp))
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
@@ -96,13 +94,12 @@ fun TransactionCard(
                         categoryKey = category.key
                     ),
                     fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = transactionName,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = TextUnit(9f, TextUnitType.Sp),
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             }
@@ -119,14 +116,13 @@ fun TransactionCard(
                         MaterialTheme.colorScheme.error
                 Text(
                     text = amountText,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodySmall,
                     color = amountColor
                 )
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = dateToString(convertInstantToLocalDateTime(transactionDate)),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontSize = TextUnit(9f, TextUnitType.Sp),
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             }

@@ -23,7 +23,7 @@ fun TransactionDateFilterChip(
         label = {
             Text(
                 text = text,
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.bodyMedium
             )
         },
         colors = FilterChipDefaults.filterChipColors(

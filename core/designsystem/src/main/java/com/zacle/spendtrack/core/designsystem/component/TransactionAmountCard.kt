@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
@@ -39,11 +40,13 @@ fun TransactionAmountCard(
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp)
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(10.dp),
+                modifier = Modifier
+                    .padding(end = 4.dp)
             ) {
                 Box(
                     modifier = Modifier.padding(8.dp),
@@ -54,7 +57,7 @@ fun TransactionAmountCard(
                         contentDescription = null,
                         tint = color,
                         modifier = Modifier
-                            .size(20.dp)
+                            .size(36.dp)
                     )
                 }
             }
@@ -64,12 +67,13 @@ fun TransactionAmountCard(
             ) {
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.surface,
+                    fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = "$$amount",
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.surface
                 )
             }
