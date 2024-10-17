@@ -30,6 +30,7 @@ import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.onboarding.navigation.onboardingScreen
 import com.zacle.spendtrack.feature.register.navigateToRegister
 import com.zacle.spendtrack.feature.register.registerScreen
+import com.zacle.spendtrack.feature.report.reportScreen
 import com.zacle.spendtrack.feature.transaction.financial_report.financialReportScreen
 import com.zacle.spendtrack.feature.transaction.financial_report.navigateToFinancialReport
 import com.zacle.spendtrack.feature.transaction.navigateToTransaction
@@ -173,6 +174,11 @@ fun STNavHost(
         financialReportScreen(
             navigateUp = navController::navigateUp,
             navigateToLogin = navController::navigateToLogin
+        )
+        reportScreen(
+            navigateToLogin = navController::navigateToLogin,
+            navigateToExpense = navController::navigateToExpenseDetail,
+            navigateToIncome = navController::navigateToIncomeDetail
         )
     }
 }

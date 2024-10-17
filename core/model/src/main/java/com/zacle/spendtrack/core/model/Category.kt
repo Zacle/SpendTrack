@@ -7,4 +7,15 @@ data class Category(
     val key: String = "",
     val icon: Int = 0,
     val color: String = ""
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Category) return false
+
+        return categoryId == other.categoryId
+    }
+
+    override fun hashCode(): Int {
+        return categoryId.hashCode()
+    }
+}

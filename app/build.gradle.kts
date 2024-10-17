@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.feature.onboarding)
     implementation(projects.feature.profile)
     implementation(projects.feature.register)
+    implementation(projects.feature.report)
     implementation(projects.feature.transaction)
     implementation(projects.feature.verifyAuth)
 

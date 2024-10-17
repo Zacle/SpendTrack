@@ -24,6 +24,7 @@ object SpendTrackIcons {
     val image = R.drawable.image
     val warning = R.drawable.warning
     val filter = R.drawable.filter
+    val report = R.drawable.report
 
     val visibility = Icons.Default.Visibility
     val visibilityOff = Icons.Default.VisibilityOff

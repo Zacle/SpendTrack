@@ -16,13 +16,14 @@ import com.zacle.spendtrack.feature.budget.budgets.Budgets
 import com.zacle.spendtrack.feature.budget.budgets.navigateToBudgets
 import com.zacle.spendtrack.feature.home.Home
 import com.zacle.spendtrack.feature.home.navigateToHome
-import com.zacle.spendtrack.feature.profile.Profile
+import com.zacle.spendtrack.feature.report.Report
+import com.zacle.spendtrack.feature.report.navigateToReport
 import com.zacle.spendtrack.feature.transaction.Transaction
 import com.zacle.spendtrack.feature.transaction.navigateToTransaction
 import com.zacle.spendtrack.navigation.TopLevelDestination
 import com.zacle.spendtrack.navigation.TopLevelDestination.BUDGET
 import com.zacle.spendtrack.navigation.TopLevelDestination.HOME
-import com.zacle.spendtrack.navigation.TopLevelDestination.PROFILE
+import com.zacle.spendtrack.navigation.TopLevelDestination.REPORT
 import com.zacle.spendtrack.navigation.TopLevelDestination.TRANSACTION
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -82,7 +83,7 @@ class STAppState(
             Home.toString() -> HOME
             Transaction.toString() -> TRANSACTION
             Budgets.toString() -> BUDGET
-            Profile.toString() -> PROFILE
+            Report.toString() -> REPORT
             else -> null
         }
 
@@ -118,7 +119,7 @@ class STAppState(
             HOME -> navController.navigateToHome(topLevelNavOptions)
             TRANSACTION -> navController.navigateToTransaction(topLevelNavOptions)
             BUDGET -> navController.navigateToBudgets(topLevelNavOptions)
-            PROFILE -> {}
+            REPORT -> navController.navigateToReport(topLevelNavOptions)
         }
     }
 }

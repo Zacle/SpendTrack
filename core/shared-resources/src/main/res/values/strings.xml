@@ -226,6 +226,10 @@
     <string name="last_name">Last Name</string>
     <string name="have_account">Already have an account?</string>
 
+    <!-- Report module -->
+    <string name="report_title">Financial Report</string>
+    <string name="report">Report</string>
+
     <!-- Transaction module -->
     <string name="transaction">Transaction</string>
     <string name="no_transaction">There are currently no transactions</string>

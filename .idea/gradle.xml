@@ -48,6 +48,7 @@
             <option value="$PROJECT_DIR$/feature/onboarding" />
             <option value="$PROJECT_DIR$/feature/profile" />
             <option value="$PROJECT_DIR$/feature/register" />
+            <option value="$PROJECT_DIR$/feature/report" />
             <option value="$PROJECT_DIR$/feature/transaction" />
             <option value="$PROJECT_DIR$/feature/verify-auth" />
           </set>

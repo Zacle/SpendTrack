@@ -25,8 +25,8 @@ enum class TopLevelDestination(
         icon = Icon.DrawableResourceIcon(SpendTrackIcons.budget),
         titleTextId = R.string.budget
     ),
-    PROFILE(
-        icon = Icon.DrawableResourceIcon(SpendTrackIcons.profile),
-        titleTextId = R.string.profile
+    REPORT(
+        icon = Icon.DrawableResourceIcon(SpendTrackIcons.report),
+        titleTextId = R.string.report
     )
 }

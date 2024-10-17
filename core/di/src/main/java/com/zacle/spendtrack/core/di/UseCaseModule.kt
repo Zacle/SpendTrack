@@ -2,6 +2,7 @@ package com.zacle.spendtrack.core.di
 
 import com.zacle.spendtrack.core.common.STDispatcher
 import com.zacle.spendtrack.core.common.STDispatchers.IO
+import com.zacle.spendtrack.core.domain.GetReportUseCase
 import com.zacle.spendtrack.core.domain.UseCase
 import com.zacle.spendtrack.core.domain.GetUserDataAndAuthStateUseCase
 import com.zacle.spendtrack.core.domain.HomeUseCase
@@ -14,6 +15,8 @@ import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
 import com.zacle.spendtrack.core.domain.expense.GetExpensesUseCase
 import com.zacle.spendtrack.core.domain.income.GetIncomesUseCase
 import com.zacle.spendtrack.core.domain.repository.CategoryRepository
+import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
+import com.zacle.spendtrack.core.domain.repository.IncomeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,4 +67,11 @@ object UseCaseModule {
         transactionsUseCase: TransactionsUseCase,
         budgetsUseCase: GetBudgetsUseCase
     ): HomeUseCase = HomeUseCase(configuration, overviewUseCase, transactionsUseCase, budgetsUseCase)
+
+    @Provides
+    fun provideGetReportUseCase(
+        configuration: UseCase.Configuration,
+        expenseRepository: ExpenseRepository,
+        incomeRepository: IncomeRepository
+    ): GetReportUseCase = GetReportUseCase(configuration, expenseRepository, incomeRepository)
 }

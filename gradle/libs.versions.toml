@@ -4,7 +4,7 @@ activityCompose = "1.9.2"
 androidDesugarJdkLibs = "2.1.2"
 # AGP and tools should be updated together
 agp = "8.5.2"
-androidTools = "31.7.0"
+androidTools = "31.7.1"
 androidxComposeMaterial3Adaptive = "1.0.0"
 androidxComposeMaterial3AdaptiveNavigationSuite = "1.3.0"
 androidxComposeRuntimeTracing = "1.7.3"
@@ -37,18 +37,20 @@ hilt = "2.51.1"
 hiltExt = "1.2.0"
 junit = "4.13.2"
 kotlin = "2.0.0"
-kotlinxCoroutines = "1.8.0"
+kotlinxCoroutines = "1.9.0"
 kotlinxDatetime = "0.5.0"
 kotlinxSerializationJson = "1.6.3"
 ksp = "2.0.0-1.0.21"
 lifecycleRuntimeKtx = "2.8.6"
 material = "1.12.0"
 mockito = "5.0.0"
+pieChart = "0.0.14"
 protobuf = "4.26.1"
 protobufPlugin = "0.9.4"
 room = "2.6.1"
 timber = "5.0.1"
 truth = "1.4.2"
+vico = "2.0.0-beta.1"
 
 [bundles]
 androidx-compose-ui-test = ["androidx-compose-ui-test", "androidx-compose-ui-testManifest"]
@@ -149,6 +151,12 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+
+# Vico
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+
+pieChart-compose = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "pieChart" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
