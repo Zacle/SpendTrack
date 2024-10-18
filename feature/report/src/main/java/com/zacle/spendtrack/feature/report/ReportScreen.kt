@@ -62,6 +62,8 @@ import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import com.zacle.spendtrack.core.designsystem.component.EmptyTransaction
+import com.zacle.spendtrack.core.designsystem.component.PeriodPicker
 import com.zacle.spendtrack.core.designsystem.component.ProgressIndicator
 import com.zacle.spendtrack.core.designsystem.component.STDropdown
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
@@ -183,6 +185,13 @@ internal fun ReportScreen(
             }
         }
     }
+    if (stateHolder.shouldShowSelectReportPeriodDialog) {
+        PeriodPicker(
+            selectedPeriod = stateHolder.selectedPeriod,
+            onSelectedPeriodChanged = onReportPeriodConfirmed,
+            onDismissRequest = onReportPeriodDismissed
+        )
+    }
 }
 
 @Composable
@@ -218,10 +227,26 @@ fun ReportContent(
                         .fillMaxWidth()
                 )
             } else {
-                if (stateHolder.recordTransactionType == RecordTransactionType.EXPENSE)
-                    CategoriesPieChart(categories = reportModel.categoryExpensesReport)
-                else
-                    CategoriesPieChart(categories = reportModel.categoryIncomesReport)
+                if (stateHolder.recordTransactionType == RecordTransactionType.EXPENSE) {
+                    if (reportModel.categoryExpensesReport.isNotEmpty()) {
+                        CategoriesPieChart(categories = reportModel.categoryExpensesReport)
+                    } else {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_expenses_graph),
+                            iconResId = R.drawable.report
+                        )
+                    }
+                }
+                else {
+                    if (reportModel.categoryIncomesReport.isNotEmpty()) {
+                        CategoriesPieChart(categories = reportModel.categoryIncomesReport)
+                    } else {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_incomes_graph),
+                            iconResId = R.drawable.report
+                        )
+                    }
+                }
             }
         }
         item {
@@ -231,54 +256,96 @@ fun ReportContent(
             )
         }
         if (stateHolder.shouldShowTransactions) {
-            items(
-                reportModel
-                    .transactions
-                    .filterIsInstance(
-                        if (stateHolder.recordTransactionType == RecordTransactionType.EXPENSE)
-                            Expense::class.java
-                        else Income::class.java
-                    ), key = { it.id }
-            ) { transaction ->
-                TransactionCard(
-                    category = transaction.category,
-                    transactionName = transaction.name,
-                    amount = transaction.amount.toInt(),
-                    transactionDate = transaction.transactionDate,
-                    type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,
-                    onClick = {
-                        if (transaction is Income) navigateToIncome(transaction.id)
-                        else navigateToExpense(transaction.id)
-                    },
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+            val expenses = reportModel.transactions.filterIsInstance<Expense>()
+            val incomes = reportModel.transactions.filterIsInstance<Income>()
+
+            if (stateHolder.recordTransactionType == RecordTransactionType.EXPENSE) {
+                if (expenses.isEmpty()) {
+                    item {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_spending),
+                            iconResId = R.drawable.add_expense
+                        )
+                    }
+                } else {
+                    items(expenses, key = { it.id }) { transaction ->
+                        TransactionCard(
+                            category = transaction.category,
+                            transactionName = transaction.name,
+                            amount = transaction.amount.toInt(),
+                            transactionDate = transaction.transactionDate,
+                            type = TransactionType.EXPENSE,
+                            onClick = { navigateToExpense(transaction.id) },
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
+                }
+            } else {
+                if (incomes.isEmpty()) {
+                    item {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_earning),
+                            iconResId = R.drawable.add_income
+                        )
+                    }
+                } else {
+                    items(incomes, key = { it.id }) { transaction ->
+                        TransactionCard(
+                            category = transaction.category,
+                            transactionName = transaction.name,
+                            amount = transaction.amount.toInt(),
+                            transactionDate = transaction.transactionDate,
+                            type = TransactionType.INCOME,
+                            onClick = { navigateToIncome(transaction.id) },
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
+                }
             }
         } else {
             if (stateHolder.recordTransactionType == RecordTransactionType.EXPENSE) {
-                items(reportModel.categoryExpensesReport.toList()) { (category, stats) ->
-                    RecordCategoryCard(
-                        name = CategoryKeyResource.getStringResourceForCategory(
-                            context = LocalContext.current,
-                            categoryKey = category.key
-                        ),
-                        color = Color(android.graphics.Color.parseColor(category.color)),
-                        amount = stats.categoryAmount,
-                        percentage = stats.categoryPercentage,
-                        recordTransactionType = stateHolder.recordTransactionType
-                    )
+                if (reportModel.categoryExpensesReport.isEmpty()) {
+                    item {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_spending),
+                            iconResId = R.drawable.add_expense
+                        )
+                    }
+                } else {
+                    items(reportModel.categoryExpensesReport.toList()) { (category, stats) ->
+                        RecordCategoryCard(
+                            name = CategoryKeyResource.getStringResourceForCategory(
+                                context = LocalContext.current,
+                                categoryKey = category.key
+                            ),
+                            color = Color(android.graphics.Color.parseColor(category.color)),
+                            amount = stats.categoryAmount,
+                            percentage = stats.categoryPercentage,
+                            recordTransactionType = stateHolder.recordTransactionType
+                        )
+                    }
                 }
             } else {
-                items(reportModel.categoryIncomesReport.toList()) { (category, stats) ->
-                    RecordCategoryCard(
-                        name = CategoryKeyResource.getStringResourceForCategory(
-                            context = LocalContext.current,
-                            categoryKey = category.key
-                        ),
-                        color = Color(android.graphics.Color.parseColor(category.color)),
-                        amount = stats.categoryAmount,
-                        percentage = stats.categoryPercentage,
-                        recordTransactionType = stateHolder.recordTransactionType
-                    )
+                if (reportModel.categoryIncomesReport.isEmpty()) {
+                    item {
+                        EmptyTransaction(
+                            text = stringResource(id = R.string.no_earning),
+                            iconResId = R.drawable.add_income
+                        )
+                    }
+                } else {
+                    items(reportModel.categoryIncomesReport.toList()) { (category, stats) ->
+                        RecordCategoryCard(
+                            name = CategoryKeyResource.getStringResourceForCategory(
+                                context = LocalContext.current,
+                                categoryKey = category.key
+                            ),
+                            color = Color(android.graphics.Color.parseColor(category.color)),
+                            amount = stats.categoryAmount,
+                            percentage = stats.categoryPercentage,
+                            recordTransactionType = stateHolder.recordTransactionType
+                        )
+                    }
                 }
             }
         }
@@ -323,7 +390,6 @@ fun TransactionReportChart(
             modelProducer = modelProducer,
             modifier = modifier
         )
-        else -> {}
     }
     
 }

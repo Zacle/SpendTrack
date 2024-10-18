@@ -33,8 +33,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.cartesianLayerPadding
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.zacle.spendtrack.core.designsystem.component.BudgetCard
-import com.zacle.spendtrack.core.designsystem.component.EmptyScreen
+import com.zacle.spendtrack.core.designsystem.component.EmptyTransaction
+import com.zacle.spendtrack.core.designsystem.component.PeriodPicker
 import com.zacle.spendtrack.core.designsystem.component.STDropdown
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.TertiaryButton
@@ -49,7 +64,13 @@ import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.core.ui.ext.formatDate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeRoute(
@@ -68,6 +89,8 @@ fun HomeRoute(
     val homeUiStateHolder by viewModel.uiState.collectAsStateWithLifecycle()
     val uiState by viewModel.uiStateFlow.collectAsStateWithLifecycle()
 
+    val modelProducer = remember { CartesianChartModelProducer() }
+
     LaunchedEffect(Unit) {
         viewModel.singleEventFlow.collect { event ->
             when (event) {
@@ -85,9 +108,9 @@ fun HomeRoute(
     HomeScreen(
         uiState = uiState,
         homeUiStateHolder = homeUiStateHolder,
+        modelProducer = modelProducer,
         setPeriod = { viewModel.submitAction(HomeUiAction.SetPeriod(it)) },
         setDisplayTransactions = { viewModel.submitAction(HomeUiAction.SetDisplayTransactions(it)) },
-        setFilterPeriod = { viewModel.submitAction(HomeUiAction.SetFilterPeriod(it)) },
         navigateToProfile = { viewModel.submitAction(HomeUiAction.NavigateToProfile) },
         navigateToExpense = { viewModel.submitAction(HomeUiAction.NavigateToExpense(it)) },
         navigateToIncome = { viewModel.submitAction(HomeUiAction.NavigateToIncome(it)) },
@@ -103,9 +126,9 @@ fun HomeRoute(
 fun HomeScreen(
     uiState: UiState<HomeModel>,
     homeUiStateHolder: HomeUiState,
+    modelProducer: CartesianChartModelProducer,
     setPeriod: (Instant) -> Unit,
     setDisplayTransactions: (Boolean) -> Unit,
-    setFilterPeriod: (TransactionPeriodType) -> Unit,
     navigateToProfile: () -> Unit,
     navigateToExpense: (String) -> Unit,
     navigateToIncome: (String) -> Unit,
@@ -152,8 +175,8 @@ fun HomeScreen(
             HomeContent(
                 homeModel = homeModel,
                 homeUiStateHolder = homeUiStateHolder,
+                modelProducer = modelProducer,
                 setDisplayTransactions = setDisplayTransactions,
-                setFilterPeriod = setFilterPeriod,
                 navigateToExpense = navigateToExpense,
                 navigateToIncome = navigateToIncome,
                 navigateToBudgetDetails = navigateToBudgetDetails,
@@ -163,14 +186,21 @@ fun HomeScreen(
             )
         }
     }
+    if (showPeriodPicker) {
+        PeriodPicker(
+            selectedPeriod = homeUiStateHolder.selectedDate,
+            onSelectedPeriodChanged = setPeriod,
+            onDismissRequest = { showPeriodPicker = false }
+        )
+    }
 }
 
 @Composable
 fun HomeContent(
     homeModel: HomeModel,
     homeUiStateHolder: HomeUiState,
+    modelProducer: CartesianChartModelProducer,
     setDisplayTransactions: (Boolean) -> Unit,
-    setFilterPeriod: (TransactionPeriodType) -> Unit,
     navigateToExpense: (String) -> Unit,
     navigateToIncome: (String) -> Unit,
     navigateToBudgetDetails: (String) -> Unit,
@@ -178,34 +208,26 @@ fun HomeContent(
     navigateToTransactions: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (homeModel.transactions.isEmpty() && homeModel.budgets.isEmpty()) {
-        EmptyScreen(
-            message = stringResource(id = R.string.no_transactions),
-            description = stringResource(id = R.string.no_transactions_description),
-            modifier = modifier
-        )
-    } else {
-        HomeList(
-            homeModel = homeModel,
-            homeUiStateHolder = homeUiStateHolder,
-            setDisplayTransactions = setDisplayTransactions,
-            setFilterPeriod = setFilterPeriod,
-            navigateToExpense = navigateToExpense,
-            navigateToIncome = navigateToIncome,
-            navigateToBudgetDetails = navigateToBudgetDetails,
-            navigateToBudgets = navigateToBudgets,
-            navigateToTransactions = navigateToTransactions,
-            modifier = modifier
-        )
-    }
+    HomeList(
+        homeModel = homeModel,
+        homeUiStateHolder = homeUiStateHolder,
+        modelProducer = modelProducer,
+        setDisplayTransactions = setDisplayTransactions,
+        navigateToExpense = navigateToExpense,
+        navigateToIncome = navigateToIncome,
+        navigateToBudgetDetails = navigateToBudgetDetails,
+        navigateToBudgets = navigateToBudgets,
+        navigateToTransactions = navigateToTransactions,
+        modifier = modifier
+    )
 }
 
 @Composable
 fun HomeList(
     homeModel: HomeModel,
     homeUiStateHolder: HomeUiState,
+    modelProducer: CartesianChartModelProducer,
     setDisplayTransactions: (Boolean) -> Unit,
-    setFilterPeriod: (TransactionPeriodType) -> Unit,
     navigateToExpense: (String) -> Unit,
     navigateToIncome: (String) -> Unit,
     navigateToBudgetDetails: (String) -> Unit,
@@ -217,20 +239,26 @@ fun HomeList(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             HomeHeader(
                 accountBalance = homeModel.accountBalance,
                 amountSpent = homeModel.amountSpent,
                 amountEarned = homeModel.amountEarned,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
             )
         }
         item {
-            TransactionsPeriodFilterChips(
-                transactionPeriodType = homeUiStateHolder.transactionPeriodType,
-                setFilterPeriod = setFilterPeriod
+            HomeReportChart(
+                selectedMonth = homeUiStateHolder.selectedDate,
+                transactions = homeModel.transactionsReport,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                modelProducer = modelProducer
             )
         }
         item {
@@ -242,29 +270,47 @@ fun HomeList(
             )
         }
         if (homeUiStateHolder.isTransactionViewActive) {
-            items(homeModel.transactions, key = { it.id }) { transaction ->
-                TransactionCard(
-                    category = transaction.category,
-                    transactionName = transaction.name,
-                    amount = transaction.amount.toInt(),
-                    transactionDate = transaction.transactionDate,
-                    type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,
-                    onClick = {
-                        if (transaction is Income) navigateToIncome(transaction.id)
-                        else navigateToExpense(transaction.id)
-                    },
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+            if (homeModel.transactions.isEmpty()) {
+                item {
+                    EmptyTransaction(
+                        text = stringResource(id = R.string.no_transactions),
+                        iconResId = R.drawable.no_transaction
+                    )
+                }
+            } else {
+                items(homeModel.transactions.take(5), key = { it.id }) { transaction ->
+                    TransactionCard(
+                        category = transaction.category,
+                        transactionName = transaction.name,
+                        amount = transaction.amount.toInt(),
+                        transactionDate = transaction.transactionDate,
+                        type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,
+                        onClick = {
+                            if (transaction is Income) navigateToIncome(transaction.id)
+                            else navigateToExpense(transaction.id)
+                        },
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         } else {
-            items(homeModel.budgets, key = { it.budgetId }) { budget ->
-                BudgetCard(
-                    budget = budget,
-                    onClick = {
-                        navigateToBudgetDetails(budget.budgetId)
-                    },
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+            if (homeModel.budgets.isEmpty()) {
+                item {
+                    EmptyTransaction(
+                        text = stringResource(id = R.string.no_budget_set),
+                        iconResId = R.drawable.no_budget
+                    )
+                }
+            } else {
+                items(homeModel.budgets.take(3), key = { it.budgetId }) { budget ->
+                    BudgetCard(
+                        budget = budget,
+                        onClick = {
+                            navigateToBudgetDetails(budget.budgetId)
+                        },
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
             }
         }
     }
@@ -326,6 +372,67 @@ fun HomeHeader(
             )
         }
     }
+}
+
+@Composable
+fun HomeReportChart(
+    selectedMonth: Instant,
+    modelProducer: CartesianChartModelProducer,
+    transactions: Map<Int, Int>,
+    modifier: Modifier = Modifier
+) {
+    val color = MaterialTheme.colorScheme.primary
+
+    LaunchedEffect(transactions) {
+        withContext(Dispatchers.Default) {
+            modelProducer.runTransaction {
+                lineSeries {
+                    series(x = transactions.keys.toList(), y = transactions.values.toList())
+                }
+            }
+        }
+    }
+
+    CartesianChartHost(
+        chart =
+        rememberCartesianChart(
+            rememberLineCartesianLayer(
+                lineProvider =
+                LineCartesianLayer.LineProvider.series(
+                    LineCartesianLayer.rememberLine(
+                        remember { LineCartesianLayer.LineFill.single(fill(color)) }
+                    )
+                )
+            ),
+            startAxis = VerticalAxis.rememberStart(),
+            bottomAxis =
+            HorizontalAxis.rememberBottom(
+                valueFormatter = bottomAxisValueFormatter(selectedMonth),
+                itemPlacer =
+                remember {
+                    HorizontalAxis.ItemPlacer.aligned(spacing = 3, addExtremeLabelPadding = true)
+                },
+            )
+            ,
+            layerPadding =
+                cartesianLayerPadding(scalableStartPadding = 12.dp, scalableEndPadding = 12.dp),
+        )
+        ,
+        modelProducer = modelProducer,
+        modifier = modifier
+    )
+}
+
+// Formatter for the day and month, e.g., "Oct 1"
+private val dateFormatter = DateTimeFormatter.ofPattern("MMM d")
+
+private fun bottomAxisValueFormatter(selectedMonth: Instant) = CartesianValueFormatter { _, x, _ ->
+    val startDate = selectedMonth
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .toJavaLocalDateTime()
+        .withDayOfMonth(x.toInt())
+
+    startDate.format(dateFormatter)
 }
 
 @Composable

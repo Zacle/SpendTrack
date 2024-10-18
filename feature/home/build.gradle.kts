@@ -11,6 +11,9 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.sharedResources)
 
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
+
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

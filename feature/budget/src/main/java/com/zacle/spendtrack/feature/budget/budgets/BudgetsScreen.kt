@@ -106,6 +106,7 @@ fun BudgetsScreen(
                             .selectedMonth
                             .month.
                             getDisplayName(TextStyle.FULL, Locale.getDefault())
+                            + ", ${stateHolder.selectedMonth.year}"
                     )
                 },
                 navigationIcon = {

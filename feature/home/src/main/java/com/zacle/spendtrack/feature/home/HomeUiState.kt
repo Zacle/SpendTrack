@@ -13,14 +13,12 @@ import kotlinx.datetime.Instant
  * is used as the reference for fetching transactions and categories.
  * @param transactionPeriod The time period for which transactions (expenses and incomes) are retrieved and displayed on the home screen.
  * @param isTransactionViewActive Determines whether the screen is displaying a list of transactions or categories.
- * @param appliedFilterPeriod The period actively used to filter transactions and categories, which may differ from [transactionPeriod].
  */
 data class HomeUiState(
     val selectedDate: Instant = Clock.System.now(),
     val transactionPeriod: Period = selectedDate.toMonthlyPeriod(),
     val transactionPeriodType: TransactionPeriodType = TransactionPeriodType.MONTHLY,
     val isTransactionViewActive: Boolean = true,
-    val appliedFilterPeriod: Period = selectedDate.toMonthlyPeriod(),
     val user: User? = null
 )
 

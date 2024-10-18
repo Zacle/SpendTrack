@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
@@ -127,6 +129,52 @@ fun TransactionCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun EmptyTransaction(
+    text: String,
+    iconResId: Int,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = 10.dp,
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(iconResId),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(42.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun EmptyTransactionPreview() {
+    SpendTrackTheme {
+        EmptyTransaction(
+            iconResId = R.drawable.no_transaction,
+            text = stringResource(id = R.string.no_transactions)
+        )
     }
 }
 

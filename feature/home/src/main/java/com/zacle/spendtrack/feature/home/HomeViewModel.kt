@@ -3,12 +3,8 @@ package com.zacle.spendtrack.feature.home
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.HomeUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
-import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.usecase.Result
-import com.zacle.spendtrack.core.model.util.period.toDailyPeriod
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
-import com.zacle.spendtrack.core.model.util.period.toWeeklyPeriod
-import com.zacle.spendtrack.core.model.util.period.toYearlyPeriod
 import com.zacle.spendtrack.core.ui.BaseViewModel
 import com.zacle.spendtrack.core.ui.UiEvent
 import com.zacle.spendtrack.core.ui.UiState
@@ -56,7 +52,6 @@ class  HomeViewModel @Inject constructor(
             is HomeUiAction.Load -> load()
             is HomeUiAction.SetPeriod -> setPeriod(action.date)
             is HomeUiAction.SetDisplayTransactions -> setDisplayTransactions(action.shouldDisplayTransactions)
-            is HomeUiAction.SetFilterPeriod -> setFilterPeriod(action.transactionPeriodType)
             is HomeUiAction.NavigateToProfile -> submitSingleEvent(HomeUiEvent.NavigateToProfile)
             is HomeUiAction.NavigateToExpense -> submitSingleEvent(HomeUiEvent.NavigateToExpense(action.expenseId))
             is HomeUiAction.NavigateToIncome -> submitSingleEvent(HomeUiEvent.NavigateToIncome(action.incomeId))
@@ -73,7 +68,6 @@ class  HomeViewModel @Inject constructor(
                 HomeUseCase.Request(
                     userId = userId,
                     period = uiState.value.transactionPeriod,
-                    appliedFilterPeriod = uiState.value.appliedFilterPeriod
                 )
             ).collectLatest { result ->
                 submitState(converter.convert(result))
@@ -87,21 +81,7 @@ class  HomeViewModel @Inject constructor(
         load()
     }
 
-    private fun setFilterPeriod(transactionPeriodType: TransactionPeriodType) {
-        val period = getPeriodFromTransactionType(transactionPeriodType)
-        _uiState.value = uiState.value.copy(appliedFilterPeriod = period, transactionPeriodType = transactionPeriodType)
-        load()
-    }
-
     private fun setDisplayTransactions(shouldDisplayTransactions: Boolean) {
         _uiState.value = uiState.value.copy(isTransactionViewActive = shouldDisplayTransactions)
     }
-
-    private fun getPeriodFromTransactionType(transactionPeriodType: TransactionPeriodType): Period =
-        when (transactionPeriodType) {
-            TransactionPeriodType.DAILY -> uiState.value.selectedDate.toDailyPeriod()
-            TransactionPeriodType.WEEKLY -> uiState.value.selectedDate.toWeeklyPeriod()
-            TransactionPeriodType.MONTHLY -> uiState.value.selectedDate.toMonthlyPeriod()
-            TransactionPeriodType.YEARLY -> uiState.value.selectedDate.toYearlyPeriod()
-        }
 }

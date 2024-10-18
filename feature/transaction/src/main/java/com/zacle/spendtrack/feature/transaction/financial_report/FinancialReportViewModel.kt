@@ -89,7 +89,6 @@ class FinancialReportViewModel @Inject constructor(
                 FinancialReportUseCase.Request(
                     userId = loggedInUserId.value,
                     period = financialReportPeriod,
-                    appliedFilterPeriod = financialReportPeriod,
                     filterState = FilterState(),
                     sortOrder = SortOrder.NEWEST
                 )

@@ -51,6 +51,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zacle.spendtrack.core.designsystem.component.EmptyTransaction
+import com.zacle.spendtrack.core.designsystem.component.PeriodPicker
 import com.zacle.spendtrack.core.designsystem.component.STDropdown
 import com.zacle.spendtrack.core.designsystem.component.STOutline
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
@@ -178,6 +180,14 @@ internal fun TransactionScreen(
             )
         }
     }
+
+    if (stateHolder.shouldDisplayMonthPeriod) {
+        PeriodPicker(
+            selectedPeriod = stateHolder.selectedMonth,
+            onSelectedPeriodChanged = onMonthPeriodApplied,
+            onDismissRequest = onMonthPeriodDismissed
+        )
+    }
 }
 
 @Composable
@@ -195,6 +205,7 @@ fun TransactionContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             FinancialReport(
@@ -204,19 +215,30 @@ fun TransactionContent(
                     .padding(bottom = 8.dp)
             )
         }
-        items(transactionModel.transactions, key = { it.id }) { transaction ->
-            TransactionCard(
-                category = transaction.category,
-                transactionName = transaction.name,
-                amount = transaction.amount.toInt(),
-                transactionDate = transaction.transactionDate,
-                type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,
-                onClick = {
-                    if (transaction is Income) navigateToIncome(transaction.id)
-                    else navigateToExpense(transaction.id)
-                },
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
+        if (transactionModel.transactions.isEmpty()) {
+            item {
+                EmptyTransaction(
+                    text = stringResource(id = R.string.no_transactions),
+                    iconResId = R.drawable.no_transaction,
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                )
+            }
+        } else {
+            items(transactionModel.transactions, key = { it.id }) { transaction ->
+                TransactionCard(
+                    category = transaction.category,
+                    transactionName = transaction.name,
+                    amount = transaction.amount.toInt(),
+                    transactionDate = transaction.transactionDate,
+                    type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,
+                    onClick = {
+                        if (transaction is Income) navigateToIncome(transaction.id)
+                        else navigateToExpense(transaction.id)
+                    },
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
     }
     if (stateHolder.shouldDisplayFilterTransaction) {

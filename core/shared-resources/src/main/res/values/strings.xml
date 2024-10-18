@@ -167,7 +167,6 @@
     <!-- Home module -->
     <string name="home">Home</string>
     <string name="notifications">Show notifications</string>
-    <string name="no_transactions">No transactions found</string>
     <string name="no_transactions_description">
         You\'ve not done any transactions for this period. Please press the + button to add a transaction.
     </string>
@@ -229,6 +228,12 @@
     <!-- Report module -->
     <string name="report_title">Financial Report</string>
     <string name="report">Report</string>
+    <string name="no_expenses_graph">
+        There are no expenses to display in the graph for this month.
+    </string>
+    <string name="no_incomes_graph">
+        There are no incomes to display in the graph for this month.
+    </string>
 
     <!-- Transaction module -->
     <string name="transaction">Transaction</string>
@@ -247,11 +252,11 @@
     <string name="financial_report">See your financial report</string>
     <string name="amount_spent">You spent</string>
     <string name="no_spending">
-        You didn\'t spend any money yet.
+        You didn\'t spend any money for this month.
     </string>
     <string name="amount_earned">You earned</string>
     <string name="no_earning">
-        You didn\'t earn any money yet.
+        You didn\'t earn any money for this month.
     </string>
     <string name="biggest_spending">
         and your biggest spending is from 
@@ -262,8 +267,9 @@
     <string name="budget_exceeds">Budget exceeded the limit</string>
     <string name="no_budget_exceeds">No Budget is exceeding the limit</string>
     <string name="no_budget_set">No budget set for this month</string>
+    <string name="no_transactions">No transactions found for this month</string>
 
-    <!-- verify Auth module -->
+    <!-- Verify Auth module -->
     <string name="verify_auth_title">Verification</string>
     <string name="email_not_verified">The email is not verified yet. Please verify it before!</string>
 

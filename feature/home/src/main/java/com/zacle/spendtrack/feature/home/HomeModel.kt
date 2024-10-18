@@ -10,5 +10,6 @@ data class HomeModel(
     val transactions: List<Transaction> = emptyList(),
     val totalBudget: Double = 0.0,
     val remainingBudget: Double = 0.0,
-    val budgets: List<Budget> = emptyList()
+    val budgets: List<Budget> = emptyList(),
+    val transactionsReport: Map<Int, Int>
 )

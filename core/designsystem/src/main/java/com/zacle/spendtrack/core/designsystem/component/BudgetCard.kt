@@ -145,13 +145,15 @@ fun ProgressIndicator(
             start = Offset(x = 0f, y = 0f),
             end = Offset(x = size.width, y = 0f)
         )
-        drawLine(
-            color = color,
-            cap = StrokeCap.Round,
-            strokeWidth = size.height,
-            start = Offset(x = 0f, y = 0f),
-            end = Offset(x = size.width * progress, y = 0f)
-        )
+        if (progress > 0f) {
+            drawLine(
+                color = color,
+                cap = StrokeCap.Round,
+                strokeWidth = size.height,
+                start = Offset(x = 0f, y = 0f),
+                end = Offset(x = size.width * progress, y = 0f)
+            )
+        }
     }
 }
 

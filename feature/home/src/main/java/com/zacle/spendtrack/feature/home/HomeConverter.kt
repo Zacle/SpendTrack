@@ -3,11 +3,10 @@ package com.zacle.spendtrack.feature.home
 import android.content.Context
 import com.zacle.spendtrack.core.domain.HomeUseCase
 import com.zacle.spendtrack.core.model.usecase.UseCaseException
+import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonResultConverter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import com.zacle.spendtrack.core.shared_resources.R
-import timber.log.Timber
 
 class HomeConverter @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -20,11 +19,11 @@ class HomeConverter @Inject constructor(
             transactions = data.transactions,
             totalBudget = data.totalBudget,
             remainingBudget = data.remainingBudget,
-            budgets = data.budgets
+            budgets = data.budgets,
+            transactionsReport = data.transactionsReport
         )
 
     override fun convertError(useCaseException: UseCaseException): String {
-        Timber.e(useCaseException)
         return context.getString(R.string.unknown_error)
     }
 

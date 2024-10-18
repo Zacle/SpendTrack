@@ -6,7 +6,6 @@ import kotlinx.datetime.Instant
 sealed class HomeUiAction: UiAction {
     data class SetPeriod(val date: Instant): HomeUiAction()
     data class SetDisplayTransactions(val shouldDisplayTransactions: Boolean): HomeUiAction()
-    data class SetFilterPeriod(val transactionPeriodType: TransactionPeriodType): HomeUiAction()
     data class NavigateToExpense(val expenseId: String): HomeUiAction()
     data class NavigateToIncome(val incomeId: String): HomeUiAction()
     data class NavigateToBudgetDetails(val budgetId: String): HomeUiAction()
