@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unknown_error">Si è verificato un errore sconosciuto!</string>
+    <string name="not_connected">Non sei connesso a Internet!</string>
+    <string name="add_transaction">Clicca per aggiungere una transazione</string>
+    <string name="food_dining">Cibo &amp; Cena</string>
+    <string name="shopping">Shopping</string>
+    <string name="entertainment">Intrattenimento</string>
+    <string name="groceries">Generi alimentari</string>
+    <string name="utilities">Servizi pubblici</string>
+    <string name="transportation">Trasporto</string>
+    <string name="rent_housing">Affitto &amp; Alloggio</string>
+    <string name="health_fitness">Salute &amp; Fitness</string>
+    <string name="education">Istruzione</string>
+    <string name="miscellaneous">Varie</string>
+    <string name="insurance">Assicurazione</string>
+    <string name="travel">Viaggio</string>
+    <string name="personal_care">Cura personale</string>
+    <string name="gifts_donations">Regali &amp; Donazioni</string>
+    <string name="savings_investments">Risparmi &amp; Investimenti</string>
+    <string name="taxes">Tasse</string>
+    <string name="pets">Animali domestici</string>
+    <string name="loans_debt">Prestiti &amp; Debiti</string>
+    <string name="kids">Bambini</string>
+    <string name="business_expenses">Spese aziendali</string>
+    <string name="budget_sync_work_notification_title">Sincronizzazione del Budget di SpendTrack</string>
+    <string name="expense_sync_work_notification_title">Sincronizzazione delle Spese di SpendTrack</string>
+    <string name="income_sync_work_notification_title">Sincronizzazione delle Entrate di SpendTrack</string>
+    <string name="budget_sync_work_notification_channel_name">Sincronizzazione Budget</string>
+    <string name="expense_sync_work_notification_channel_name">Sincronizzazione Spese</string>
+    <string name="income_sync_work_notification_channel_name">Sincronizzazione Entrate</string>
+    <string name="budget_sync_work_notification_channel_description">Attività di sincronizzazione del budget in background</string>
+    <string name="expense_sync_work_notification_channel_description">Attività di sincronizzazione delle spese in background</string>
+    <string name="income_sync_work_notification_channel_description">Attività di sincronizzazione delle entrate in background</string>
+    <string name="google_auth">Continua con Google</string>
+    <string name="food_drinks">Cibo &amp; Bevande</string>
+    <string name="remaining">Rimanente</string>
+    <string name="exceeded_limit">Hai superato il limite!</string>
+    <string name="of">di</string>
+    <string name="how_much">Quanto?</string>
+    <string name="categories">Categorie</string>
+    <string name="name">Inserisci il nome</string>
+    <string name="description">Descrizione</string>
+    <string name="add_attachment">Aggiungi allegato</string>
+    <string name="attachment">Allegato</string>
+    <string name="save">Salva</string>
+    <string name="select_date">Seleziona la data della transazione</string>
+    <string name="today">Oggi</string>
+    <string name="tomorrow">Domani</string>
+    <string name="yesterday">Ieri</string>
+    <string name="this_day">Questo giorno</string>
+    <string name="done">Fatto</string>
+    <string name="cancel">Annulla</string>
+    <string name="edit">Modifica</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="camera">Fotocamera</string>
+    <string name="gallery">Galleria</string>
+    <string name="camera_description">Scatta una foto della ricevuta</string>
+    <string name="gallery_description">Seleziona foto dalla galleria</string>
+    <string name="delete_receipt">Elimina ricevuta</string>
+    <string name="type">Tipo</string>
+    <string name="category">Categoria</string>
+    <string name="remove_transaction_title">Eliminare questa transazione?</string>
+    <string name="remove_transaction_description">Questa azione non può essere annullata. Sei sicuro di voler eliminare questa transazione?</string>
+    <string name="transaction_removed">Transazione eliminata con successo</string>
+    <string name="detail_transaction">Dettagli della transazione</string>
+    <string name="camera_permission">Si prega di concedere l\'autorizzazione alla fotocamera</string>
+    <string name="try_again">Riprova</string>
+    <string name="name_error_blank">Il nome non può essere vuoto</string>
+    <string name="name_error_invalid">Nome non valido</string>
+    <string name="name_error_short">Il nome deve contenere almeno 3 caratteri</string>
+    <string name="email_error_blank">L\'e-mail non può essere vuota</string>
+    <string name="email_error_invalid">E-mail non valida</string>
+    <string name="password_error_blank">La password non può essere vuota</string>
+    <string name="password_error_short">La password deve contenere almeno 8 caratteri</string>
+    <string name="password_error_invalid">Password non valida. La password deve contenere almeno 1 lettera maiuscola, 1 minuscola e 1 numero</string>
+    <string name="category_not_selected">Nessuna categoria selezionata. Si prega di scegliere una categoria!</string>
+    <string name="amount_error_invalid">Importo non valido. L\'importo deve essere superiore a 0</string>
+    <string name="date_error_blank">Seleziona la data della transazione</string>
+    <string name="budget">Budget</string>
+    <string name="setup_budget">Imposta il budget per questo mese</string>
+    <string name="setup_budget_description">Impostiamo un budget per te per tenere traccia</string>
+    <string name="budget_previous">Non hai ancora impostato un budget per questo mese</string>
+    <string name="budget_previous_description">Puoi impostare un budget solo per il mese corrente</string>
+    <string name="repeat">Ripeti</string>
+    <string name="repeat_budget">Ripetere questo budget ogni mese?</string>
+    <string name="receive_alert">Ricevi avviso</string>
+    <string name="receive_alert_description">Ricevi un avviso quando raggiungi un determinato punto.</string>
+    <string name="budget_amount">Quanto vuoi spendere?</string>
+    <string name="create_budget">Crea budget</string>
+    <string name="edit_budget">Modifica budget</string>
+    <string name="planned_budget">Spese pianificate di</string>
+    <string name="with">con</string>
+    <string name="budget_left">rimasti del budget totale</string>
+    <string name="budget_spent">Budget speso</string>
+    <string name="detail_budget">Dettagli del budget</string>
+    <string name="delete_budget">Eliminare questo budget?</string>
+    <string name="delete_budget_description">Questa azione non può essere annullata. Sei sicuro di voler eliminare questo budget?</string>
+    <string name="overview">Panoramica</string>
+    <string name="budget_channel_name">Avviso di budget</string>
+    <string name="budget_channel_exceeded_description">Hai superato il budget impostato per questo mese. Rivedi le tue spese.</string>
+    <string name="budget_channel_remaining_description">Stai per raggiungere il limite impostato per questo mese. Stai attento.</string>
+    <string name="expense">Spesa</string>
+    <string name="back">Indietro</string>
+    <string name="expense_not_found">Spesa non trovata</string>
+    <string name="expense_not_found_description">La spesa richiesta non è stata trovata. Verifica l\'ID della spesa e riprova.</string>
+    <string name="email_not_found">E-mail non trovata. Registrati invece!</string>
+    <string name="title">Password dimenticata</string>
+    <string name="email">E-mail</string>
+    <string name="reset_password_text">Inserisci l\'e-mail registrata. Ti invieremo un link per reimpostare la password. Clicca sul link per reimpostare la password.</string>
+    <string name="submit">Invia</string>
+    <string name="home">Home</string>
+    <string name="notifications">Vedi notifiche</string>
+    <string name="no_transactions_description">Non hai transazioni per questo periodo. Premi il pulsante + per aggiungere una transazione.</string>
+    <string name="account_balance">Saldo del conto</string>
+    <string name="week">Settimana</string>
+    <string name="month">Mese</string>
+    <string name="year">Anno</string>
+    <string name="transactions">Transazioni</string>
+    <string name="see_all">Vedi tutto</string>
+    <string name="income">Entrata</string>
+    <string name="income_not_found">Entrata non trovata</string>
+    <string name="income_not_found_description">L\'entrata richiesta non è stata trovata. Verifica l\'ID dell\'entrata e riprova.</string>
+    <string name="login">Accedi</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Password dimenticata?</string>
+    <string name="no_account">Non hai ancora un account?</string>
+    <string name="signup">Registrati</string>
+    <string name="or">Oppure</string>
+    <string name="login_failed">E-mail o password non corrette</string>
+    <string name="skip">Salta</string>
+    <string name="get_started">Iniziamo</string>
+    <string name="take_full_control">Prendi il pieno controllo delle tue finanze</string>
+
+    <string name="take_full_control_description">
+        Prendi il controllo delle tue finanze e sfrutta al massimo ogni centesimo
+    </string>
+    <string name="keep_tabs">
+        Tieni traccia delle tue finanze
+    </string>
+    <string name="keep_tabs_description">
+        Traccia facilmente le transazioni con categorie e rapporti finanziari
+    </string>
+    <string name="be_proactive">
+        Sii proattivo
+    </string>
+    <string name="be_proactive_description">
+        Implementa un budget per ogni categoria per garantire il controllo
+    </string>
+
+    <!-- Profile module -->
+    <string name="profile">Profilo</string>
+
+    <!-- Register module -->
+    <string name="registration_failed">
+        Registrazione fallita. Riprova
+    </string>
+    <string name="register">Iscriviti</string>
+    <string name="first_name">Nome</string>
+    <string name="last_name">Cognome</string>
+    <string name="have_account">
+        Hai già un account?
+    </string>
+
+    <!-- Report module -->
+    <string name="report_title">Rapporto Finanziario</string>
+    <string name="report">Rapporto</string>
+    <string name="no_expenses_graph">
+        Non ci sono spese da visualizzare nel grafico per questo mese.
+    </string>
+    <string name="no_incomes_graph">
+        Non ci sono entrate da visualizzare nel grafico per questo mese.
+    </string>
+
+    <!-- Transaction module -->
+    <string name="transaction">Transazione</string>
+    <string name="no_transaction">
+        Attualmente non ci sono transazioni
+    </string>
+    <string name="filter_transaction">Filtra Transazione</string>
+    <string name="filter_by">Filtra Per</string>
+    <string name="sort_by">Ordina Per</string>
+    <string name="Highest">Più Alto</string>
+    <string name="Lowest">Più Basso</string>
+    <string name="Newest">Più Recente</string>
+    <string name="Oldest">Più Vecchio</string>
+    <string name="choose_category">Scegli Categoria</string>
+    <string name="reset">Reimposta</string>
+    <string name="selected">Selezionato</string>
+    <string name="apply">Applica</string>
+    <string name="financial_report">
+        Vedi il tuo rapporto finanziario
+    </string>
+    <string name="amount_spent">Hai speso</string>
+    <string name="no_spending">
+        Non hai speso nulla questo mese.
+    </string>
+    <string name="amount_earned">Hai guadagnato</string>
+    <string name="no_earning">
+        Non hai guadagnato nulla questo mese.
+    </string>
+    <string name="biggest_spending">
+        e la tua spesa maggiore è stata per
+    </string>
+    <string name="biggest_income">
+        e il tuo reddito maggiore proviene da
+    </string>
+    <string name="budget_exceeds">Il budget ha superato il limite</string>
+    <string name="no_budget_exceeds">Nessun budget ha superato il limite</string>
+    <string name="no_budget_set">Nessun budget impostato per questo mese</string>
+    <string name="no_transactions">Nessuna transazione trovata per questo mese</string>
+
+    <!-- Verify Auth module -->
+    <string name="verify_auth_title">Verifica</string>
+    <string name="email_not_verified">
+        L\'e-mail non è ancora stata verificata. Verificala prima!
+    </string>
+
+    <string name="email_verification_text">
+        Sei quasi arrivato! Abbiamo appena inviato un\'e-mail di verifica. Clicca sul link per confermare il tuo indirizzo e iniziare a usare l\'app!
+    </string>
+    <string name="already_verified">Già verificato</string>
+
+</resources>
