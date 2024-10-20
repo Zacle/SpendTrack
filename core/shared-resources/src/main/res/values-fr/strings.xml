@@ -133,50 +133,50 @@
     <string name="get_started">Commencer</string>
     <string name="take_full_control">Prenez le contrôle total de vos finances</string>
     <string name="take_full_control_description">
-    Prenez le contrôle de vos finances et tirez le meilleur parti de chaque centime
-</string>
+        Prenez le contrôle de vos finances et tirez le meilleur parti de chaque centime
+    </string>
     <string name="keep_tabs">
-    Gardez un œil sur vos finances
-</string>
+        Gardez un œil sur vos finances
+    </string>
     <string name="keep_tabs_description">
-    Suivez facilement les transactions avec des catégories et des rapports financiers
-</string>
+        Suivez facilement les transactions avec des catégories et des rapports financiers
+    </string>
     <string name="be_proactive">
-    Soyez proactif
-</string>
+        Soyez proactif
+    </string>
     <string name="be_proactive_description">
-    Mettez en place un budget pour chaque catégorie afin d\'assurer le contrôle
-</string>
+        Mettez en place un budget pour chaque catégorie afin d\'assurer le contrôle
+    </string>
 
     <!-- Profile module -->
     <string name="profile">Profil</string>
 
     <!-- Register module -->
     <string name="registration_failed">
-    Échec de l\'inscription. Réessayez
-</string>
+        Échec de l\'inscription. Réessayez
+    </string>
     <string name="register">S\'inscrire</string>
     <string name="first_name">Prénom</string>
     <string name="last_name">Nom</string>
     <string name="have_account">
-    Vous avez déjà un compte ?
-</string>
+        Vous avez déjà un compte ?
+    </string>
 
     <!-- Report module -->
     <string name="report_title">Rapport Financier</string>
     <string name="report">Rapport</string>
     <string name="no_expenses_graph">
-    Il n\'y a aucune dépense à afficher dans le graphique pour ce mois.
-</string>
+        Il n\'y a aucune dépense à afficher dans le graphique pour ce mois.
+    </string>
     <string name="no_incomes_graph">
-    Il n\'y a aucun revenu à afficher dans le graphique pour ce mois.
-</string>
+        Il n\'y a aucun revenu à afficher dans le graphique pour ce mois.
+    </string>
 
     <!-- Transaction module -->
     <string name="transaction">Transaction</string>
     <string name="no_transaction">
-    Il n\'y a actuellement aucune transaction
-</string>
+        Il n\'y a actuellement aucune transaction
+    </string>
     <string name="filter_transaction">Filtrer la Transaction</string>
     <string name="filter_by">Filtrer Par</string>
     <string name="sort_by">Trier Par</string>
@@ -189,22 +189,22 @@
     <string name="selected">Sélectionné</string>
     <string name="apply">Appliquer</string>
     <string name="financial_report">
-    Voir votre rapport financier
-</string>
+        Voir votre rapport financier
+    </string>
     <string name="amount_spent">Vous avez dépensé</string>
     <string name="no_spending">
-    Vous n\'avez rien dépensé ce mois-ci.
-</string>
+        Vous n\'avez rien dépensé ce mois-ci.
+    </string>
     <string name="amount_earned">Vous avez gagné</string>
     <string name="no_earning">
-    Vous n\'avez rien gagné ce mois-ci.
-</string>
+        Vous n\'avez rien gagné ce mois-ci.
+    </string>
     <string name="biggest_spending">
-    et votre plus grande dépense provient de
-</string>
+        et votre plus grande dépense provient de
+    </string>
     <string name="biggest_income">
-    et votre plus grand revenu provient de
-</string>
+        et votre plus grand revenu provient de
+    </string>
     <string name="budget_exceeds">Le budget a dépassé la limite</string>
     <string name="no_budget_exceeds">Aucun budget ne dépasse la limite</string>
     <string name="no_budget_set">Aucun budget n\'a été défini pour ce mois</string>
@@ -213,12 +213,158 @@
     <!-- Verify Auth module -->
     <string name="verify_auth_title">Vérification</string>
     <string name="email_not_verified">
-    L\'email n\'est pas encore vérifié. Veuillez le vérifier avant !
-</string>
+        L\'email n\'est pas encore vérifié. Veuillez le vérifier avant !
+    </string>
 
     <string name="email_verification_text">
-    Vous y êtes presque ! Nous venons de vous envoyer un email de vérification. Cliquez sur le lien pour confirmer votre adresse et commencer à utiliser l\'application !
-</string>
+        Vous y êtes presque ! Nous venons de vous envoyer un email de vérification. Cliquez sur le lien pour confirmer votre adresse et commencer à utiliser l\'application !
+    </string>
     <string name="already_verified">Déjà vérifié</string>
+
+    <string name="AED">Dirham des Émirats Arabes Unis</string>
+    <string name="AFN">Afghani Afghan</string>
+    <string name="ALL">Lek Albanais</string>
+    <string name="AMD">Dram Arménien</string>
+    <string name="ANG">Florin des Antilles Néerlandaises</string>
+    <string name="ARS">Peso Argentin</string>
+    <string name="AUD">Dollar Australien</string>
+    <string name="AWG">Florin Arubais</string>
+    <string name="AZN">Manat Azerbaïdjanais</string>
+    <string name="BAM">Mark Convertible Bosnie-Herzégovine</string>
+    <string name="BDT">Taka Bangladais</string>
+    <string name="BGN">Lev Bulgare</string>
+    <string name="BHD">Dinar Bahreïnien</string>
+    <string name="BND">Dollar de Brunei</string>
+    <string name="BOB">Boliviano Bolivien</string>
+    <string name="BRL">Réal Brésilien</string>
+    <string name="BTN">Ngultrum Bhoutanais</string>
+    <string name="BWP">Pula Botswanais</string>
+    <string name="BYN">Rouble Biélorusse</string>
+    <string name="BZD">Dollar Bélizéen</string>
+    <string name="CAD">Dollar Canadien</string>
+    <string name="CDF">Franc Congolais</string>
+    <string name="CHF">Franc Suisse</string>
+    <string name="CNY">Yuan Chinois</string>
+    <string name="CVE">Escudo Cap-Verdien</string>
+    <string name="DJF">Franc Djiboutien</string>
+    <string name="DZD">Dinar Algérien</string>
+    <string name="EGP">Livre Égyptienne</string>
+    <string name="ERN">Nakfa Érythréen</string>
+    <string name="ETB">Birr Éthiopien</string>
+    <string name="EUR">Euro</string>
+    <string name="FJD">Dollar Fidjien</string>
+    <string name="GBP">Livre Sterling</string>
+    <string name="GHS">Cedi Ghanéen</string>
+    <string name="GNF">Franc Guinéen</string>
+    <string name="KES">Shilling Kényan</string>
+    <string name="MAD">Dirham Marocain</string>
+    <string name="MGA">Ariary Malgache</string>
+    <string name="NGN">Naira Nigérian</string>
+    <string name="XAF">Franc CFA BEAC</string>
+    <string name="XOF">Franc CFA BCEAO</string>
+    <string name="ZAR">Rand Sud-Africain</string>
+    <string name="CLP">Peso Chilien</string>
+    <string name="COP">Peso Colombien</string>
+    <string name="CRC">Colón Costaricain</string>
+    <string name="CZK">Couronne Tchèque</string>
+    <string name="DKK">Couronne Danoise</string>
+    <string name="DOP">Peso Dominicain</string>
+    <string name="FKP">Livre des Îles Falkland</string>
+    <string name="GEL">Lari Géorgien</string>
+    <string name="GIP">Livre de Gibraltar</string>
+    <string name="GMD">Dalasi Gambien</string>
+    <string name="GTQ">Quetzal Guatémaltèque</string>
+    <string name="GYD">Dollar Guyanien</string>
+    <string name="HKD">Dollar de Hong Kong</string>
+    <string name="HNL">Lempira Hondurien</string>
+    <string name="HRK">Kuna Croate</string>
+    <string name="HTG">Gourde Haïtienne</string>
+    <string name="HUF">Forint Hongrois</string>
+    <string name="IDR">Roupie Indonésienne</string>
+    <string name="ILS">Nouveau Shekel Israélien</string>
+    <string name="INR">Roupie Indienne</string>
+    <string name="IQD">Dinar Irakien</string>
+    <string name="IRR">Rial Iranien</string>
+    <string name="ISK">Couronne Islandaise</string>
+    <string name="JMD">Dollar Jamaïcain</string>
+    <string name="JOD">Dinar Jordanien</string>
+    <string name="JPY">Yen Japonais</string>
+    <string name="KGS">Som Kirghize</string>
+    <string name="KHR">Riel Cambodgien</string>
+    <string name="KMF">Franc Comorien</string>
+    <string name="KRW">Won Sud-Coréen</string>
+    <string name="KWD">Dinar Koweïtien</string>
+    <string name="KYD">Dollar des Îles Caïmans</string>
+    <string name="KZT">Tenge Kazakh</string>
+    <string name="LAK">Kip Laotien</string>
+    <string name="LBP">Livre Libanaise</string>
+    <string name="LKR">Roupie Sri Lankaise</string>
+    <string name="LRD">Dollar Libérien</string>
+    <string name="LSL">Loti du Lesotho</string>
+    <string name="LYD">Dinar Libyen</string>
+    <string name="MDL">Leu Moldave</string>
+    <string name="MKD">Denar Macédonien</string>
+    <string name="MMK">Kyat Birman</string>
+    <string name="MNT">Tögrög Mongol</string>
+    <string name="MOP">Pataca Macanaise</string>
+    <string name="MRU">Ouguiya Mauritanien</string>
+    <string name="MUR">Roupie Mauricienne</string>
+    <string name="MVR">Rufiyaa Maldivienne</string>
+    <string name="MWK">Kwacha Malawite</string>
+    <string name="MXN">Peso Mexicain</string>
+    <string name="MYR">Ringgit Malaisien</string>
+    <string name="MZN">Metical Mozambicain</string>
+    <string name="NAD">Dollar Namibien</string>
+    <string name="NIO">Córdoba Nicaraguayen</string>
+    <string name="NOK">Couronne Norvégienne</string>
+    <string name="NPR">Roupie Népalaise</string>
+    <string name="NZD">Dollar Néo-Zélandais</string>
+    <string name="PEN">Sol Péruvien</string>
+    <string name="PGK">Kina Papouasienne</string>
+    <string name="PHP">Peso Philippin</string>
+    <string name="PKR">Roupie Pakistanaise</string>
+    <string name="PLN">Zloty Polonais</string>
+    <string name="PYG">Guarani Paraguayen</string>
+    <string name="QAR">Rial Qatari</string>
+    <string name="RON">Leu Roumain</string>
+    <string name="RSD">Dinar Serbe</string>
+    <string name="RUB">Rouble Russe</string>
+    <string name="RWF">Franc Rwandais</string>
+    <string name="SAR">Riyal Saoudien</string>
+    <string name="SBD">Dollar des Îles Salomon</string>
+    <string name="SCR">Roupie Seychelloise</string>
+    <string name="SDG">Livre Soudanaise</string>
+    <string name="SEK">Couronne Suédoise</string>
+    <string name="SGD">Dollar de Singapour</string>
+    <string name="SHP">Livre de Sainte-Hélène</string>
+    <string name="SLL">Leone Sierra-Léonais</string>
+    <string name="SOS">Shilling Somalien</string>
+    <string name="SRD">Dollar Surinamien</string>
+    <string name="SSP">Livre Sud-Soudanaise</string>
+    <string name="STN">Dobra Santoméen</string>
+    <string name="SYP">Livre Syrienne</string>
+    <string name="SZL">Lilangeni Swazi</string>
+    <string name="THB">Baht Thaïlandais</string>
+    <string name="TJS">Somoni Tadjik</string>
+    <string name="TMT">Manat Turkmène</string>
+    <string name="TND">Dinar Tunisien</string>
+    <string name="TOP">Paʻanga Tongien</string>
+    <string name="TRY">Livre Turque</string>
+    <string name="TTD">Dollar Trinidadien</string>
+    <string name="TWD">Nouveau Dollar Taïwanais</string>
+    <string name="TZS">Shilling Tanzanien</string>
+    <string name="UAH">Hryvnia Ukrainienne</string>
+    <string name="UGX">Shilling Ougandais</string>
+    <string name="UYU">Peso Uruguayen</string>
+    <string name="UZS">Som Ouzbek</string>
+    <string name="VEF">Bolivar Vénézuélien</string>
+    <string name="VND">Dong Vietnamien</string>
+    <string name="VUV">Vatu Vanuatais</string>
+    <string name="WST">Tala Samoan</string>
+    <string name="XCD">Dollar des Caraïbes Orientales</string>
+    <string name="XPF">Franc CFP</string>
+    <string name="YER">Rial Yéménite</string>
+    <string name="ZMW">Kwacha Zambien</string>
+    <string name="USD">Dollar Américain</string>
 
 </resources>
