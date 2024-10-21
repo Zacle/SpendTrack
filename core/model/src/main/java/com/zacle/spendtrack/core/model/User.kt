@@ -9,6 +9,7 @@ data class User(
     val firstName: String = "",
     val lastName: String = "",
     val profilePictureUrl: String? = null,
+    val localReceiptImagePath: String? = null,
     val updatedAt: Instant? = null,
-    val synced: Boolean = true
+    val synced: Boolean = false
 )

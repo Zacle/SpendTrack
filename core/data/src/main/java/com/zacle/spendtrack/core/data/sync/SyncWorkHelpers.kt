@@ -15,9 +15,11 @@ import com.zacle.spendtrack.core.shared_resources.R as SharedR
 private const val BUDGET_SYNC_NOTIFICATION_ID = 0
 private const val EXPENSE_SYNC_NOTIFICATION_ID = 1
 private const val INCOME_SYNC_NOTIFICATION_ID = 2
+private const val USER_SYNC_NOTIFICATION_ID = 3
 private const val BUDGET_SYNC_NOTIFICATION_CHANNEL_ID = "budget_sync_notification_channel"
 private const val EXPENSE_SYNC_NOTIFICATION_CHANNEL_ID = "expense_sync_notification_channel"
 private const val INCOME_SYNC_NOTIFICATION_CHANNEL_ID = "income_sync_notification_channel"
+private const val USER_SYNC_NOTIFICATION_CHANNEL_ID = "user_sync_notification_channel"
 
 val SyncConstraints
     get() = Constraints.Builder()
@@ -51,6 +53,16 @@ fun Context.syncIncomeForegroundInfo() = ForegroundInfo(
         channelNameResId = SharedR.string.income_sync_work_notification_channel_name,
         channelDescriptionResId = SharedR.string.income_sync_work_notification_channel_description,
         titleResId = SharedR.string.income_sync_work_notification_title
+    )
+)
+
+fun Context.syncUserForegroundInfo() = ForegroundInfo(
+    USER_SYNC_NOTIFICATION_ID,
+    syncWorkNotification(
+        channelId = USER_SYNC_NOTIFICATION_CHANNEL_ID,
+        channelNameResId = SharedR.string.user_sync_work_notification_channel_name,
+        channelDescriptionResId = SharedR.string.user_sync_work_notification_channel_description,
+        titleResId = SharedR.string.user_sync_work_notification_title
     )
 )
 

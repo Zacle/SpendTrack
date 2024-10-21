@@ -33,7 +33,7 @@ import com.zacle.spendtrack.core.database.model.UserEntity
         DeletedExpenseEntity::class,
         DeletedIncomeEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2)

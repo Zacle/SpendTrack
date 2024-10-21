@@ -10,10 +10,12 @@ import com.zacle.spendtrack.core.data.sync.RecurrentBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncBudgetWorker
 import com.zacle.spendtrack.core.data.sync.SyncExpenseWorker
 import com.zacle.spendtrack.core.data.sync.SyncIncomeWorker
+import com.zacle.spendtrack.core.data.sync.SyncUserWorker
 import com.zacle.spendtrack.core.datastore.UserPreferencesDataSource
 import com.zacle.spendtrack.core.domain.repository.BudgetRepository
 import com.zacle.spendtrack.core.domain.repository.ExpenseRepository
 import com.zacle.spendtrack.core.domain.repository.IncomeRepository
+import com.zacle.spendtrack.core.domain.repository.UserRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineDispatcher
 import timber.log.Timber
@@ -44,6 +46,7 @@ class STWorkersFactory @Inject constructor(
     budgetRepository: BudgetRepository,
     expenseRepository: ExpenseRepository,
     incomeRepository: IncomeRepository,
+    userRepository: UserRepository,
     userPreferencesDataSource: UserPreferencesDataSource,
     @STDispatcher(IO) ioDispatcher: CoroutineDispatcher
 ): DelegatingWorkerFactory() {
@@ -72,6 +75,13 @@ class STWorkersFactory @Inject constructor(
         addFactory(
             RecurrentBudgetWorker.Factory(
                 budgetRepository = budgetRepository
+            )
+        )
+        addFactory(
+            SyncUserWorker.Factory(
+                userRepository = userRepository,
+                userPreferencesDataSource = userPreferencesDataSource,
+                ioDispatcher = ioDispatcher
             )
         )
     }

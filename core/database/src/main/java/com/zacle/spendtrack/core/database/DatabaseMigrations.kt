@@ -21,4 +21,11 @@ internal object DatabaseMigrations {
             db.execSQL("ALTER TABLE categories ADD COLUMN `key` TEXT NOT NULL DEFAULT ''")
         }
     }
+
+    val MIGRATION_4_5 = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            // Add new column to the "users" table
+            db.execSQL("ALTER TABLE users ADD COLUMN local_receipt_image_path TEXT")
+        }
+    }
 }

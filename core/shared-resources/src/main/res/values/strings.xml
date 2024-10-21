@@ -32,10 +32,12 @@
     <string name="budget_sync_work_notification_title">SpendTrack Budget Sync</string>
     <string name="expense_sync_work_notification_title">SpendTrack Expense Sync</string>
     <string name="income_sync_work_notification_title">SpendTrack Income Sync</string>
+    <string name="user_sync_work_notification_title">SpendTrack User Sync</string>
 
     <string name="budget_sync_work_notification_channel_name">Syncing Budgets</string>
     <string name="expense_sync_work_notification_channel_name">Syncing Expenses</string>
     <string name="income_sync_work_notification_channel_name">Syncing Incomes</string>
+    <string name="user_sync_work_notification_channel_name">Syncing Users</string>
 
     <string name="budget_sync_work_notification_channel_description">
         Background tasks for syncing budgets
@@ -45,6 +47,9 @@
     </string>
     <string name="income_sync_work_notification_channel_description">
         Background tasks for syncing incomes
+    </string>
+    <string name="user_sync_work_notification_channel_description">
+        Background tasks for syncing users
     </string>
 
     <!-- Design system module -->
@@ -217,6 +222,11 @@
 
     <!-- Profile module -->
     <string name="profile">Profile</string>
+    <string name="personal_settings">Personal Settings</string>
+    <string name="language">Language</string>
+    <string name="currency">Currency</string>
+    <string name="theme">Theme</string>
+    <string name="logout">Log Out</string>
 
     <!-- Register module -->
     <string name="registration_failed">Registration failed. Try again</string>

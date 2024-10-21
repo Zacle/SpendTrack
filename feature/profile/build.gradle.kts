@@ -10,6 +10,8 @@ android {
 dependencies {
     implementation(projects.core.domain)
 
+    implementation(libs.coil.kt.compose)
+
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

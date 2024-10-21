@@ -32,6 +32,11 @@
     <string name="budget_sync_work_notification_channel_description">Attività di sincronizzazione del budget in background</string>
     <string name="expense_sync_work_notification_channel_description">Attività di sincronizzazione delle spese in background</string>
     <string name="income_sync_work_notification_channel_description">Attività di sincronizzazione delle entrate in background</string>
+    <string name="user_sync_work_notification_title">Sincronizzazione utenti SpendTrack</string>
+    <string name="user_sync_work_notification_channel_name">Sincronizzazione degli utenti</string>
+    <string name="user_sync_work_notification_channel_description">
+        Attività in background per sincronizzare gli utenti
+    </string>
     <string name="google_auth">Continua con Google</string>
     <string name="food_drinks">Cibo &amp; Bevande</string>
     <string name="remaining">Rimanente</string>
@@ -151,6 +156,11 @@
 
     <!-- Profile module -->
     <string name="profile">Profilo</string>
+    <string name="personal_settings">Impostazioni Personali</string>
+    <string name="language">Lingua</string>
+    <string name="currency">Valuta</string>
+    <string name="theme">Tema</string>
+    <string name="logout">Disconnetti</string>
 
     <!-- Register module -->
     <string name="registration_failed">

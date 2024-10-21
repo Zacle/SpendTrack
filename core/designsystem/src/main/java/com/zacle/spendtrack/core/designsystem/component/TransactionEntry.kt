@@ -533,7 +533,7 @@ fun Attachment(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PicturePickerModalBottomSheet(
+fun PicturePickerModalBottomSheet(
     onAttachmentSelected: (ImageData?) -> Unit,
     dismissPicturePickerDialog: () -> Unit,
     modifier: Modifier = Modifier

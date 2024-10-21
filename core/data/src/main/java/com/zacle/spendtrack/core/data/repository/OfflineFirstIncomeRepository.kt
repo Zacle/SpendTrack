@@ -132,16 +132,20 @@ class OfflineFirstIncomeRepository @Inject constructor(
 
     private suspend fun addIncomeToServer(income: Income) {
         var incomeToUpload = income
+        val localReceiptImagePath = income.localReceiptImagePath
+
         // If the income has a local receipt image, upload it to the cloud
-        if (income.localReceiptImagePath != null) {
+        if (localReceiptImagePath != null) {
             // Upload the image to the cloud storage and obtain the cloud URL
             val cloudUrl = storageDataSource.uploadImageToCloud(
                 bucketName = "$INCOME_IMAGES/${income.id}.jpg",
-                imagePath = income.localReceiptImagePath!!
+                imagePath = localReceiptImagePath
             )
             if (cloudUrl != null) {
                 // Update the income with the cloud receipt URL and clear the local receipt image path
                 incomeToUpload = income.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+                // Delete the local image file after uploading to avoid storage quota errors
+                imageStorageManager.deleteImageLocally(localReceiptImagePath)
             }
         }
         // Upload the income to the remote data source (Firebase, etc.)

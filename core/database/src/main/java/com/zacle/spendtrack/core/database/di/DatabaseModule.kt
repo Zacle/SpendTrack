@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.zacle.spendtrack.core.database.DatabaseMigrations.MIGRATION_2_3
 import com.zacle.spendtrack.core.database.DatabaseMigrations.MIGRATION_3_4
+import com.zacle.spendtrack.core.database.DatabaseMigrations.MIGRATION_4_5
 import com.zacle.spendtrack.core.database.STDatabase
 import com.zacle.spendtrack.core.database.dao.BudgetDao
 import com.zacle.spendtrack.core.database.dao.CategoryDao
@@ -32,7 +33,7 @@ internal object DatabaseModule {
         STDatabase::class.java,
         "spendtrack-database"
     )
-        .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
+        .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
         .build()
 
     @Provides

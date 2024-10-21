@@ -14,8 +14,9 @@ data class UserEntity(
     @ColumnInfo(name = "first_name") val firstName: String = "",
     @ColumnInfo(name = "last_name") val lastName: String = "",
     @ColumnInfo(name = "profile_picture_url") val profilePictureUrl: String? = null,
+    @ColumnInfo(name = "local_receipt_image_path") val localReceiptImagePath: String? = null,
     @ColumnInfo(name = "updated_at") val updatedAt: Instant? = null,
-    val synced: Boolean = true
+    val synced: Boolean = false
 )
 
 fun UserEntity.asExternalModel() = User(
@@ -25,6 +26,7 @@ fun UserEntity.asExternalModel() = User(
     firstName = firstName,
     lastName = lastName,
     profilePictureUrl = profilePictureUrl,
+    localReceiptImagePath = localReceiptImagePath,
     updatedAt = updatedAt,
     synced = synced
 )
@@ -36,6 +38,7 @@ fun User.asEntity() = UserEntity(
     firstName = firstName,
     lastName = lastName,
     profilePictureUrl = profilePictureUrl,
+    localReceiptImagePath = localReceiptImagePath,
     updatedAt = updatedAt,
     synced = synced
 )

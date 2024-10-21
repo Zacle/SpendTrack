@@ -185,16 +185,20 @@ class OfflineFirstExpenseRepository @Inject constructor(
 
     private suspend fun updateExpenseOnServer(expense: Expense) {
         var expenseToUpload = expense
+        val localReceiptImagePath = expense.localReceiptImagePath
+
         // If the expense has a local receipt image, upload it to cloud storage
-        if (expense.localReceiptImagePath != null) {
+        if (localReceiptImagePath != null) {
             // Upload the image to the cloud storage and get the cloud URL
             val cloudUrl = storageDataSource.uploadImageToCloud(
                 bucketName = "$EXPENSE_IMAGES/${expense.id}.jpg",
-                imagePath = expense.localReceiptImagePath!!
+                imagePath = localReceiptImagePath
             )
             // If the upload is successful, update the expense with the cloud receipt URL
             if (cloudUrl != null) {
                 expenseToUpload = expense.copy(receiptUrl = cloudUrl, localReceiptImagePath = null)
+                // Delete the local image file after uploading to avoid storage quota errors
+                imageStorageManager.deleteImageLocally(localReceiptImagePath)
             }
         }
         // Update the expense in the remote data source (e.g., Firebase)

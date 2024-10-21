@@ -1,6 +1,7 @@
 package com.zacle.spendtrack.core.domain.repository
 
 import com.zacle.spendtrack.core.model.User
+import com.zacle.spendtrack.core.model.util.Syncable
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
  * If the user is not connected to the internet, it schedules the sync through a WorkManager
  * to be saved later in the remote
  */
-interface UserRepository {
+interface UserRepository: Syncable {
     /**
      * Get the current logged in user
      */
@@ -21,15 +22,4 @@ interface UserRepository {
      * Update the current logged in user
      */
     suspend fun updateUser(user: User)
-
-    /**
-     * Create a new user
-     */
-    suspend fun insertUser(user: User)
-
-
-    /**
-     * Delete the current logged in user
-     */
-    suspend fun deleteUser(userId: String)
 }
