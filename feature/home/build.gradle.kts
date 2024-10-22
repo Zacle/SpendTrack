@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.sharedResources)
 
+    implementation(libs.coil.kt.compose)
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
 

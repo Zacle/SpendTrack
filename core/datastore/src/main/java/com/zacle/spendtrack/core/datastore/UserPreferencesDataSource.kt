@@ -26,7 +26,9 @@ data class UserPreferencesDataSource @Inject constructor(
                     -> ThemeAppearance.FOLLOW_SYSTEM
                     ThemeAppearanceProto.THEME_APPEARANCE_LIGHT -> ThemeAppearance.LIGHT
                     ThemeAppearanceProto.THEME_APPEARANCE_DARK -> ThemeAppearance.DARK
-                }
+                },
+                languageCode = it.languageCode,
+                currencyCode = it.currencyCode.ifEmpty { "USD" }
             )
         }
 
@@ -46,6 +48,22 @@ data class UserPreferencesDataSource @Inject constructor(
         userPreferences.updateData {
             it.copy {
                 this.shouldHideOnboarding = shouldHideOnboarding
+            }
+        }
+    }
+
+    suspend fun setLanguageCode(languageCode: String) {
+        userPreferences.updateData {
+            it.copy {
+                this.languageCode = languageCode
+            }
+        }
+    }
+
+    suspend fun setCurrencyCode(currencyCode: String) {
+        userPreferences.updateData {
+            it.copy {
+                this.currencyCode = currencyCode
             }
         }
     }

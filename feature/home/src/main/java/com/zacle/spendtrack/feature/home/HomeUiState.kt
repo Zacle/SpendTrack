@@ -1,5 +1,6 @@
 package com.zacle.spendtrack.feature.home
 
+import com.zacle.spendtrack.core.model.ImageData
 import com.zacle.spendtrack.core.model.Period
 import com.zacle.spendtrack.core.model.User
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
@@ -19,7 +20,8 @@ data class HomeUiState(
     val transactionPeriod: Period = selectedDate.toMonthlyPeriod(),
     val transactionPeriodType: TransactionPeriodType = TransactionPeriodType.MONTHLY,
     val isTransactionViewActive: Boolean = true,
-    val user: User? = null
+    val user: User? = null,
+    val profilePicture: ImageData? = null
 )
 
 enum class TransactionPeriodType {

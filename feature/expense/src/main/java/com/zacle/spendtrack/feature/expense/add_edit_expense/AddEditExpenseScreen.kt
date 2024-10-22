@@ -125,8 +125,7 @@ fun AddEditExpenseScreen(
     ) {
         if (stateHolder.isLoading) {
             Loading()
-        }
-        else {
+        } else {
             AddEditExpenseContent(
                 stateHolder = stateHolder,
                 onNameChanged = onNameChanged,

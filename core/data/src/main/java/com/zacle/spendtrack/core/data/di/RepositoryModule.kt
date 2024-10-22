@@ -173,12 +173,18 @@ object RepositoryModule {
     fun provideUserRepository(
         @LocalUserData localUserDataSource: UserDataSource,
         @RemoteUserData remoteUserDataSource: UserDataSource,
+        @ApplicationContext context: Context,
         authStateUserRepository: AuthStateUserRepository,
-        networkMonitor: NetworkMonitor
+        networkMonitor: NetworkMonitor,
+        storageDataSource: StorageDataSource,
+        imageStorageManager: ImageStorageManager
     ): UserRepository = OfflineFirstUserRepository(
         localUserDataSource = localUserDataSource,
         remoteUserDataSource = remoteUserDataSource,
         authStateUserRepository = authStateUserRepository,
-        networkMonitor = networkMonitor
+        networkMonitor = networkMonitor,
+        storageDataSource = storageDataSource,
+        imageStorageManager = imageStorageManager,
+        context = context
     )
 }

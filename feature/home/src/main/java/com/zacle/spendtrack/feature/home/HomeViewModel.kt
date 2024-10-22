@@ -1,8 +1,10 @@
 package com.zacle.spendtrack.feature.home
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.HomeUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
+import com.zacle.spendtrack.core.model.ImageData
 import com.zacle.spendtrack.core.model.usecase.Result
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
 import com.zacle.spendtrack.core.ui.BaseViewModel
@@ -33,7 +35,17 @@ class  HomeViewModel @Inject constructor(
                 if (result is Result.Success) {
                     val user = result.data.user
                     if (user != null) {
-                        _uiState.value = uiState.value.copy(user = user)
+                        _uiState.value = uiState.value.copy(
+                            user = user,
+                            profilePicture =
+                                when {
+                                    user.profilePictureUrl != null -> ImageData.UriImage(Uri.parse(user.profilePictureUrl))
+                                    user.localReceiptImagePath != null -> ImageData.LocalPathImage(
+                                        user.localReceiptImagePath!!
+                                    )
+                                    else -> null
+                                }
+                        )
                         submitAction(HomeUiAction.Load)
                     } else {
                         submitSingleEvent(HomeUiEvent.NavigateToLogin)

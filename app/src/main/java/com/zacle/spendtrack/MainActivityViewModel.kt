@@ -39,8 +39,8 @@ class MainActivityViewModel @Inject constructor(
             combine(
                 getUserDataAndAuthStateUseCase.execute(GetUserDataAndAuthStateUseCase.Request),
                 getCategoriesUseCase.execute(GetCategoriesUseCase.Request)
-            ) { userDataResponse, _ ->
-                converter.convert(userDataResponse)
+            ) { userDataAndAuthState, _ ->
+                converter.convert(userDataAndAuthState)
             }.collectLatest { state ->
                 submitState(state)
             }

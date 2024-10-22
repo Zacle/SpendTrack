@@ -17,4 +17,7 @@ message UserPreferences {
     int64 category_last_sync = 7;
 
     ThemeAppearanceProto theme_appearance = 8;
+
+    string language_code = 9;
+    string currency_code = 10;
 }

@@ -1,5 +1,7 @@
 package com.zacle.spendtrack.feature.home
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,13 +11,16 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +31,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
@@ -57,8 +67,10 @@ import com.zacle.spendtrack.core.designsystem.component.TransactionAmountCard
 import com.zacle.spendtrack.core.designsystem.component.TransactionCard
 import com.zacle.spendtrack.core.designsystem.component.TransactionDateFilterChip
 import com.zacle.spendtrack.core.designsystem.component.TransactionType
+import com.zacle.spendtrack.core.designsystem.component.noRippleEffect
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.model.ImageData
 import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
@@ -70,6 +82,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
+import java.io.File
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -156,7 +169,67 @@ fun HomeScreen(
                     )
                 },
                 navigationIcon = {
-                    // TODO("Add profile image and navigate to profile")
+                    val receiptUriImageData = homeUiStateHolder.profilePicture
+                    Surface(
+                        shape = CircleShape,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier
+                            .size(32.dp)
+                            .noRippleEffect {
+                                navigateToProfile()
+                            }
+                    ) {
+                        if (receiptUriImageData == null) {
+                            Image(
+                                painter = painterResource(R.drawable.profile),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(32.dp)
+                            )
+                        } else {
+                            when (receiptUriImageData) {
+                                is ImageData.UriImage -> {
+                                    val uri = receiptUriImageData.uri
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(uri)
+                                            .crossfade(true)
+                                            .build(),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                    )
+                                }
+                                is ImageData.BitmapImage -> {
+                                    val bitmap = receiptUriImageData.bitmap
+                                    Image(
+                                        bitmap = bitmap.asImageBitmap(),
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                    )
+                                }
+                                is ImageData.LocalPathImage -> {
+                                    val path = receiptUriImageData.path
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(File(path))
+                                            .crossfade(true)
+                                            .build(),
+                                        contentDescription = "Local Receipt Image",
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             )
         },
