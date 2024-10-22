@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,7 @@ import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackButton
 import com.zacle.spendtrack.core.designsystem.component.noRippleEffect
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.designsystem.util.getCurrencies
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
@@ -150,6 +152,7 @@ fun BudgetsScreen(
             } else {
                 BudgetsContent(
                     budgetsModel = budgetsModel,
+                    stateHolder = stateHolder,
                     onCreateBudgetPressed = onCreateBudgetPressed,
                     onBudgetPressed = onBudgetPressed,
                     isCurrentMonth = stateHolder.selectedMonth.month == currentMonth &&
@@ -164,11 +167,15 @@ fun BudgetsScreen(
 @Composable
 fun BudgetsContent(
     budgetsModel: BudgetsModel,
+    stateHolder: BudgetsUiState,
     isCurrentMonth: Boolean,
     onCreateBudgetPressed: () -> Unit,
     onBudgetPressed: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currencies = getCurrencies(LocalContext.current)
+    val currency = currencies.find { it.code == stateHolder.currencyCode }?.symbol ?: "$"
+
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -183,13 +190,17 @@ fun BudgetsContent(
                 .padding(16.dp)
         ) {
             item {
-                BudgetsContentHeader(budgetsModel = budgetsModel)
+                BudgetsContentHeader(
+                    budgetsModel = budgetsModel,
+                    currency = currency
+                )
             }
             items(budgetsModel.budgets, key = { it.budgetId }) { budget ->
                 BudgetCard(
                     budget = budget,
                     onClick = { onBudgetPressed(budget.budgetId) },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    currency = currency
                 )
             }
             if (isCurrentMonth) {
@@ -208,8 +219,10 @@ fun BudgetsContent(
 @Composable
 fun BudgetsContentHeader(
     budgetsModel: BudgetsModel,
+    currency: String,
     modifier: Modifier = Modifier
 ) {
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -219,13 +232,14 @@ fun BudgetsContentHeader(
         BudgetCircularIndicator(
             totalAmount = budgetsModel.totalBudget.toFloat(),
             remainingAmount = budgetsModel.remainingBudget.toFloat(),
+            currency = currency,
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = stringResource(R.string.planned_budget)
-                    + " $${budgetsModel.totalBudget.toInt()} " +
+                    + " ${budgetsModel.totalBudget.toInt()}$currency " +
                     stringResource(R.string.with) +
-                    " $${budgetsModel.remainingBudget.toInt()} "
+                    " ${budgetsModel.remainingBudget.toInt()}$currency "
                     + stringResource(R.string.budget_left),
             fontWeight = FontWeight.Medium,
             modifier = modifier
@@ -239,7 +253,8 @@ fun BudgetsContentHeader(
 fun BudgetsContentHeaderPreview() {
     SpendTrackTheme {
         BudgetsContentHeader(
-            budgetsModel = BudgetsModel(totalBudget = 3200.0, remainingBudget = 1200.0, budgets = emptyList())
+            budgetsModel = BudgetsModel(totalBudget = 3200.0, remainingBudget = 1200.0, budgets = emptyList()),
+            currency = "$"
         )
     }
 }

@@ -53,6 +53,7 @@ import com.zacle.spendtrack.core.designsystem.component.noRippleEffect
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
 import com.zacle.spendtrack.core.designsystem.util.CategoryKeyResource
+import com.zacle.spendtrack.core.designsystem.util.getCurrencies
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.model.Income
@@ -187,7 +188,11 @@ fun BudgetDetailContent(
     onIncomeClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currencies = getCurrencies(LocalContext.current)
+    val currencySymbol = currencies.find { it.code == stateHolder.currencyCode }?.symbol ?: "$"
+
     var showTransactions by remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -195,7 +200,8 @@ fun BudgetDetailContent(
     ) {
         item {
             BudgetDetailHeader(
-                budget = budgetDetailModel.budget
+                budget = budgetDetailModel.budget,
+                currencySymbol = currencySymbol
             )
         }
         item {
@@ -209,6 +215,7 @@ fun BudgetDetailContent(
             items(budgetDetailModel.transactions, key = { it.id }) { transaction ->
                 TransactionCard(
                     category = transaction.category,
+                    currencySymbol = currencySymbol,
                     transactionName = transaction.name,
                     amount = transaction.amount.toInt(),
                     transactionDate = transaction.transactionDate,
@@ -235,6 +242,7 @@ fun BudgetDetailContent(
 @Composable
 fun BudgetDetailHeader(
     budget: Budget,
+    currencySymbol: String,
     modifier: Modifier = Modifier
 ) {
     val color = Color(AndroidColor.parseColor(budget.category.color))
@@ -256,7 +264,7 @@ fun BudgetDetailHeader(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "$${if (isBudgetExceeded) 0 else budget.remainingAmount.toInt()}",
+            text = "${if (isBudgetExceeded) 0 else budget.remainingAmount.toInt()}$currencySymbol",
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold
         )
@@ -400,7 +408,8 @@ fun BudgetDetailHeardPreview() {
                 ),
                 amount = 1000.0,
                 remainingAmount = -500.0
-            )
+            ),
+            currencySymbol = "ƒ"
         )
     }
 }

@@ -2,6 +2,7 @@ package com.zacle.spendtrack.feature.budget.budgets
 
 import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.budget.GetBudgetsUseCase
+import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
 import com.zacle.spendtrack.core.model.usecase.Result
 import com.zacle.spendtrack.core.model.util.period.toMonthlyPeriod
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
@@ -24,6 +26,7 @@ import javax.inject.Inject
 class BudgetsViewModel @Inject constructor(
     private val getBudgetsUseCase: GetBudgetsUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getUserDataUseCase: GetUserDataUseCase,
     private val converter: BudgetsConverter
 ): BaseViewModel<BudgetsModel, UiState<BudgetsModel>, BudgetsUiAction, BudgetsUiEvent>() {
 
@@ -67,12 +70,22 @@ class BudgetsViewModel @Inject constructor(
         val userId = uiState.value.userId
         val period = uiState.value.selectedMonth.toInstant(TimeZone.currentSystemDefault()).toMonthlyPeriod()
         viewModelScope.launch {
-            getBudgetsUseCase.execute(
-                GetBudgetsUseCase.Request(
-                    userId = userId,
-                    budgetPeriod = period
-                )
-            ).collectLatest { result ->
+            combine(
+                getBudgetsUseCase.execute(
+                    GetBudgetsUseCase.Request(
+                        userId = userId,
+                        budgetPeriod = period
+                    )
+                ),
+                getUserDataUseCase.execute(GetUserDataUseCase.Request)
+            ) { budgetsResult, userDataResult ->
+                if (userDataResult is Result.Success) {
+                    _uiState.value = uiState.value.copy(
+                        currencyCode = userDataResult.data.userData.currencyCode
+                    )
+                }
+                budgetsResult
+            }.collectLatest { result ->
                 submitState(converter.convert(result))
             }
         }

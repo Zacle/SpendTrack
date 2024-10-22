@@ -2,6 +2,10 @@ package com.zacle.spendtrack.feature.expense.view_expense
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +36,7 @@ import com.zacle.spendtrack.core.model.Transaction
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiAction
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiEvent
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiState
@@ -117,12 +122,20 @@ internal fun ExpenseDetailScreen(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Color.Transparent
-    ) {
+    ) { innerPadding ->
+        // Get the bottom navigation bar insets (padding)
+        val bottomPadding = innerPadding.calculateBottomPadding().minus(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+        val contentPadding = Modifier.padding(
+            top = innerPadding.calculateTopPadding(),
+            bottom = bottomPadding
+        )
+
         CommonScreen(uiState) { transactionModel ->
             if (transactionModel.transaction == null) {
                 EmptyScreen(
                     message = stringResource(R.string.expense_not_found),
-                    description = stringResource(R.string.expense_not_found_description)
+                    description = stringResource(R.string.expense_not_found_description),
+                    modifier = contentPadding
                 )
             } else {
                 ExpenseDetailContent(
@@ -131,7 +144,8 @@ internal fun ExpenseDetailScreen(
                     onEditPressed = onEditPressed,
                     onDeleteDismissed = onDeleteDismissed,
                     onDeleteConfirmed = onDeleteConfirmed,
-                    onDismissTransactionDeletedDialog = onDismissTransactionDeletedDialog
+                    onDismissTransactionDeletedDialog = onDismissTransactionDeletedDialog,
+                    modifier = contentPadding
                 )
             }
         }
@@ -145,8 +159,11 @@ fun ExpenseDetailContent(
     onEditPressed: () -> Unit,
     onDeleteDismissed: () -> Unit,
     onDeleteConfirmed: (Transaction) -> Unit,
-    onDismissTransactionDeletedDialog: () -> Unit
+    onDismissTransactionDeletedDialog: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val currency = LocalCurrency.current
+
     val receiptUriImage =
         when {
             transaction.receiptUrl != null -> ImageData.UriImage(Uri.parse(transaction.receiptUrl))
@@ -166,7 +183,9 @@ fun ExpenseDetailContent(
         onEdit = onEditPressed,
         isTransactionDeleted = stateHolder.isTransactionDeleted,
         color = Color(0xFFEA6830),
-        contentColor = MaterialTheme.colorScheme.onErrorContainer
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        modifier = modifier,
+        currency = currency
     )
     if (stateHolder.shouldDisplayRemoveTransactionDialog) {
         RemoveTransactionModalSheet(

@@ -70,6 +70,7 @@ import com.zacle.spendtrack.core.model.util.SortOrder
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.ext.formatDate
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -229,6 +230,7 @@ fun TransactionContent(
                 TransactionCard(
                     category = transaction.category,
                     transactionName = transaction.name,
+                    currencySymbol = LocalCurrency.current,
                     amount = transaction.amount.toInt(),
                     transactionDate = transaction.transactionDate,
                     type = if (transaction is Income) TransactionType.INCOME else TransactionType.EXPENSE,

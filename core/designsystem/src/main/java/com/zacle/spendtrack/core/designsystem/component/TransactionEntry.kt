@@ -88,6 +88,7 @@ import android.graphics.Color as AndroidColor
 fun RecordTransaction(
     name: String,
     description: String,
+    currency: String,
     categories: List<Category>,
     selectedCategoryId: String,
     onAmountChanged: (Int) -> Unit,
@@ -118,7 +119,8 @@ fun RecordTransaction(
                 onAmountChanged = onAmountChanged,
                 amount = amount,
                 contentColor = contentColor,
-                title = stringResource(id = R.string.how_much)
+                title = stringResource(id = R.string.how_much),
+                currency = currency
             )
         }
         TransactionEntry(
@@ -144,6 +146,7 @@ fun RecordTransaction(
 @Composable
 fun TransactionEntryAmount(
     title: String,
+    currency: String,
     onAmountChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     amount: Int = 0,
@@ -170,7 +173,7 @@ fun TransactionEntryAmount(
                 .padding(start = 16.dp)
         ) {
             Text(
-                text = "$",
+                text = currency,
                 style = MaterialTheme.typography.displayMedium,
                 color = contentColor,
                 fontWeight = FontWeight.Bold
@@ -783,6 +786,7 @@ fun RecordTransactionPreview() {
             RecordTransaction(
                 name = "",
                 description = "",
+                currency = "$",
                 categories = emptyList(),
                 selectedCategoryId = "",
                 onCategorySelected = {},
@@ -811,6 +815,7 @@ fun RecordTransactionWithUriPreview() {
             RecordTransaction(
                 name = "",
                 description = "",
+                currency = "$",
                 categories = emptyList(),
                 selectedCategoryId = "",
                 onCategorySelected = {},

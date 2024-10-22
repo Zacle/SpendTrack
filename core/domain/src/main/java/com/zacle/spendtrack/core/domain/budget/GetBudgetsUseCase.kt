@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 
 class GetBudgetsUseCase(
     configuration: Configuration,
-    private val budgetRepository: BudgetRepository
+    private val budgetRepository: BudgetRepository,
 ): UseCase<GetBudgetsUseCase.Request, GetBudgetsUseCase.Response>(configuration) {
 
     override suspend fun process(request: Request): Flow<Response> =

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.cartesianLayerPadding
@@ -79,6 +80,7 @@ import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.ext.formatDate
 import ir.ehsannarmani.compose_charts.PieChart
 import ir.ehsannarmani.compose_charts.models.Pie
@@ -272,6 +274,7 @@ fun ReportContent(
                         TransactionCard(
                             category = transaction.category,
                             transactionName = transaction.name,
+                            currencySymbol = LocalCurrency.current,
                             amount = transaction.amount.toInt(),
                             transactionDate = transaction.transactionDate,
                             type = TransactionType.EXPENSE,
@@ -294,6 +297,7 @@ fun ReportContent(
                             category = transaction.category,
                             transactionName = transaction.name,
                             amount = transaction.amount.toInt(),
+                            currencySymbol = LocalCurrency.current,
                             transactionDate = transaction.transactionDate,
                             type = TransactionType.INCOME,
                             onClick = { navigateToIncome(transaction.id) },
@@ -413,7 +417,14 @@ fun LineChart(
                             )
                         )
                 ),
-                startAxis = VerticalAxis.rememberStart(),
+                startAxis = VerticalAxis.rememberStart(
+                    line = rememberLineComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                ),
                 bottomAxis =
                     HorizontalAxis.rememberBottom(
                         valueFormatter = bottomAxisValueFormatter(selectedMonth),
@@ -421,6 +432,12 @@ fun LineChart(
                         remember {
                             HorizontalAxis.ItemPlacer.aligned(spacing = 3, addExtremeLabelPadding = true)
                         },
+                        line = rememberLineComponent(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
+                        label = rememberAxisLabelComponent(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
                 ,
                 layerPadding =
@@ -452,7 +469,14 @@ fun ColumnChart(
                         )
                     )
                 ),
-                startAxis = VerticalAxis.rememberStart(),
+                startAxis = VerticalAxis.rememberStart(
+                    line = rememberLineComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                ),
                 bottomAxis =
                     HorizontalAxis.rememberBottom(
                         valueFormatter = bottomAxisValueFormatter(selectedMonth),
@@ -460,6 +484,12 @@ fun ColumnChart(
                         remember {
                             HorizontalAxis.ItemPlacer.aligned(spacing = 3, addExtremeLabelPadding = true)
                         },
+                        line = rememberLineComponent(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
+                        label = rememberAxisLabelComponent(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
                 ,
             )
@@ -669,6 +699,7 @@ fun RecordCategoryCard(
     recordTransactionType: RecordTransactionType,
     modifier: Modifier = Modifier
 ) {
+    val currency = LocalCurrency.current
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -703,7 +734,7 @@ fun RecordCategoryCard(
             }
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "${if (recordTransactionType == RecordTransactionType.EXPENSE) "-" else "+"}$$amount",
+                text = "${if (recordTransactionType == RecordTransactionType.EXPENSE) "-" else "+"}$amount$currency",
                 style = MaterialTheme.typography.bodyMedium,
                 color =
                     if (recordTransactionType == RecordTransactionType.EXPENSE)

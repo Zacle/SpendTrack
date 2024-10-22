@@ -25,6 +25,7 @@ import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.model.ImageData
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.Loading
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiAction
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiEvent
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiState
@@ -168,6 +169,7 @@ fun AddEditIncomeContent(
         onAttachmentSelected = onAttachmentSelected,
         onTransactionSaved = onExpenseSaved,
         isUploading = stateHolder.isUploading,
-        modifier = modifier
+        modifier = modifier,
+        currency = LocalCurrency.current
     )
 }

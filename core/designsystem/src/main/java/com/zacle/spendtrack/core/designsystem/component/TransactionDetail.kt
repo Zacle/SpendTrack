@@ -57,6 +57,7 @@ fun TransactionDetailScreen(
     type: String,
     key: String,
     description: String,
+    currency: String,
     receiptUriImage: ImageData?,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -87,7 +88,8 @@ fun TransactionDetailScreen(
                     name = name,
                     date = date,
                     color = color,
-                    contentColor = contentColor
+                    contentColor = contentColor,
+                    currency = currency
                 )
             }
             Spacer(modifier = Modifier.height(30.dp))
@@ -116,6 +118,7 @@ fun TransactionDetailTopScreen(
     amount: Int,
     name: String,
     date: Instant,
+    currency: String,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = MaterialTheme.colorScheme.onSurface
@@ -133,7 +136,7 @@ fun TransactionDetailTopScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "$$amount",
+                text = "$amount$currency",
                 style = MaterialTheme.typography.displayMedium,
                 color = contentColor,
                 fontWeight = FontWeight.Bold
@@ -413,7 +416,8 @@ fun TransactionDetailScreenPreview() {
             receiptUriImage = null,
             onEdit = {},
             color = MaterialTheme.colorScheme.tertiaryContainer,
-            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            currency = "$"
         )
     }
 }

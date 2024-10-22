@@ -24,6 +24,7 @@ import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.model.ImageData
 import com.zacle.spendtrack.core.ui.Loading
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiAction
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiEvent
 import com.zacle.spendtrack.core.ui.transaction.TransactionUiState
@@ -152,6 +153,8 @@ fun AddEditExpenseContent(
     onExpenseSaved: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currency = LocalCurrency.current
+
     RecordTransaction(
         name = stateHolder.name,
         description = stateHolder.description,
@@ -168,6 +171,7 @@ fun AddEditExpenseContent(
         onAttachmentSelected = onAttachmentSelected,
         onTransactionSaved = onExpenseSaved,
         isUploading = stateHolder.isUploading,
-        modifier = modifier
+        modifier = modifier,
+        currency = currency,
     )
 }

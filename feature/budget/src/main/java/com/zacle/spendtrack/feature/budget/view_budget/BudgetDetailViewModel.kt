@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.budget.DeleteBudgetUseCase
 import com.zacle.spendtrack.core.domain.budget.GetBudgetDetailsUseCase
 import com.zacle.spendtrack.core.domain.budget.GetBudgetUseCase
+import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.usecase.Result
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +29,7 @@ class BudgetDetailViewModel @Inject constructor(
     private val getBudgetDetailsUseCase: GetBudgetDetailsUseCase,
     private val deleteBudgetUseCase: DeleteBudgetUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val getUserDataUseCase: GetUserDataUseCase,
     private val converter: BudgetDetailConverter,
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<BudgetDetailModel, UiState<BudgetDetailModel>, BudgetDetailUiAction, BudgetDetailUiEvent>() {
@@ -90,14 +93,24 @@ class BudgetDetailViewModel @Inject constructor(
         if (budgetResult is Result.Success) {
             val budget = budgetResult.data.budget
             if (budget != null) {
-                getBudgetDetailsUseCase.execute(
-                    GetBudgetDetailsUseCase.Request(
-                        userId = userId,
-                        budgetId = budgetId,
-                        categoryId = budget.category.categoryId,
-                        budgetPeriod = budget.budgetPeriod.toMonthlyPeriod()
-                    )
-                ).collectLatest {
+                combine(
+                    getBudgetDetailsUseCase.execute(
+                        GetBudgetDetailsUseCase.Request(
+                            userId = userId,
+                            budgetId = budgetId,
+                            categoryId = budget.category.categoryId,
+                            budgetPeriod = budget.budgetPeriod.toMonthlyPeriod()
+                        )
+                    ),
+                    getUserDataUseCase.execute(GetUserDataUseCase.Request)
+                ) { budgetDetailsResult, userDataResult ->
+                    if (userDataResult is Result.Success) {
+                        _uiState.value = uiState.value.copy(
+                            currencyCode = userDataResult.data.userData.currencyCode
+                        )
+                    }
+                    budgetDetailsResult
+                }.collectLatest {
                     submitState(converter.convert(it))
                 }
             }

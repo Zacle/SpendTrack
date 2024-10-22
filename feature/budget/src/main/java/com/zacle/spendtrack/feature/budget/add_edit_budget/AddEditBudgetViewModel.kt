@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zacle.spendtrack.core.domain.budget.AddBudgetUseCase
 import com.zacle.spendtrack.core.domain.budget.GetBudgetUseCase
 import com.zacle.spendtrack.core.domain.category.GetCategoriesUseCase
+import com.zacle.spendtrack.core.domain.datastore.GetUserDataUseCase
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
 import com.zacle.spendtrack.core.model.Budget
 import com.zacle.spendtrack.core.model.Category
@@ -29,6 +30,7 @@ class AddEditBudgetViewModel @Inject constructor(
     private val getBudgetUseCase: GetBudgetUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getUserDataUseCase: GetUserDataUseCase,
     savedStateHandle: SavedStateHandle
 ): BaseViewModel<Unit, UiState<Unit>, AddEditBudgetUiAction, AddEditBudgetUiEvent>() {
     private val budgetId: String? = savedStateHandle[BUDGET_ID_ARG]
@@ -45,6 +47,7 @@ class AddEditBudgetViewModel @Inject constructor(
             if (budgetId != null) {
                 getBudget(budgetId, userId)
             }
+            getCurrency()
             getCategories()
         }
     }
@@ -166,6 +169,14 @@ class AddEditBudgetViewModel @Inject constructor(
                 val categories = result.data.categories
                 _uiState.value = uiState.value.copy(categories = categories)
             }
+        }
+    }
+
+    private suspend fun getCurrency() {
+        val currencyResult = getUserDataUseCase.execute(GetUserDataUseCase.Request).first()
+        if (currencyResult is Result.Success) {
+            val currencyCode = currencyResult.data.userData.currencyCode
+            _uiState.value = uiState.value.copy(currencyCode = currencyCode)
         }
     }
 

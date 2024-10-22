@@ -7,6 +7,7 @@ data class AddEditBudgetUiState(
     val userId: String = "",
     val budgetId: String? = null,
     val amount: Int = 0,
+    val currencyCode: String = "USD",
     val categories: List<Category> = emptyList(),
     val selectedCategory: Category = Category(),
     val recurrent: Boolean = false,

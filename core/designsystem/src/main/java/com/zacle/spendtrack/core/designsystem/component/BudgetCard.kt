@@ -42,6 +42,7 @@ import com.zacle.spendtrack.core.shared_resources.R
 @Composable
 fun BudgetCard(
     budget: Budget,
+    currency: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -98,7 +99,7 @@ fun BudgetCard(
                 if (isBudgetExceeded) 0
                 else budget.remainingAmount.toInt()
             Text(
-                text = stringResource(id = R.string.remaining) + " $$remainingAmount",
+                text = stringResource(id = R.string.remaining) + " $remainingAmount$currency",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -112,7 +113,7 @@ fun BudgetCard(
                     .padding(horizontal = 4.dp)
             )
             Text(
-                text = "$$totalExpense " + stringResource(id = R.string.of) + " $${budget.amount.toInt()}",
+                text = "$totalExpense$currency " + stringResource(id = R.string.of) + " ${budget.amount.toInt()}$currency",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
             )
@@ -216,7 +217,8 @@ fun BudgetCardPreview() {
                 remainingAmount = 500.0
             ),
             onClick = {  },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            currency = "$"
         )
     }
 }
@@ -237,7 +239,8 @@ fun BudgetCardExceedPreview() {
                 remainingAmount = -200.0
             ),
             onClick = {  },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            currency = "лв"
         )
     }
 }

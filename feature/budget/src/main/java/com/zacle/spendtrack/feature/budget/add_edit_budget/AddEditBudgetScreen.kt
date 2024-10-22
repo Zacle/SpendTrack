@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.noRippleEffect
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
+import com.zacle.spendtrack.core.designsystem.util.getCurrencies
 import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.feature.budget.CreateBudgetContent
@@ -128,8 +129,13 @@ fun AddEditBudgetContent(
     onSaveBudget: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currencies = getCurrencies(LocalContext.current)
+
+    val currency = currencies.find { it.code == stateHolder.currencyCode }?.symbol ?: "$"
+
     CreateBudgetContent(
         amount = stateHolder.amount,
+        currency = currency,
         categories = stateHolder.categories,
         selectedCategoryId = stateHolder.selectedCategory.categoryId,
         receiveAlert = stateHolder.budgetAlert,

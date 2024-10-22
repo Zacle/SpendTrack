@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.kotlinx.datetime)
     implementation(libs.timber)
+    implementation(libs.androidx.appcompat)
 
     ksp(libs.hilt.compiler)
 

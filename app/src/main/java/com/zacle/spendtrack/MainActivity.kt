@@ -1,18 +1,26 @@
 package com.zacle.spendtrack
 
+import android.app.LocaleManager
+import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,7 +29,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.zacle.spendtrack.core.common.util.NetworkMonitor
 import com.zacle.spendtrack.core.common.util.TimeZoneMonitor
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
+import com.zacle.spendtrack.core.designsystem.util.getCurrencies
+import com.zacle.spendtrack.core.model.ThemeAppearance
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.composition_local.LocalTimeZone
 import com.zacle.spendtrack.data.UserStateModel
 import com.zacle.spendtrack.ui.STApp
@@ -70,8 +81,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            // TODO: Let users choose from the settings
-            val darkTheme = isSystemInDarkTheme()
+            val darkTheme =
+                when (uiState) {
+                    UiState.Loading -> isSystemInDarkTheme()
+                    is UiState.Error -> isSystemInDarkTheme()
+                    is UiState.Success -> {
+                        val themeAppearance = (uiState as UiState.Success<UserStateModel>).data.userData.themeAppearance
+                        val isDarkTheme =
+                            when (themeAppearance) {
+                                ThemeAppearance.FOLLOW_SYSTEM -> isSystemInDarkTheme()
+                                ThemeAppearance.LIGHT -> false
+                                ThemeAppearance.DARK -> true
+                            }
+                        isDarkTheme
+                    }
+                }
 
             // Update the edge to edge configuration to match the theme
             // This is the same parameters as the default enableEdgeToEdge call, but we manually
@@ -102,15 +126,39 @@ class MainActivity : ComponentActivity() {
                 LocalTimeZone provides currentTimeZone
             ) {
                 if (uiState is UiState.Success) {
-                    SpendTrackTheme(darkTheme = darkTheme) {
-                        STApp(
-                            appState = appState,
-                            userStateModel = (uiState as UiState.Success<UserStateModel>).data
-                        )
+                    val currencyCode = (uiState as UiState.Success<UserStateModel>).data.userData.currencyCode
+                    val currencies = getCurrencies(this)
+                    val currency = currencies.find { it.code == currencyCode }?.symbol ?: "$"
+
+                    val languageCode = (uiState as UiState.Success<UserStateModel>).data.userData.languageCode
+
+                    val context = LocalContext.current
+                    LaunchedEffect(languageCode) {
+                        setLanguage(context, languageCode)
+                    }
+
+                    CompositionLocalProvider(
+                        LocalCurrency provides currency
+                    ) {
+                        SpendTrackTheme(darkTheme = darkTheme) {
+                            STApp(
+                                appState = appState,
+                                userStateModel = (uiState as UiState.Success<UserStateModel>).data
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+fun setLanguage(context: Context, languageCode: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.getSystemService(LocaleManager::class.java)
+            .applicationLocales = LocaleList.forLanguageTags(languageCode)
+    } else {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
     }
 }
 

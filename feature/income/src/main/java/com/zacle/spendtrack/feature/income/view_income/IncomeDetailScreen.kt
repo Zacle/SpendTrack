@@ -32,6 +32,7 @@ import com.zacle.spendtrack.core.model.Transaction
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiAction
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiEvent
 import com.zacle.spendtrack.core.ui.transaction.TransactionDetailUiState
@@ -166,7 +167,8 @@ fun IncomeDetailContent(
         onEdit = onEditPressed,
         isTransactionDeleted = stateHolder.isTransactionDeleted,
         color = Color(0xFFF3CC42),
-        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        currency = LocalCurrency.current
     )
     if (stateHolder.shouldDisplayRemoveTransactionDialog) {
         RemoveTransactionModalSheet(

@@ -45,6 +45,7 @@ enum class TransactionType {
 @Composable
 fun TransactionCard(
     category: Category,
+    currencySymbol: String,
     transactionName: String,
     amount: Int,
     transactionDate: Instant,
@@ -110,14 +111,14 @@ fun TransactionCard(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1f)
             ) {
-                val amountText = if (type == TransactionType.INCOME) "+$$amount" else "-$$amount"
+                val amountText = if (type == TransactionType.INCOME) "+$amount" else "-$amount"
                 val amountColor =
                     if (type == TransactionType.INCOME)
                         MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.error
                 Text(
-                    text = amountText,
+                    text = amountText + currencySymbol,
                     style = MaterialTheme.typography.bodySmall,
                     color = amountColor
                 )
@@ -193,7 +194,8 @@ fun TransactionCardPreview() {
             amount = 75,
             transactionDate = Clock.System.now().minus(4.days),
             type = TransactionType.EXPENSE,
-            onClick = {}
+            onClick = {},
+            currencySymbol = ".د.ب"
         )
     }
 }

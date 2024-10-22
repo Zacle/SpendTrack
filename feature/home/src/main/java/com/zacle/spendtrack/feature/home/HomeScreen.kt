@@ -44,12 +44,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.cartesianLayerPadding
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
 import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
@@ -75,6 +77,7 @@ import com.zacle.spendtrack.core.model.Income
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import com.zacle.spendtrack.core.ui.ext.formatDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -362,7 +365,8 @@ fun HomeList(
                             if (transaction is Income) navigateToIncome(transaction.id)
                             else navigateToExpense(transaction.id)
                         },
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        currencySymbol = LocalCurrency.current
                     )
                 }
             }
@@ -378,6 +382,7 @@ fun HomeList(
                 items(homeModel.budgets.take(3), key = { it.budgetId }) { budget ->
                     BudgetCard(
                         budget = budget,
+                        currency = LocalCurrency.current,
                         onClick = {
                             navigateToBudgetDetails(budget.budgetId)
                         },
@@ -477,7 +482,14 @@ fun HomeReportChart(
                     )
                 )
             ),
-            startAxis = VerticalAxis.rememberStart(),
+            startAxis = VerticalAxis.rememberStart(
+                line = rememberLineComponent(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                label = rememberAxisLabelComponent(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            ),
             bottomAxis =
             HorizontalAxis.rememberBottom(
                 valueFormatter = bottomAxisValueFormatter(selectedMonth),
@@ -485,6 +497,12 @@ fun HomeReportChart(
                 remember {
                     HorizontalAxis.ItemPlacer.aligned(spacing = 3, addExtremeLabelPadding = true)
                 },
+                line = rememberLineComponent(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                label = rememberAxisLabelComponent(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
             ,
             layerPadding =

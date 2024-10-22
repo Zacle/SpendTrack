@@ -97,6 +97,7 @@ fun EmptyBudgetScreen(
 @Composable
 fun CreateBudgetContent(
     amount: Int,
+    currency: String,
     categories: List<Category>,
     selectedCategoryId: String,
     receiveAlert: Boolean,
@@ -125,7 +126,8 @@ fun CreateBudgetContent(
                 onAmountChanged = onAmountChanged,
                 amount = amount,
                 title = stringResource(R.string.budget_amount),
-                contentColor = contentColor
+                contentColor = contentColor,
+                currency = currency
             )
         }
         BudgetEntry(
@@ -247,9 +249,10 @@ fun BudgetEntry(
 fun BudgetCircularIndicator(
     totalAmount: Float,
     remainingAmount: Float,
+    currency: String,
     modifier: Modifier = Modifier,
-    indicatorSize: Dp = 130.dp,
-    strokeWidth: Dp = 15.dp,
+    indicatorSize: Dp = 150.dp,
+    strokeWidth: Dp = 12.dp,
     backgroundIndicatorColor: Color = Color.LightGray,
     progressGradientColors: List<Color> = listOf(
         MaterialTheme.colorScheme.primary, Color(0xFF71AA13)
@@ -312,7 +315,7 @@ fun BudgetCircularIndicator(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "$${amountSpent.toInt()}",
+                text = "${amountSpent.toInt()}$currency",
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium,
@@ -343,6 +346,7 @@ fun CreateBudgetContentPreview() {
     SpendTrackTheme {
         CreateBudgetContent(
             amount = 0,
+            currency = "$",
             categories = emptyList(),
             selectedCategoryId = "",
             receiveAlert = true,
@@ -365,7 +369,8 @@ fun BudgetCircularIndicatorPreview(modifier: Modifier = Modifier) {
         BudgetCircularIndicator(
             totalAmount = 3200f,
             remainingAmount = 2000f,
-            modifier = modifier
+            modifier = modifier,
+            currency = "$"
         )
     }
 }

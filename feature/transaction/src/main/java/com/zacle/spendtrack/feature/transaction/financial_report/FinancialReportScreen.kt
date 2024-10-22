@@ -53,6 +53,7 @@ import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.shared_resources.R
 import com.zacle.spendtrack.core.ui.CommonScreen
 import com.zacle.spendtrack.core.ui.UiState
+import com.zacle.spendtrack.core.ui.composition_local.LocalCurrency
 import kotlinx.datetime.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
@@ -225,6 +226,7 @@ fun TransactionFinancialReportContent(
     category: Category,
     modifier: Modifier = Modifier
 ) {
+    val currency = LocalCurrency.current
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -242,7 +244,7 @@ fun TransactionFinancialReportContent(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "$$amount",
+                text = "$amount$currency",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -252,6 +254,7 @@ fun TransactionFinancialReportContent(
             amount = amount,
             text = highlightText,
             category = category,
+            currency = currency,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
         )
@@ -434,6 +437,7 @@ fun Indicator(
 fun FinancialReportHighlight(
     amount: Int,
     text: String,
+    currency: String,
     category: Category,
     modifier: Modifier = Modifier
 ) {
@@ -500,7 +504,7 @@ fun FinancialReportHighlight(
                 }
             }
             Text(
-                text = "$ $amount",
+                text = "$amount$currency",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center

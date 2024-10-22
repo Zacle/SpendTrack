@@ -7,5 +7,6 @@ import kotlinx.datetime.toLocalDateTime
 
 data class BudgetsUiState(
     val userId: String = "",
-    val selectedMonth: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    val selectedMonth: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+    val currencyCode: String = ""
 )
