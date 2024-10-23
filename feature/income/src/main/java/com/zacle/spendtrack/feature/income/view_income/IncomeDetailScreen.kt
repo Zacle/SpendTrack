@@ -146,7 +146,8 @@ fun IncomeDetailContent(
     onEditPressed: () -> Unit,
     onDeleteDismissed: () -> Unit,
     onDeleteConfirmed: (Transaction) -> Unit,
-    onDismissTransactionDeletedDialog: () -> Unit
+    onDismissTransactionDeletedDialog: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val receiptUriImage =
         when {
@@ -168,7 +169,8 @@ fun IncomeDetailContent(
         isTransactionDeleted = stateHolder.isTransactionDeleted,
         color = Color(0xFFF3CC42),
         contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-        currency = LocalCurrency.current
+        currency = LocalCurrency.current,
+        modifier = modifier
     )
     if (stateHolder.shouldDisplayRemoveTransactionDialog) {
         RemoveTransactionModalSheet(

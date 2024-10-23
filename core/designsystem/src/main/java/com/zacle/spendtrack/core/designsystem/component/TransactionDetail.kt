@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -75,12 +76,13 @@ fun TransactionDetailScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(fraction = 0.3f)
+                    .fillMaxHeight(fraction = 0.35f)
                     .fillMaxWidth()
                     .background(
                         color = color,
                         shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
-                    ),
+                    )
+                    .statusBarsPadding(),
                 contentAlignment = Alignment.Center
             ) {
                 TransactionDetailTopScreen(
@@ -89,7 +91,8 @@ fun TransactionDetailScreen(
                     date = date,
                     color = color,
                     contentColor = contentColor,
-                    currency = currency
+                    currency = currency,
+                    modifier = Modifier
                 )
             }
             Spacer(modifier = Modifier.height(30.dp))
@@ -108,7 +111,7 @@ fun TransactionDetailScreen(
             key = key,
             modifier = Modifier
                 .align(Alignment.Center)
-                .offset(y = (-160).dp)
+                .offset(y = (-120).dp)
         )
     }
 }
@@ -137,13 +140,13 @@ fun TransactionDetailTopScreen(
         ) {
             Text(
                 text = "$amount$currency",
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displaySmall,
                 color = contentColor,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = contentColor,
                 fontWeight = FontWeight.Medium
             )
@@ -155,7 +158,6 @@ fun TransactionDetailTopScreen(
                 style = MaterialTheme.typography.titleSmall,
                 color = contentColor,
             )
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

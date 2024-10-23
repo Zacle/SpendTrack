@@ -2,10 +2,6 @@ package com.zacle.spendtrack.feature.expense.view_expense
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -122,20 +118,12 @@ internal fun ExpenseDetailScreen(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = Color.Transparent
-    ) { innerPadding ->
-        // Get the bottom navigation bar insets (padding)
-        val bottomPadding = innerPadding.calculateBottomPadding().minus(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
-        val contentPadding = Modifier.padding(
-            top = innerPadding.calculateTopPadding(),
-            bottom = bottomPadding
-        )
-
+    ) {
         CommonScreen(uiState) { transactionModel ->
             if (transactionModel.transaction == null) {
                 EmptyScreen(
                     message = stringResource(R.string.expense_not_found),
                     description = stringResource(R.string.expense_not_found_description),
-                    modifier = contentPadding
                 )
             } else {
                 ExpenseDetailContent(
@@ -145,7 +133,6 @@ internal fun ExpenseDetailScreen(
                     onDeleteDismissed = onDeleteDismissed,
                     onDeleteConfirmed = onDeleteConfirmed,
                     onDismissTransactionDeletedDialog = onDismissTransactionDeletedDialog,
-                    modifier = contentPadding
                 )
             }
         }
