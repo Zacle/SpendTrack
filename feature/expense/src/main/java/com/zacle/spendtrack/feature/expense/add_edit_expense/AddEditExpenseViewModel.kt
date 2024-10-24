@@ -168,7 +168,7 @@ class AddEditExpenseViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(isUploading = true)
 
         val expense = expense.value
-        var didImageChange = false
+        val didImageChange: Boolean
         if (uiState.value.receiptImage != null) {
             val imageData = uiState.value.receiptImage
             didImageChange = when (imageData) {

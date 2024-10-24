@@ -94,7 +94,7 @@ class ProfileViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isSaving = true)
 
         val user = _uiState.value.user
-        var didProfilePictureChange = false
+        val didProfilePictureChange: Boolean
         if (_uiState.value.profileImage != null) {
             val imageData = _uiState.value.profileImage
             didProfilePictureChange = when (imageData) {

@@ -204,7 +204,7 @@ class AddEditIncomeViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(isUploading = true)
 
         val income = income.value
-        var didImageChange = false
+        val didImageChange: Boolean
         if (uiState.value.receiptImage != null) {
             val imageData = uiState.value.receiptImage
             didImageChange = when (imageData) {
