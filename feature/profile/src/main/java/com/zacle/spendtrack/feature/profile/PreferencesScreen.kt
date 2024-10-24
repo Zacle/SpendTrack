@@ -213,7 +213,7 @@ fun PreferencesContent(
         ) {
             PreferencesHeader(
                 userName = userName,
-                receiptUriImageData = receiptUriImageData,
+                profileUriImageData = receiptUriImageData,
                 onEditProfileClick = onEditProfileClick
             )
         }
@@ -232,7 +232,7 @@ fun PreferencesContent(
 @Composable
 fun PreferencesHeader(
     userName: String,
-    receiptUriImageData: ImageData?,
+    profileUriImageData: ImageData?,
     onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -251,7 +251,7 @@ fun PreferencesHeader(
             modifier = Modifier
                 .size(80.dp)
         ) {
-            if (receiptUriImageData == null) {
+            if (profileUriImageData == null) {
                 Image(
                     painter = painterResource(R.drawable.profile),
                     contentDescription = null,
@@ -260,9 +260,9 @@ fun PreferencesHeader(
                         .size(80.dp)
                 )
             } else {
-                when (receiptUriImageData) {
+                when (profileUriImageData) {
                     is ImageData.UriImage -> {
-                        val uri = receiptUriImageData.uri
+                        val uri = profileUriImageData.uri
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(uri)
@@ -275,7 +275,7 @@ fun PreferencesHeader(
                         )
                     }
                     is ImageData.BitmapImage -> {
-                        val bitmap = receiptUriImageData.bitmap
+                        val bitmap = profileUriImageData.bitmap
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             contentDescription = null,
@@ -285,7 +285,7 @@ fun PreferencesHeader(
                         )
                     }
                     is ImageData.LocalPathImage -> {
-                        val path = receiptUriImageData.path
+                        val path = profileUriImageData.path
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(File(path))

@@ -40,8 +40,8 @@ class  HomeViewModel @Inject constructor(
                             profilePicture =
                                 when {
                                     user.profilePictureUrl != null -> ImageData.UriImage(Uri.parse(user.profilePictureUrl))
-                                    user.localReceiptImagePath != null -> ImageData.LocalPathImage(
-                                        user.localReceiptImagePath!!
+                                    user.localProfilePictureUrl != null -> ImageData.LocalPathImage(
+                                        user.localProfilePictureUrl!!
                                     )
                                     else -> null
                                 }

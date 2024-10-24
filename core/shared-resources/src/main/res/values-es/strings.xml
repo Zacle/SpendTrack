@@ -172,6 +172,9 @@
     <string name="currency">Moneda</string>
     <string name="theme">Tema</string>
     <string name="logout">Cerrar Sesión</string>
+    <string name="change_profile">Cambiar foto de perfil</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="remove_profile">Eliminar foto de perfil</string>
 
     <!-- Register module -->
     <string name="registration_failed">

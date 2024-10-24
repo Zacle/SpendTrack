@@ -87,13 +87,13 @@ class AddEditIncomeViewModel @Inject constructor(
                     selectedCategory = income.category,
                     transactionDate = income.transactionDate,
                     receiptImage =
-                    when {
-                        income.receiptUrl != null -> ImageData.UriImage(Uri.parse(income.receiptUrl))
-                        income.localReceiptImagePath != null -> ImageData.LocalPathImage(
-                            income.localReceiptImagePath!!
-                        )
-                        else -> null
-                    }
+                        when {
+                            income.receiptUrl != null -> ImageData.UriImage(Uri.parse(income.receiptUrl))
+                            income.localReceiptImagePath != null -> ImageData.LocalPathImage(
+                                income.localReceiptImagePath!!
+                            )
+                            else -> null
+                        }
                 )
             }
         }
@@ -212,6 +212,8 @@ class AddEditIncomeViewModel @Inject constructor(
                 is ImageData.LocalPathImage -> imageData.path != income?.localReceiptImagePath
                 else -> true
             }
+        } else {
+            didImageChange = true
         }
 
         var localReceiptImagePath: String? = income?.localReceiptImagePath

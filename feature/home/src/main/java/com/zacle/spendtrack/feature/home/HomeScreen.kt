@@ -165,11 +165,7 @@ fun HomeScreen(
                     )
                 },
                 actionIcon = {
-                    Icon(
-                        imageVector = SpendTrackIcons.notification,
-                        contentDescription = stringResource(id = R.string.notifications),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+
                 },
                 navigationIcon = {
                     val receiptUriImageData = homeUiStateHolder.profilePicture
@@ -518,12 +514,16 @@ fun HomeReportChart(
 private val dateFormatter = DateTimeFormatter.ofPattern("MMM d")
 
 private fun bottomAxisValueFormatter(selectedMonth: Instant) = CartesianValueFormatter { _, x, _ ->
-    val startDate = selectedMonth
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .toJavaLocalDateTime()
-        .withDayOfMonth(x.toInt())
+    try {
+        val startDate = selectedMonth
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .toJavaLocalDateTime()
+            .withDayOfMonth(x.toInt())
 
-    startDate.format(dateFormatter)
+        startDate.format(dateFormatter)
+    } catch (e: Exception) {
+        ""
+    }
 }
 
 @Composable

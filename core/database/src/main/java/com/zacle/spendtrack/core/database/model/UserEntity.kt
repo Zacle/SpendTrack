@@ -26,7 +26,7 @@ fun UserEntity.asExternalModel() = User(
     firstName = firstName,
     lastName = lastName,
     profilePictureUrl = profilePictureUrl,
-    localReceiptImagePath = localReceiptImagePath,
+    localProfilePictureUrl = localReceiptImagePath,
     updatedAt = updatedAt,
     synced = synced
 )
@@ -38,7 +38,7 @@ fun User.asEntity() = UserEntity(
     firstName = firstName,
     lastName = lastName,
     profilePictureUrl = profilePictureUrl,
-    localReceiptImagePath = localReceiptImagePath,
+    localReceiptImagePath = localProfilePictureUrl,
     updatedAt = updatedAt,
     synced = synced
 )

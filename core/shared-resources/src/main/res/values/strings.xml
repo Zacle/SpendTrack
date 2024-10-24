@@ -240,6 +240,9 @@
     <string name="currency">Currency</string>
     <string name="theme">Theme</string>
     <string name="logout">Log Out</string>
+    <string name="change_profile">Change Profile Picture</string>
+    <string name="remove_profile">Remove Profile Picture</string>
+    <string name="edit_profile">Edit Profile</string>
 
     <!-- Register module -->
     <string name="registration_failed">Registration failed. Try again</string>

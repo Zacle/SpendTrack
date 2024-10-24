@@ -176,6 +176,8 @@ class AddEditExpenseViewModel @Inject constructor(
                 is ImageData.LocalPathImage -> imageData.path != expense?.localReceiptImagePath
                 else -> true
             }
+        } else {
+            didImageChange = true
         }
 
         var localReceiptImagePath: String? = expense?.localReceiptImagePath

@@ -94,7 +94,7 @@ class OfflineFirstUserRepository @Inject constructor(
 
     private suspend fun updateUserOnServer(user: User) {
         var userToUpload = user
-        val localReceiptImagePath = user.localReceiptImagePath
+        val localReceiptImagePath = user.localProfilePictureUrl
 
         // If the user has a local receipt image, upload it to cloud storage
         if (localReceiptImagePath != null) {
@@ -105,7 +105,7 @@ class OfflineFirstUserRepository @Inject constructor(
             )
             // If the upload is successful, update the user with the cloud receipt URL
             if (cloudUrl != null) {
-                userToUpload = user.copy(profilePictureUrl = cloudUrl, localReceiptImagePath = null)
+                userToUpload = user.copy(profilePictureUrl = cloudUrl, localProfilePictureUrl = null)
                 // Delete the local image file after uploading to avoid storage quota errors
                 imageStorageManager.deleteImageLocally(localReceiptImagePath)
             }

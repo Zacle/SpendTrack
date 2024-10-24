@@ -173,6 +173,9 @@
     <string name="currency">Valuta</string>
     <string name="theme">Tema</string>
     <string name="logout">Disconnetti</string>
+    <string name="change_profile">Cambia immagine del profilo</string>
+    <string name="edit_profile">Modifica profilo</string>
+    <string name="remove_profile">Rimuovi immagine del profilo</string>
 
     <!-- Register module -->
     <string name="registration_failed">

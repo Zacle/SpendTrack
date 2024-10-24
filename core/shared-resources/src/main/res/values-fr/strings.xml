@@ -172,6 +172,9 @@
     <string name="currency">Devise</string>
     <string name="theme">Thème</string>
     <string name="logout">Déconnexion</string>
+    <string name="change_profile">Changer la photo de profil</string>
+    <string name="edit_profile">Modifier le profil</string>
+    <string name="remove_profile">Supprimer la photo de profil</string>
 
     <!-- Register module -->
     <string name="registration_failed">

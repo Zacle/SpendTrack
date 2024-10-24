@@ -8,6 +8,7 @@ import com.zacle.spendtrack.core.domain.datastore.SetThemeAppearanceUseCase
 import com.zacle.spendtrack.core.domain.repository.UserDataRepository
 import com.zacle.spendtrack.core.domain.repository.UserRepository
 import com.zacle.spendtrack.core.domain.user.GetUserUseCase
+import com.zacle.spendtrack.core.domain.user.UpdateUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +28,12 @@ object UserDataUseCaseModule {
         configuration: UseCase.Configuration,
         userRepository: UserRepository
     ): GetUserUseCase = GetUserUseCase(configuration, userRepository)
+
+    @Provides
+    fun provideUpdateUserUseCase(
+        configuration: UseCase.Configuration,
+        userRepository: UserRepository
+    ): UpdateUserUseCase = UpdateUserUseCase(configuration, userRepository)
 
     @Provides
     fun provideSetThemeAppearanceUseCase(

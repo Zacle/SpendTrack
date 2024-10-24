@@ -28,6 +28,8 @@ import com.zacle.spendtrack.feature.login.loginScreen
 import com.zacle.spendtrack.feature.login.navigateToLogin
 import com.zacle.spendtrack.feature.onboarding.navigation.Onboarding
 import com.zacle.spendtrack.feature.onboarding.navigation.onboardingScreen
+import com.zacle.spendtrack.feature.profile.edit_profile.navigateToProfile
+import com.zacle.spendtrack.feature.profile.edit_profile.profileScreen
 import com.zacle.spendtrack.feature.profile.navigateToPreferences
 import com.zacle.spendtrack.feature.profile.preferencesScreen
 import com.zacle.spendtrack.feature.register.navigateToRegister
@@ -185,7 +187,11 @@ fun STNavHost(
         preferencesScreen(
             navigateToLogin = navController::navigateToLogin,
             navigateBack = navController::navigateUp,
-            navigateToEditProfile = {}
+            navigateToEditProfile = navController::navigateToProfile
+        )
+        profileScreen(
+            navigateToLogin = navController::navigateToLogin,
+            navigateUp = navController::navigateUp
         )
     }
 }
