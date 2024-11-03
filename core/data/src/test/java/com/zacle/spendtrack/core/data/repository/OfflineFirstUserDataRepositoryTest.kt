@@ -20,12 +20,16 @@ class OfflineFirstUserDataRepositoryTest {
     fun `should be able to retrieve user data`() = runTest {
         val expected = UserData(
             shouldHideOnboarding = false,
-            themeAppearance = ThemeAppearance.FOLLOW_SYSTEM
+            themeAppearance = ThemeAppearance.FOLLOW_SYSTEM,
+            languageCode = "en",
+            currencyCode = "USD"
         )
         whenever(userPreferencesDataSource.userData).thenReturn(flowOf(
             UserData(
                 shouldHideOnboarding = false,
-                themeAppearance = ThemeAppearance.FOLLOW_SYSTEM
+                themeAppearance = ThemeAppearance.FOLLOW_SYSTEM,
+                languageCode = "en",
+                currencyCode = "USD"
             )
         ))
         val actual = repository.userData.first()
