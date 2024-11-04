@@ -395,6 +395,7 @@ fun AccountBalance(
     accountBalance: Double,
     modifier: Modifier = Modifier
 ) {
+    val currency = LocalCurrency.current
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -403,11 +404,11 @@ fun AccountBalance(
         Text(
             text = stringResource(id = R.string.account_balance),
             fontWeight = FontWeight.Medium,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
         Text(
-            text = "$${accountBalance.toInt()}",
+            text = "${accountBalance.toInt()}$currency",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
