@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ fun TransactionAmountCard(
     amount: Int,
     color: Color,
     painter: Painter,
+    currency: String,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -38,9 +40,8 @@ fun TransactionAmountCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp)
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.background,
@@ -57,11 +58,11 @@ fun TransactionAmountCard(
                         contentDescription = null,
                         tint = color,
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(24.dp)
                     )
                 }
             }
-            Spacer(modifier = Modifier.size(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
@@ -69,12 +70,13 @@ fun TransactionAmountCard(
                     text = text,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.surface,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "$$amount",
+                    text = "$amount$currency",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.surface
+                    color = MaterialTheme.colorScheme.surface,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
@@ -89,7 +91,8 @@ fun TransactionAmountPreview(modifier: Modifier = Modifier) {
             text = "Income",
             amount = 18000,
             color = MaterialTheme.colorScheme.tertiaryContainer,
-            painter = painterResource(id = SpendTrackIcons.addIncome)
+            painter = painterResource(id = SpendTrackIcons.addIncome),
+            currency = "$"
         )
     }
 }

@@ -189,7 +189,7 @@ class AddEditIncomeViewModel @Inject constructor(
             )
         )
         _uiState.value = uiState.value.copy(isUploading = false)
-        submitSingleEvent(TransactionUiEvent.NavigateBack)
+        submitSingleEvent(TransactionUiEvent.NavigateToTransactionDetail(income.id))
     }
 
     private suspend fun updateIncome() {

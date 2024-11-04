@@ -26,10 +26,6 @@ class OfflineFirstCategoryRepository @Inject constructor(
         localCategoryDataSource.getCategories().flatMapLatest { localCategories ->
             networkMonitor.isOnline.flatMapLatest { isOnline ->
                 when {
-                    localCategories.isNotEmpty() -> {
-                        // If local categories exist, just emit them
-                        flowOf(localCategories)
-                    }
                     isOnline -> {
                         // If online, try fetching remote categories
                         remoteCategoryDataSource.getCategories().flatMapLatest { remoteCategories ->
@@ -42,6 +38,10 @@ class OfflineFirstCategoryRepository @Inject constructor(
                                 flowOf(CATEGORIES)
                             }
                         }
+                    }
+                    localCategories.isNotEmpty() -> {
+                        // If local categories exist, just emit them
+                        flowOf(localCategories)
                     }
                     else -> {
                         // If offline and no local categories, insert and emit defaults

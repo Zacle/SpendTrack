@@ -61,6 +61,7 @@ import com.zacle.spendtrack.core.shared_resources.R as SharedR
 fun STApp(
     appState: STAppState,
     userStateModel: UserStateModel,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SpendTrackBackground(modifier = modifier) {
@@ -83,7 +84,8 @@ fun STApp(
             appState = appState,
             startDestination = startDestination,
             isOffline = isOffline,
-            snackbarHostState = snackbarHostState
+            snackbarHostState = snackbarHostState,
+            onRestartApp = onRestartApp
         )
     }
 }
@@ -96,6 +98,7 @@ fun STApp(
     startDestination: Any,
     isOffline: Boolean,
     snackbarHostState: SnackbarHostState,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo()
 ) {
@@ -208,6 +211,7 @@ fun STApp(
                 isOffline = isOffline,
                 appState = appState,
                 startDestination = startDestination,
+                onRestartApp = onRestartApp,
                 modifier = Modifier
                     .padding(bottom = contentPadding)
             )

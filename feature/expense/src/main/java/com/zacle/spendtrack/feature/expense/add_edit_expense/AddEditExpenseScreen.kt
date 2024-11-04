@@ -35,6 +35,7 @@ import com.zacle.spendtrack.core.shared_resources.R as SharedR
 fun AddEditExpenseRoute(
     navigateBack: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToExpenseDetail: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddEditExpenseViewModel = hiltViewModel(),
 ) {
@@ -64,6 +65,7 @@ fun AddEditExpenseRoute(
                 }
                 is TransactionUiEvent.NavigateBack -> navigateBack()
                 is TransactionUiEvent.NavigateToLogin -> navigateToLogin()
+                is TransactionUiEvent.NavigateToTransactionDetail -> navigateToExpenseDetail(event.transactionId)
             }
         }
     }

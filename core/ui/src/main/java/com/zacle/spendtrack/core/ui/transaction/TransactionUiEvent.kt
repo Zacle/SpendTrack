@@ -8,6 +8,7 @@ sealed class TransactionUiEvent: UiEvent {
     data class ShortNameError(val messageResId: Int): TransactionUiEvent()
     data class InvalidAmountError(val messageResId: Int): TransactionUiEvent()
     data class CategoryNotSelectedError(val messageResId: Int): TransactionUiEvent()
+    data class NavigateToTransactionDetail(val transactionId: String): TransactionUiEvent()
     data object NavigateBack: TransactionUiEvent()
     data object NavigateToLogin: TransactionUiEvent()
 }

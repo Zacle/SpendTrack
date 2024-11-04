@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -427,22 +427,25 @@ fun HomeHeader(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         AccountBalance(accountBalance = accountBalance)
-        Box(
+        Row(
             modifier = Modifier.fillMaxWidth()
         ) {
             TransactionAmountCard(
                 text = stringResource(id = R.string.income),
                 amount = amountEarned.toInt(),
                 color = MaterialTheme.colorScheme.tertiaryContainer,
+                currency = LocalCurrency.current,
                 painter = painterResource(id = SpendTrackIcons.addIncome),
-                modifier = Modifier.align(Alignment.CenterStart)
+                modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.size(8.dp))
             TransactionAmountCard(
                 text = stringResource(id = R.string.expense),
                 amount = amountSpent.toInt(),
                 color = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
+                currency = LocalCurrency.current,
                 painter = painterResource(id = SpendTrackIcons.addExpense),
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier.weight(1f)
             )
         }
     }
@@ -455,7 +458,6 @@ fun HomeReportChart(
     transactions: Map<Int, Int>,
     modifier: Modifier = Modifier
 ) {
-    val color = MaterialTheme.colorScheme.primary
 
     LaunchedEffect(transactions) {
         withContext(Dispatchers.Default) {
@@ -466,6 +468,21 @@ fun HomeReportChart(
             }
         }
     }
+
+    Chart(
+        modelProducer = modelProducer,
+        selectedMonth = selectedMonth,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun Chart(
+    modelProducer: CartesianChartModelProducer,
+    selectedMonth: Instant,
+    modifier: Modifier = Modifier
+) {
+    val color = MaterialTheme.colorScheme.primary
 
     CartesianChartHost(
         chart =
@@ -502,7 +519,7 @@ fun HomeReportChart(
             )
             ,
             layerPadding =
-                cartesianLayerPadding(scalableStartPadding = 12.dp, scalableEndPadding = 12.dp),
+            cartesianLayerPadding(scalableStartPadding = 12.dp, scalableEndPadding = 12.dp),
         )
         ,
         modelProducer = modelProducer,

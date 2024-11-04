@@ -9,7 +9,7 @@ import com.zacle.spendtrack.core.ui.UiState
 import com.zacle.spendtrack.data.UserStateModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +23,9 @@ class MainActivityViewModel @Inject constructor(
     override fun initState(): UiState<UserStateModel>  = UiState.Loading
 
     init {
+        viewModelScope.launch {
+            getCategoriesUseCase.execute(GetCategoriesUseCase.Request).first()
+        }
         submitAction(MainActivityUiAction.Load)
     }
 
@@ -36,14 +39,11 @@ class MainActivityViewModel @Inject constructor(
 
     private fun loadUserData() {
         viewModelScope.launch {
-            combine(
-                getUserDataAndAuthStateUseCase.execute(GetUserDataAndAuthStateUseCase.Request),
-                getCategoriesUseCase.execute(GetCategoriesUseCase.Request)
-            ) { userDataAndAuthState, _ ->
-                converter.convert(userDataAndAuthState)
-            }.collectLatest { state ->
-                submitState(state)
-            }
+            getUserDataAndAuthStateUseCase
+                .execute(GetUserDataAndAuthStateUseCase.Request)
+                .collectLatest { state ->
+                    submitState(converter.convert(state))
+                }
         }
     }
 }

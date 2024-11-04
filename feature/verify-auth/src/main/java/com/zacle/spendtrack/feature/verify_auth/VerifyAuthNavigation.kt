@@ -14,15 +14,13 @@ fun NavController.navigateToVerifyAuth(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.verifyAuthScreen(
-    isOffline: Boolean,
     navigateUp: () -> Unit,
-    navigateToHome: () -> Unit
+    onRestartApp: () -> Unit
 ) {
     composable<VerifyAuth> {
         VerifyAuthRoute(
-            isOffline = isOffline,
             navigateUp = navigateUp,
-            navigateToHome = navigateToHome
+            onRestartApp = onRestartApp
         )
     }
 }

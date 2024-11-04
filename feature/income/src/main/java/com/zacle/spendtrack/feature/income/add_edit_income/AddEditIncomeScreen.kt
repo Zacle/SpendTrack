@@ -35,6 +35,7 @@ import kotlinx.datetime.Instant
 fun AddEditIncomeRoute(
     navigateBack: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToIncomeDetail: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddEditIncomeViewModel = hiltViewModel(),
 ) {
@@ -64,6 +65,7 @@ fun AddEditIncomeRoute(
                 }
                 is TransactionUiEvent.NavigateBack -> navigateBack()
                 is TransactionUiEvent.NavigateToLogin -> navigateToLogin()
+                is TransactionUiEvent.NavigateToTransactionDetail -> navigateToIncomeDetail(event.transactionId)
             }
         }
     }

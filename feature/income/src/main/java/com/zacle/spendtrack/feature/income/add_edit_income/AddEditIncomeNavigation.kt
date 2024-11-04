@@ -22,12 +22,14 @@ fun NavController.navigateToAddEditIncome(
 
 fun NavGraphBuilder.addEditIncomeScreen(
     navigateBack: () -> Unit,
-    navigateToLogin: () -> Unit
+    navigateToLogin: () -> Unit,
+    navigateToIncomeDetail: (String) -> Unit
 ) {
     composable<AddEditIncome> {
         AddEditIncomeRoute(
             navigateBack = navigateBack,
-            navigateToLogin = navigateToLogin
+            navigateToLogin = navigateToLogin,
+            navigateToIncomeDetail = navigateToIncomeDetail
         )
     }
 }

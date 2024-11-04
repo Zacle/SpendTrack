@@ -3,17 +3,12 @@ package com.zacle.spendtrack.feature.verify_auth
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,56 +16,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.zacle.spendtrack.core.designsystem.component.STTopAppBar
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackBackground
 import com.zacle.spendtrack.core.designsystem.component.SpendTrackButton
 import com.zacle.spendtrack.core.designsystem.icon.SpendTrackIcons
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
-import com.zacle.spendtrack.core.ui.previews.DevicePreviews
-import kotlinx.coroutines.flow.collectLatest
 import com.zacle.spendtrack.core.shared_resources.R
+import com.zacle.spendtrack.core.ui.previews.DevicePreviews
 
 @Composable
 fun VerifyAuthRoute(
-    isOffline: Boolean,
     navigateUp: () -> Unit,
-    navigateToHome: () -> Unit,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: VerifyAuthViewModel = hiltViewModel()
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val emailNotVerified = stringResource(id = R.string.email_not_verified)
-
-    LaunchedEffect(Unit) {
-        viewModel.singleEventFlow.collectLatest { event ->
-            when (event) {
-                is VerifyAuthUiEvent.NotVerifiedYet -> {
-                    snackbarHostState.showSnackbar(emailNotVerified)
-                }
-                is VerifyAuthUiEvent.NavigateToHome -> {
-                    navigateToHome()
-                }
-            }
-        }
-    }
 
     VerifyAuthScreen(
-        isOffline = isOffline,
-        snackbarHostState = snackbarHostState,
-        onAlreadyVerifiedClicked = { viewModel.submitAction(VerifyAuthUiAction.OnAlreadyVerifiedClicked) },
         navigateUp = navigateUp,
+        onRestartApp = onRestartApp,
         modifier = modifier
     )
 }
 
 @Composable
 fun VerifyAuthScreen(
-    isOffline: Boolean,
-    snackbarHostState: SnackbarHostState,
-    onAlreadyVerifiedClicked: () -> Unit,
     navigateUp: () -> Unit,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -91,11 +62,9 @@ fun VerifyAuthScreen(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onSurface,
         modifier = modifier,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         VerifyAuthContent(
-            isOffline = isOffline,
-            onAlreadyVerifiedClicked = onAlreadyVerifiedClicked,
+            onRestartApp = onRestartApp,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -103,8 +72,7 @@ fun VerifyAuthScreen(
 
 @Composable
 fun VerifyAuthContent(
-    isOffline: Boolean,
-    onAlreadyVerifiedClicked: () -> Unit,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -120,11 +88,10 @@ fun VerifyAuthContent(
                 .padding(top = 64.dp),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
         SpendTrackButton(
             text = stringResource(id = R.string.already_verified),
-            onClick = onAlreadyVerifiedClicked,
-            enabled = !isOffline
+            onClick = onRestartApp
         )
     }
 }
@@ -135,8 +102,7 @@ fun VerifyAuthContentPreview() {
     SpendTrackTheme {
         SpendTrackBackground {
             VerifyAuthContent(
-                isOffline = false,
-                onAlreadyVerifiedClicked = {}
+                onRestartApp = {}
             )
         }
     }

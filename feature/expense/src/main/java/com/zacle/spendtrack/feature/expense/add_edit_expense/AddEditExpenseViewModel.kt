@@ -249,7 +249,7 @@ class AddEditExpenseViewModel @Inject constructor(
             )
         )
         _uiState.value = uiState.value.copy(isUploading = false)
-        submitSingleEvent(TransactionUiEvent.NavigateBack)
+        submitSingleEvent(TransactionUiEvent.NavigateToTransactionDetail(expense.id))
     }
 
     private fun formValidation(name: String, amount: Int, category: Category) {

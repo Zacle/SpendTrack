@@ -48,10 +48,9 @@ object UseCaseModule {
     @Provides
     fun provideOverviewUseCase(
         configuration: UseCase.Configuration,
-        getBudgetsUseCase: GetBudgetsUseCase,
         getExpensesUseCase: GetExpensesUseCase,
         getIncomesUseCase: GetIncomesUseCase
-    ): OverviewUseCase = OverviewUseCase(configuration, getBudgetsUseCase, getExpensesUseCase, getIncomesUseCase)
+    ): OverviewUseCase = OverviewUseCase(configuration, getExpensesUseCase, getIncomesUseCase)
 
     @Provides
     fun provideTransactionsUseCase(

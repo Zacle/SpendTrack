@@ -47,6 +47,7 @@ import com.zacle.spendtrack.ui.STAppState
 fun STNavHost(
     isOffline: Boolean,
     appState: STAppState,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier,
     startDestination: Any = Onboarding
 ) {
@@ -79,9 +80,8 @@ fun STNavHost(
             navigateToLogin = navController::navigateToLogin
         )
         verifyAuthScreen(
-            isOffline = isOffline,
             navigateUp = navController::navigateUp,
-            navigateToHome = navController::navigateToHome
+            onRestartApp = onRestartApp
         )
         homeScreen(
             navigateToProfile = navController::navigateToPreferences,
@@ -114,11 +114,32 @@ fun STNavHost(
         )
         addEditExpenseScreen(
             navigateBack = navController::navigateUp,
-            navigateToLogin = navController::navigateToHome
+            navigateToLogin = navController::navigateToHome,
+            navigateToExpenseDetail = {
+                navController.navigateToExpenseDetail(
+                    expenseId = it,
+                    navOptionsBuilder = {
+                        popUpTo<Home> {
+                            inclusive = false
+                        }
+                    }
+                )
+            }
         )
         addEditIncomeScreen(
             navigateBack = navController::navigateUp,
-            navigateToLogin = navController::navigateToHome
+            navigateToLogin = navController::navigateToHome,
+            navigateToIncomeDetail = {
+                navController.navigateToIncomeDetail(
+                    incomeId = it,
+                    navOptionsBuilder = {
+                        popUpTo<Home> {
+                            inclusive = false
+                        }
+                    }
+                )
+
+            }
         )
         expenseDetailScreen(
             navigateBack = navController::navigateUp,

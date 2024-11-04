@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zacle.spendtrack.core.designsystem.theme.SpendTrackTheme
@@ -89,7 +90,8 @@ fun TransactionCard(
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = CategoryKeyResource.getStringResourceForCategory(
@@ -98,6 +100,8 @@ fun TransactionCard(
                     ),
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyLarge,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -108,8 +112,7 @@ fun TransactionCard(
             }
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1f)
+                verticalArrangement = Arrangement.Center
             ) {
                 val amountText = if (type == TransactionType.INCOME) "+$amount" else "-$amount"
                 val amountColor =
@@ -125,7 +128,7 @@ fun TransactionCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = dateToString(convertInstantToLocalDateTime(transactionDate)),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             }
@@ -186,8 +189,8 @@ fun TransactionCardPreview() {
         TransactionCard(
             category = Category(
                 categoryId = "1",
-                key = "food_dining",
-                icon = R.drawable.food_dinning,
+                key = "savings_investments",
+                icon = R.drawable.savings_investment,
                 color = "#FF7043"
             ),
             transactionName = "Restaurants",
