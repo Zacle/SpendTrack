@@ -1,0 +1,22 @@
+sequence-diagram
+
+Home Screen [icon: monitor, color: green]
+UseCase [icon: android, color: blue]
+Repository [icon: azure-tfs-vc-repository, color: yellow]
+Room DB [icon: database, color: purple]
+Firebase [icon: firebase, color: orange]
+WorkManager [icon: sync, color: red]
+
+Home Screen <> UseCase: Write and read data
+UseCase <> Repository: Write and Read data
+Repository <> Room DB: Write and Read data
+
+alt [label: if user online, color: yellow] {
+  Repository > Firebase: Save data to Firebase
+}
+else [label: if user not online] {
+  Repository > WorkManager: Schedule a synchronization
+}
+
+WorkManager > Room DB: Sync remote database with local database
+WorkManager > Firebase: Sync local database with remote database

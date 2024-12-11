@@ -1,0 +1,21 @@
+sequence-diagram
+
+User [icon: user, color: gray]
+MainActivity [icon: azure-monitor, color: blue]
+DataStore [icon: store, color: orange]
+Onboarding Screen [icon: monitor, color: green]
+MainOrAuth Screen [icon: monitor, color: yellow]
+
+User > MainActivity: Access the app
+activate MainActivity
+MainActivity > DataStore: Check if user already onboarded
+DataStore --> MainActivity: Reply with onboarding status
+
+alt [label: if onboarded, color: green] {
+  MainActivity > MainOrAuth Screen: User already onboarded
+}
+else [label: if not onboarded] {
+  MainActivity > Onboarding Screen: Onboard user first
+}
+
+deactivate MainActivity
