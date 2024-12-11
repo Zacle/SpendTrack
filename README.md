@@ -1,8 +1,7 @@
 <p><a target="_blank" href="https://app.eraser.io/workspace/Vpp13yukn8E9xUvejWnZ" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
 
 ## 
-**SpendTrack Architecture**
-
+# **SpendTrack Architecture**
 ## 1. Introduction
 ### 1.1 Purpose
 This document outlines the architecture of the **SpendTrack **app, detailing its design, components, and interactions. It is intended for developers, architects, and stakeholders involved in the project. The document provides a comprehensive overview of the system to ensure a shared understanding among the team.
@@ -100,10 +99,10 @@ The **SpendTrack** app allows users to track their expenses, set budgets, and re
 #### 9. Modularization:
 - **Feature Modules**: Organize code into feature-specific modules to promote code reusability and maintainability.
 ### 6.2 Component Diagrams
-![System Architecture](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---BzpPwM1Fg9jsezDfGHxWX---figure---sHzW50i0zYwTUyxpRlnIpQ.png "System Architecture")
+![System Architecture](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---hOVMm8Yl0XDZr2TCjzqst---figure---sHzW50i0zYwTUyxpRlnIpQ.png "System Architecture")
 
 ### 6.3 Database Design
-![Database](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---hp7GC54MJKJcYH03UTxAs---figure---mfMa5bqXZO6yM_xqoBIwwg.png "Database")
+![Database](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---FuDSjeYVVXZ94UzACP81K---figure---mfMa5bqXZO6yM_xqoBIwwg.png "Database")
 
 ## 7. Key Architectural Decisions
 ### 7.1 Decision Log
