@@ -100,10 +100,10 @@ The **SpendTrack** app allows users to track their expenses, set budgets, and re
 #### 9. Modularization:
 - **Feature Modules**: Organize code into feature-specific modules to promote code reusability and maintainability.
 ### 6.2 Component Diagrams
-![System Architecture](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---T--4t4bJbttV2rTDh3aHh---figure---sHzW50i0zYwTUyxpRlnIpQ.png "System Architecture")
+![System Architecture](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---BzpPwM1Fg9jsezDfGHxWX---figure---sHzW50i0zYwTUyxpRlnIpQ.png "System Architecture")
 
 ### 6.3 Database Design
-![Database](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---vYKSw0Wp8zYlXeqSn-Woz---figure---mfMa5bqXZO6yM_xqoBIwwg.png "Database")
+![Database](/.eraser/Vpp13yukn8E9xUvejWnZ___mbHLwx3aAyOSFQFXDLP8FU2S4x63___---figure---hp7GC54MJKJcYH03UTxAs---figure---mfMa5bqXZO6yM_xqoBIwwg.png "Database")
 
 ## 7. Key Architectural Decisions
 ### 7.1 Decision Log
