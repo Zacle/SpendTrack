@@ -1,0 +1,94 @@
+entity-relationship-diagram
+
+users [icon: user, color: blue] {
+  user_id string pk
+  email string
+  first_name string
+  last_name string
+  profile_picture_url string
+  isSynced boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+expense [icon: money, color: orange] {
+  expense_id string
+  user_id string fk
+  category_id string fk
+  payment_id string fk
+  amount double
+  description string
+  transaction_date timestamp
+  receipt_url timestamp
+  isSynced boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+income [icon: money, color: purple] {
+  income_id string
+  user_id string fk
+  category_id string fk
+  source_id string fk
+  amount double
+  description string
+  transaction_date timestamp
+  isSynced boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+budget [icon: wallet, color: blue] {
+  budget_id string pk
+  user_id string fk
+  amount double
+  budget_period timestamp
+  budget_alert boolean
+  budget_alert_percentage double
+  recurrent boolean
+  isSynced boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+bills [icon: gcp-billing] {
+  bill_id string pk
+  user_id string fk
+  category_id string fk
+  amount double
+  due_date timestamp
+  is_paid boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+category [icon: shopping-cart, color: yellow] {
+  category_id string pk
+  name string
+  amount_spent double
+  amount_limit double
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+payment_details [icon: wallet] {
+  payment_id string pk
+  payment_type string
+  currency string
+  card_number string
+  card_type string
+  last_four_digits int
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+users.user_id < expense.user_id
+users.user_id < income.user_id
+users.user_id < budget.user_id
+users.user_id < bills.user_id
+expense.category_id - category.category_id
+expense.payment_id - payment_details.payment_id
+income.category_id - category.category_id
+income.source_id - payment_details.payment_id
+
+
