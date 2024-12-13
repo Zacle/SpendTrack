@@ -11,9 +11,11 @@ import com.zacle.spendtrack.core.model.Category
 import com.zacle.spendtrack.core.shared_resources.R
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 
 class OfflineFirstCategoryRepository @Inject constructor(
@@ -22,35 +24,42 @@ class OfflineFirstCategoryRepository @Inject constructor(
     @STDispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val networkMonitor: NetworkMonitor
 ): CategoryRepository {
-    override suspend fun categories(): Flow<List<Category>> =
-        localCategoryDataSource.getCategories().flatMapLatest { localCategories ->
-            networkMonitor.isOnline.flatMapLatest { isOnline ->
-                when {
-                    isOnline -> {
-                        // If online, try fetching remote categories
-                        remoteCategoryDataSource.getCategories().flatMapLatest { remoteCategories ->
-                            if (remoteCategories.isNotEmpty()) {
-                                localCategoryDataSource.insertAllCategories(remoteCategories)
-                                flowOf(remoteCategories)
-                            } else {
-                                localCategoryDataSource.insertAllCategories(CATEGORIES)
-                                remoteCategoryDataSource.insertAllCategories(CATEGORIES)
-                                flowOf(CATEGORIES)
-                            }
-                        }
-                    }
-                    localCategories.isNotEmpty() -> {
-                        // If local categories exist, just emit them
-                        flowOf(localCategories)
-                    }
-                    else -> {
-                        // If offline and no local categories, insert and emit defaults
-                        localCategoryDataSource.insertAllCategories(CATEGORIES)
-                        flowOf(CATEGORIES)
-                    }
-                }
+
+    override suspend fun categories(): Flow<List<Category>> = flow {
+        val isOnline = networkMonitor.isOnline.first()
+
+        // If online, fetch categories from the remote source
+        if (isOnline) {
+            val remoteCategories = remoteCategoryDataSource.getCategories().first()
+            if (remoteCategories.isNotEmpty()) {
+                // Insert the fetched categories into the local database
+                localCategoryDataSource.insertAllCategories(remoteCategories)
+                emit(remoteCategories) // Emit the updated categories
+            } else {
+                // Handle case where remote categories are empty (rare case)
+                emit(handleEmptyCategories())
             }
-        }.flowOn(ioDispatcher)
+        } else {
+            // If offline, fall back to local categories
+            val localCategories = localCategoryDataSource.getCategories().first()
+            if (localCategories.isNotEmpty()) {
+                emit(localCategories)
+            } else {
+                emit(handleEmptyCategories())
+            }
+        }
+    }.catch { e ->
+        Timber.e(e)
+        emit(emptyList()) // In case of an error, emit an empty list
+    }.flowOn(ioDispatcher)
+
+    // Helper function to handle empty categories case
+    private suspend fun handleEmptyCategories(): List<Category> {
+        // Insert default categories into both local and remote sources
+        localCategoryDataSource.insertAllCategories(CATEGORIES)
+        remoteCategoryDataSource.insertAllCategories(CATEGORIES)
+        return CATEGORIES
+    }
 }
 
 val CATEGORIES = listOf(

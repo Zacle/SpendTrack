@@ -1,6 +1,5 @@
 package com.zacle.spendtrack.core.firebase.datasource
 
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.zacle.spendtrack.core.data.datasource.CategoryDataSource
 import com.zacle.spendtrack.core.firebase.util.Collections.CATEGORIES_COLLECTION
@@ -10,17 +9,16 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FirebaseCategoryDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ): CategoryDataSource {
     override suspend fun getCategories(): Flow<List<Category>> = flow {
-        val task = firestore.collection(CATEGORIES_COLLECTION)
+        val snapshot = firestore.collection(CATEGORIES_COLLECTION)
             .get()
+            .await()
 
-        val snapshot = Tasks.await(task, TIMEOUT_DURATION, TimeUnit.SECONDS)
         val categories = snapshot.documents.mapNotNull {
             it.toObject(Category::class.java)
         }
@@ -43,7 +41,7 @@ class FirebaseCategoryDataSource @Inject constructor(
             batch.commit().await()
         } catch (e: Exception) {
             // Handle failure
-            Timber.e("FirestoreError", "Batch insert failed", e)
+            Timber.e(e)
         }
     }
 }
