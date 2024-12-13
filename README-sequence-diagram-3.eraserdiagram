@@ -1,0 +1,51 @@
+sequence-diagram
+
+MainActivity [icon: monitor, color: black]
+Login Screen [icon: monitor, color: blue]
+Register Screen [icon: monitor, color: green]
+Forgot Password Screen [icon: monitor, color: yellow]
+Verify Email Screen [icon: monitor, color: white]
+Home Screen [icon: monitor, color: red]
+Auth State User DataSource [icon: datadog, color: blue]
+Auth Repository [icon: azure-tfs-vc-repository, color: yellow]
+Firestore Repository [icon: azure-tfs-vc-repository, color: green]
+Google Auth Service [icon: google, color: purple]
+
+MainActivity <> Auth State User DataSource: Observe the user authetication state
+activate Auth State User DataSource
+
+alt [label: if user logged in and email verified, color: green] {
+  MainActivity > Home Screen: User logged in and email verified
+}
+else [label: if not logged in] {
+  MainActivity > Login Screen: Display login page
+}
+else [label: if logged in but not verified] {
+  MainActivity > Verify Email Screen: Tell user to verify the email
+}
+
+alt [label: log in with email and password] {
+  Login Screen > Auth Repository: Log in with email and password
+}
+else [label: log in with Google account] {
+  Login Screen > Google Auth Service: Log in with Google credentials
+}
+
+Login Screen > Forgot Password Screen: Forgot Password
+Forgot Password Screen > Auth Repository: Update password
+Forgot Password Screen > Login Screen: Log in again after changing the password
+Login Screen > Home Screen: After successfull log in, go to home
+Login Screen > Register Screen: Registration required for first time users
+
+alt [label: register in with email and password] {
+  Register Screen > Auth Repository: Log in with email and password
+  Register Screen > Firestore Repository: Save user info to firestore
+}
+else [label: register in with Google account] {
+  Register Screen > Google Auth Service: Log in with Google credentials
+  Register Screen > Firestore Repository: Save user info to firestore
+}
+
+Register Screen > Verify Email Screen: After registration, verify the email
+
+deactivate Auth State User DataSource
